@@ -7,7 +7,7 @@
 #endif
 #endif
 
-#include "Minigin.h"
+#include "Rift2D.h"
 #include "SceneManager.h"
 #include "ResourceManager.h"
 #include "TextObject.h"

@@ -10,7 +10,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
-#include "Minigin.h"
+#include "Rift2D.h"
 #include "InputManager.h"
 #include "SceneManager.h"
 #include "Renderer.h"

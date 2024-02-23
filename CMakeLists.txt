@@ -1,48 +1,48 @@
 cmake_minimum_required(VERSION 3.26)
-project(Minigin)
+project(Rift2D)
 
 if(EMSCRIPTEN)
   message("Using Emscripten!")
 endif()
 
 if(EMSCRIPTEN)
-  set(TARGET_NAME minigin_web)
+  set(TARGET_NAME Rift2D_web)
   set(TARGET_PARAM )
 else()
-  set(TARGET_NAME minigin)
+  set(TARGET_NAME Rift2D)
   set(TARGET_PARAM WIN32)
 endif()
 
 # list source files here
 add_executable(${TARGET_NAME} ${TARGET_PARAM}
-  Minigin/Font.cpp
-  Minigin/Font.h
-  Minigin/GameObject.cpp
-  Minigin/GameObject.h
-  Minigin/InputManager.cpp
-  Minigin/InputManager.h
-  Minigin/Main.cpp
-  Minigin/Minigin.cpp
-  Minigin/Minigin.h
-  Minigin/Renderer.cpp
-  Minigin/Renderer.h
-  Minigin/ResourceManager.cpp
-  Minigin/ResourceManager.h
-  Minigin/Scene.cpp
-  Minigin/Scene.h
-  Minigin/SceneManager.cpp
-  Minigin/SceneManager.h
-  Minigin/TextObject.cpp
-  Minigin/TextObject.h
-  Minigin/Texture2D.cpp
-  Minigin/Texture2D.h
-  Minigin/Transform.cpp
-  Minigin/Transform.h
+  Rift2D/Font.cpp
+  Rift2D/Font.h
+  Rift2D/GameObject.cpp
+  Rift2D/GameObject.h
+  Rift2D/InputManager.cpp
+  Rift2D/InputManager.h
+  Rift2D/Main.cpp
+  Rift2D/Rift2D.cpp
+  Rift2D/Rift2D.h
+  Rift2D/Renderer.cpp
+  Rift2D/Renderer.h
+  Rift2D/ResourceManager.cpp
+  Rift2D/ResourceManager.h
+  Rift2D/Scene.cpp
+  Rift2D/Scene.h
+  Rift2D/SceneManager.cpp
+  Rift2D/SceneManager.h
+  Rift2D/TextObject.cpp
+  Rift2D/TextObject.h
+  Rift2D/Texture2D.cpp
+  Rift2D/Texture2D.h
+  Rift2D/Transform.cpp
+  Rift2D/Transform.h
 )
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
-# set minigin as the default startup project
+# set Rift2D as the default startup project
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${TARGET_NAME})
 
 include(FetchContent)
@@ -187,7 +187,7 @@ elseif(NOT EMSCRIPTEN)
 endif()
 
 target_include_directories(${TARGET_NAME} PRIVATE
-  ${CMAKE_SOURCE_DIR}/Minigin/
+  ${CMAKE_SOURCE_DIR}/Rift2D/
   ${glm_SOURCE_DIR}
 )
 
