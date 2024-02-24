@@ -1,6 +1,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <iostream>
+#include <thread>
 
 #if WIN32
 #define WIN32_LEAN_AND_MEAN 
@@ -10,7 +11,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
-#include "Rift2D.h"
+#include "Rift2DEngine.h"
 #include "InputManager.h"
 #include "SceneManager.h"
 #include "Renderer.h"
@@ -34,7 +35,7 @@ void LogSDLVersion(const std::string& message, const SDL_version& v)
 
 void LoopCallback(void* arg)
 {
-	static_cast<dae::Minigin*>(arg)->RunOneFrame();
+	static_cast<dae::Rift2DEngine*>(arg)->RunOneFrame();
 }
 #endif
 
@@ -63,7 +64,7 @@ void PrintSDLVersion()
 	LogSDLVersion("We linked against SDL_ttf version ", version);
 }
 
-dae::Minigin::Minigin(const std::filesystem::path &dataPath)
+dae::Rift2DEngine::Rift2DEngine(const std::filesystem::path &dataPath)
 {
 	PrintSDLVersion();
 	
@@ -89,7 +90,7 @@ dae::Minigin::Minigin(const std::filesystem::path &dataPath)
 	ResourceManager::GetInstance().Init(dataPath);
 }
 
-dae::Minigin::~Minigin()
+dae::Rift2DEngine::~Rift2DEngine()
 {
 	Renderer::GetInstance().Destroy();
 	SDL_DestroyWindow(g_window);
@@ -97,20 +98,42 @@ dae::Minigin::~Minigin()
 	SDL_Quit();
 }
 
-void dae::Minigin::Run(const std::function<void()>& load)
+void dae::Rift2DEngine::Run(const std::function<void()>& load)
 {
 	load();
 #ifndef __EMSCRIPTEN__
-	while (!m_quit)
-		RunOneFrame();
+	using namespace std::chrono;
+
+	bool doContinue = true;
+	auto lastTime = high_resolution_clock::now();
+	float lag = 0.0f;
+	constexpr float fixedTimeStep{ 0.03f };
+	constexpr float desiredFps{ 60.0f };
+	constexpr float msPerFrame{ 1000.f / desiredFps };
+
+	while (doContinue)
+	{
+		const auto currentTime = high_resolution_clock::now();
+		const float elapsedTime = duration<float>(currentTime - lastTime).count();
+		lastTime = currentTime;
+		lag += elapsedTime;
+
+		doContinue = InputManager::GetInstance().ProcessInput();
+
+		while (lag >= fixedTimeStep)
+		{
+			//fixed update
+			lag -= fixedTimeStep;
+		}
+
+		SceneManager::GetInstance().Update();
+		Renderer::GetInstance().Render();
+
+		const auto sleepTime = currentTime + milliseconds(static_cast<int>(msPerFrame)) - high_resolution_clock::now();
+		std::this_thread::sleep_for(sleepTime);
+	}
+		
 #else
 	emscripten_set_main_loop_arg(&LoopCallback, this, 0, true);
 #endif
-}
-
-void dae::Minigin::RunOneFrame()
-{
-	m_quit = !InputManager::GetInstance().ProcessInput();
-	SceneManager::GetInstance().Update();
-	Renderer::GetInstance().Render();
 }

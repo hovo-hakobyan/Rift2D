@@ -7,7 +7,7 @@
 #endif
 #endif
 
-#include "Rift2D.h"
+#include "Rift2DEngine.h"
 #include "SceneManager.h"
 #include "ResourceManager.h"
 #include "TextObject.h"
@@ -43,7 +43,7 @@ int main(int, char*[]) {
 	if(!fs::exists(data_location))
 		data_location = "../Data/";
 #endif
-	dae::Minigin engine(data_location);
+	dae::Rift2DEngine engine(data_location);
 	engine.Run(load);
     return 0;
 }

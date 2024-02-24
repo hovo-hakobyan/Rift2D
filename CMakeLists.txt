@@ -22,8 +22,8 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Rift2D/InputManager.cpp
   Rift2D/InputManager.h
   Rift2D/Main.cpp
-  Rift2D/Rift2D.cpp
-  Rift2D/Rift2D.h
+  Rift2D/Rift2DEngine.cpp
+  Rift2D/Rift2DEngine.h
   Rift2D/Renderer.cpp
   Rift2D/Renderer.h
   Rift2D/ResourceManager.cpp
