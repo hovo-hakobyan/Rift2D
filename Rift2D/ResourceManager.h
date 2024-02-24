@@ -4,7 +4,7 @@
 #include <memory>
 #include "Singleton.h"
 
-namespace dae
+namespace rift2d
 {
 	class Texture2D;
 	class Font;

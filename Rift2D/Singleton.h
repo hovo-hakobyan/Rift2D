@@ -1,5 +1,5 @@
 #pragma once
-namespace dae
+namespace rift2d
 {
 	template <typename T>
 	class Singleton

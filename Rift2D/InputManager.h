@@ -1,7 +1,7 @@
 #pragma once
 #include "Singleton.h"
 
-namespace dae
+namespace rift2d
 {
 	class InputManager final : public Singleton<InputManager>
 	{

@@ -3,7 +3,7 @@
 
 #include <algorithm>
 
-using namespace dae;
+using namespace rift2d;
 
 unsigned int Scene::m_idCounter = 0;
 

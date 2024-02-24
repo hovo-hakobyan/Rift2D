@@ -35,7 +35,7 @@ void LogSDLVersion(const std::string& message, const SDL_version& v)
 
 void LoopCallback(void* arg)
 {
-	static_cast<dae::Rift2DEngine*>(arg)->RunOneFrame();
+	static_cast<rift2d::Rift2DEngine*>(arg)->RunOneFrame();
 }
 #endif
 
@@ -64,7 +64,7 @@ void PrintSDLVersion()
 	LogSDLVersion("We linked against SDL_ttf version ", version);
 }
 
-dae::Rift2DEngine::Rift2DEngine(const std::filesystem::path &dataPath)
+rift2d::Rift2DEngine::Rift2DEngine(const std::filesystem::path &dataPath)
 {
 	PrintSDLVersion();
 	
@@ -90,7 +90,7 @@ dae::Rift2DEngine::Rift2DEngine(const std::filesystem::path &dataPath)
 	ResourceManager::GetInstance().Init(dataPath);
 }
 
-dae::Rift2DEngine::~Rift2DEngine()
+rift2d::Rift2DEngine::~Rift2DEngine()
 {
 	Renderer::GetInstance().Destroy();
 	SDL_DestroyWindow(g_window);
@@ -98,7 +98,7 @@ dae::Rift2DEngine::~Rift2DEngine()
 	SDL_Quit();
 }
 
-void dae::Rift2DEngine::Run(const std::function<void()>& load)
+void rift2d::Rift2DEngine::Run(const std::function<void()>& load)
 {
 	load();
 #ifndef __EMSCRIPTEN__

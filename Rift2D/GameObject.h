@@ -3,7 +3,7 @@
 #include <memory>
 #include "Transform.h"
 
-namespace dae
+namespace rift2d
 {
 	class Texture2D;
 	class GameObject 

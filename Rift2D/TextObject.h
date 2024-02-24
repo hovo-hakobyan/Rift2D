@@ -4,7 +4,7 @@
 #include "GameObject.h"
 #include "Transform.h"
 
-namespace dae
+namespace rift2d
 {
 	class Font;
 	class Texture2D;

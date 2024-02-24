@@ -18,19 +18,19 @@ namespace fs = std::filesystem;
 
 void load()
 {
-	auto& scene = dae::SceneManager::GetInstance().CreateScene("Demo");
+	auto& scene = rift2d::SceneManager::GetInstance().CreateScene("Demo");
 
-	auto go = std::make_shared<dae::GameObject>();
+	auto go = std::make_shared<rift2d::GameObject>();
 	go->SetTexture("background.tga");
 	scene.Add(go);
 
-	go = std::make_shared<dae::GameObject>();
+	go = std::make_shared<rift2d::GameObject>();
 	go->SetTexture("logo.tga");
 	go->SetPosition(216, 180);
 	scene.Add(go);
 
-	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	auto to = std::make_shared<dae::TextObject>("Programming 4 Assignment", font);
+	auto font = rift2d::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
+	auto to = std::make_shared<rift2d::TextObject>("Programming 4 Assignment", font);
 	to->SetPosition(80, 20);
 	scene.Add(to);
 }
@@ -43,7 +43,7 @@ int main(int, char*[]) {
 	if(!fs::exists(data_location))
 		data_location = "../Data/";
 #endif
-	dae::Rift2DEngine engine(data_location);
+	rift2d::Rift2DEngine engine(data_location);
 	engine.Run(load);
     return 0;
 }

@@ -3,7 +3,7 @@
 #include <functional>
 #include <filesystem>
 
-namespace dae
+namespace rift2d
 {
 	class Rift2DEngine final
 	{
