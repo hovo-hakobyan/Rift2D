@@ -15,6 +15,7 @@ endif()
 
 # list source files here
 add_executable(${TARGET_NAME} ${TARGET_PARAM}
+  Rift2D/BaseComponent.h
   Rift2D/Font.cpp
   Rift2D/Font.h
   Rift2D/GameObject.cpp
@@ -32,12 +33,15 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Rift2D/Scene.h
   Rift2D/SceneManager.cpp
   Rift2D/SceneManager.h
-  Rift2D/TextObject.cpp
-  Rift2D/TextObject.h
+  Rift2D/TextRenderer.cpp
+  Rift2D/TextRenderer.h
   Rift2D/Texture2D.cpp
   Rift2D/Texture2D.h
   Rift2D/Transform.cpp
   Rift2D/Transform.h
+  Rift2D/Interfaces.h
+  Rift2D/SpriteRenderer.cpp
+  Rift2D/SpriteRenderer.h
 )
 
 # enable c++20 features
@@ -189,6 +193,7 @@ endif()
 target_include_directories(${TARGET_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/Rift2D/
   ${glm_SOURCE_DIR}
+  ${CMAKE_SOURCE_DIR}/Data/
 )
 
 # compile at max warning level + treat warnings as errors

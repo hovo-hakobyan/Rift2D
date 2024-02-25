@@ -13,7 +13,7 @@ namespace rift2d
 		void RemoveAll();
 
 		void Update();
-		void Render() const;
+		
 
 		~Scene();
 		Scene(const Scene& other) = delete;

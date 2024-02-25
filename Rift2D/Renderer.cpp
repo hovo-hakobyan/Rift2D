@@ -3,6 +3,7 @@
 #include "Renderer.h"
 #include "SceneManager.h"
 #include "Texture2D.h"
+#include "Interfaces.h"
 
 int GetOpenGLDriverIndex()
 {
@@ -34,7 +35,10 @@ void rift2d::Renderer::Render() const
 	SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderClear(m_renderer);
 
-	SceneManager::GetInstance().Render();
+	for (auto& renderable : m_Renderables)
+	{
+		renderable->Render();
+	}
 	
 	SDL_RenderPresent(m_renderer);
 }
@@ -68,3 +72,8 @@ void rift2d::Renderer::RenderTexture(const Texture2D& texture, const float x, co
 }
 
 SDL_Renderer* rift2d::Renderer::GetSDLRenderer() const { return m_renderer; }
+
+void rift2d::Renderer::RegisterComponent(std::shared_ptr<IRenderable> component)
+{
+	m_Renderables.push_back(component);
+}

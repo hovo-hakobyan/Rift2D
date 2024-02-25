@@ -1,15 +1,15 @@
 #include <stdexcept>
 #include <SDL_ttf.h>
-#include "TextObject.h"
+#include "TextRenderer.h"
 #include "Renderer.h"
 #include "Font.h"
 #include "Texture2D.h"
 
-rift2d::TextObject::TextObject(const std::string& text, std::shared_ptr<Font> font) 
+rift2d::TextRenderer::TextRenderer(const std::string& text, std::shared_ptr<Font> font) 
 	: m_needsUpdate(true), m_text(text), m_font(std::move(font)), m_textTexture(nullptr)
 { }
 
-void rift2d::TextObject::Update()
+void rift2d::TextRenderer::Update()
 {
 	if (m_needsUpdate)
 	{
@@ -30,7 +30,7 @@ void rift2d::TextObject::Update()
 	}
 }
 
-void rift2d::TextObject::Render() const
+void rift2d::TextRenderer::Render() const
 {
 	if (m_textTexture != nullptr)
 	{
@@ -40,13 +40,13 @@ void rift2d::TextObject::Render() const
 }
 
 // This implementation uses the "dirty flag" pattern
-void rift2d::TextObject::SetText(const std::string& text)
+void rift2d::TextRenderer::SetText(const std::string& text)
 {
 	m_text = text;
 	m_needsUpdate = true;
 }
 
-void rift2d::TextObject::SetPosition(const float x, const float y)
+void rift2d::TextRenderer::SetPosition(const float x, const float y)
 {
 	m_transform.SetPosition(x, y, 0.0f);
 }

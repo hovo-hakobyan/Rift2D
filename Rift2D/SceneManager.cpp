@@ -9,13 +9,7 @@ void rift2d::SceneManager::Update()
 	}
 }
 
-void rift2d::SceneManager::Render()
-{
-	for (const auto& scene : m_scenes)
-	{
-		scene->Render();
-	}
-}
+
 
 rift2d::Scene& rift2d::SceneManager::CreateScene(const std::string& name)
 {
