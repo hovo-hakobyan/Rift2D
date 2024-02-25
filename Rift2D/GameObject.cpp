@@ -16,9 +16,10 @@ void rift2d::GameObject::Init()
 
 void rift2d::GameObject::Update()
 {
-	for (auto& comp : m_Components)
+	for (auto& comp : m_Components) 
 	{
 		comp->Update();
 	}
+
 }
 

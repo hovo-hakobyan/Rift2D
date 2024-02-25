@@ -9,6 +9,8 @@ unsigned int Scene::m_idCounter = 0;
 
 Scene::Scene(const std::string& name) : m_name(name) {}
 
+
+
 Scene::~Scene() = default;
 
 void Scene::Add(std::shared_ptr<GameObject> object)
@@ -18,7 +20,11 @@ void Scene::Add(std::shared_ptr<GameObject> object)
 
 void Scene::Remove(std::shared_ptr<GameObject> object)
 {
-	m_objects.erase(std::remove(m_objects.begin(), m_objects.end(), object), m_objects.end());
+	auto it = std::find(m_objects.begin(), m_objects.end(), object);
+	if (it != m_objects.end())
+	{
+		m_DeadObjects.push_back(object);
+	}
 }
 
 void Scene::RemoveAll()
@@ -40,6 +46,24 @@ void Scene::Update()
 	{
 		object->Update();
 	}
+
+	ProcessGameObjectRemovals();
+
+	for (auto& object : m_objects)
+	{
+		object->ProcessRemovals();
+	}
+
+	
+}
+
+void rift2d::Scene::ProcessGameObjectRemovals()
+{
+	for (const auto& objectToRemove : m_DeadObjects)
+	{
+		m_objects.erase(std::remove(m_objects.begin(), m_objects.end(), objectToRemove), m_objects.end());
+	}
+	m_DeadObjects.clear(); 
 }
 
 

@@ -3,16 +3,19 @@
 #include "Transform.h"
 #include "Interfaces.h"
 #include "Renderer.h"
+#include "BaseComponent.h"
 
 namespace rift2d
 {
 	class Texture2D;
-	class BaseComponent;
 	class GameObject final: public std::enable_shared_from_this<GameObject>
 	{
 		Transform m_transform{};
 		
 		std::vector<std::shared_ptr<BaseComponent>> m_Components;
+		std::vector<std::shared_ptr<BaseComponent>> m_ComponentsToAdd;
+		std::vector<std::shared_ptr<BaseComponent>> m_DeadComponents;
+
 	public:
 		void Init();
 		void Update();
@@ -63,56 +66,80 @@ namespace rift2d
 			return nullptr;
 		}
 
+		/**
+		* @brief Marks a component for removal.
+		*
+		* This function marks a component of type ComponentType for deferred removal.
+		*
+		* @tparam ComponentType The type of the component to remove.
+		*/
 		template<typename ComponentType>
 		void RemoveComponent()
 		{
 			static_assert(std::is_base_of<BaseComponent, ComponentType>::value, "ComponentType must derive from BaseComponent");
 
 			auto componentToRemove = GetComponent<ComponentType>();
-			if (!componentToRemove)
+			if (!componentToRemove|| componentToRemove->IsMarkedForRemoval())
 			{
 				return;
 			}
 
-			
-			auto it = std::remove_if(m_Components.begin(), m_Components.end(),
-				[&componentToRemove](const std::shared_ptr<BaseComponent>& component) {
-					return component == componentToRemove;
-				});
-
-			if (it != m_Components.end())
-			{
-				m_Components.erase(it, m_Components.end());
-
-				if (std::dynamic_pointer_cast<IRenderable>(componentToRemove))
-				{
-					Renderer::GetInstance().UnregisterComponent(componentToRemove);
-				}
-			}
-			
+			componentToRemove->MarkForRemoval();
+			m_DeadComponents.push_back(componentToRemove);
+					
 		}
 
+		/**
+		* @brief Marks a component for removal.
+		*
+		* This function marks a component of type ComponentType for deferred removal.
+		*
+		* @tparam ComponentType The type of the component to remove.
+		*/
 		template<typename ComponentType>
 		void RemoveComponent(const std::shared_ptr<ComponentType>& componentToRemove)
 		{
 			static_assert(std::is_base_of<BaseComponent, ComponentType>::value, "ComponentType must derive from BaseComponent");
-
-			auto it = std::remove_if(m_Components.begin(), m_Components.end(),
-				[&componentToRemove](const std::shared_ptr<BaseComponent>& component) {
-					return component == componentToRemove;
-				});
-
-			if (it != m_Components.end())
+			
+			if (componentToRemove->IsMarkedForRemoval())
 			{
-				auto renderableComponent = std::dynamic_pointer_cast<IRenderable>(componentToRemove);
-				if (renderableComponent)
-				{
-					Renderer::GetInstance().UnregisterComponent(renderableComponent);
-				}
-
-				m_Components.erase(it, m_Components.end());
+				return;
 			}
+
+			auto exists = std::find_if(m_Components.begin(), m_Components.end(),
+				[&componentToRemove](const std::shared_ptr<BaseComponent>& component)
+				{
+					return component == componentToRemove;
+				}) != m_Components.end();
+
+				if (exists)
+				{
+					componentToRemove->MarkForRemoval();
+					m_DeadComponents.push_back(componentToRemove);
+				}
+			
 		}
 
+		void ProcessRemovals()
+		{
+			for (const auto& compToRemove : m_DeadComponents)
+			{
+				auto it = std::remove(m_Components.begin(), m_Components.end(), compToRemove);
+				if (it != m_Components.end())
+				{
+					m_Components.erase(it, m_Components.end());
+
+					// Unregister from Renderer if it's renderable
+					auto renderableComponent = std::dynamic_pointer_cast<IRenderable>(compToRemove);
+					if (renderableComponent)
+					{
+						Renderer::GetInstance().UnregisterComponent(renderableComponent);
+					}
+				}
+			}
+
+			m_DeadComponents.clear();
+		}
+			
 	};
 }

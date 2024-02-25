@@ -20,11 +20,14 @@ namespace rift2d
 		virtual void Update() {}
 		virtual void FixedUpdate() {}
 
+		void MarkForRemoval() { m_IsMarkedForRemoval = true; }
+		bool IsMarkedForRemoval() const { return m_IsMarkedForRemoval; }
+
 		
 	protected:
 		std::weak_ptr<GameObject> m_Owner;
 		BaseComponent(std::shared_ptr<GameObject> owner) : m_Owner{ owner }{}
-
+		bool m_IsMarkedForRemoval{};
 		
 	};
 
