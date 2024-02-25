@@ -63,5 +63,56 @@ namespace rift2d
 			return nullptr;
 		}
 
+		template<typename ComponentType>
+		void RemoveComponent()
+		{
+			static_assert(std::is_base_of<BaseComponent, ComponentType>::value, "ComponentType must derive from BaseComponent");
+
+			auto componentToRemove = GetComponent<ComponentType>();
+			if (!componentToRemove)
+			{
+				return;
+			}
+
+			
+			auto it = std::remove_if(m_Components.begin(), m_Components.end(),
+				[&componentToRemove](const std::shared_ptr<BaseComponent>& component) {
+					return component == componentToRemove;
+				});
+
+			if (it != m_Components.end())
+			{
+				m_Components.erase(it, m_Components.end());
+
+				if (std::dynamic_pointer_cast<IRenderable>(componentToRemove))
+				{
+					Renderer::GetInstance().UnregisterComponent(componentToRemove);
+				}
+			}
+			
+		}
+
+		template<typename ComponentType>
+		void RemoveComponent(const std::shared_ptr<ComponentType>& componentToRemove)
+		{
+			static_assert(std::is_base_of<BaseComponent, ComponentType>::value, "ComponentType must derive from BaseComponent");
+
+			auto it = std::remove_if(m_Components.begin(), m_Components.end(),
+				[&componentToRemove](const std::shared_ptr<BaseComponent>& component) {
+					return component == componentToRemove;
+				});
+
+			if (it != m_Components.end())
+			{
+				auto renderableComponent = std::dynamic_pointer_cast<IRenderable>(componentToRemove);
+				if (renderableComponent)
+				{
+					Renderer::GetInstance().UnregisterComponent(renderableComponent);
+				}
+
+				m_Components.erase(it, m_Components.end());
+			}
+		}
+
 	};
 }

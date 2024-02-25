@@ -40,6 +40,11 @@ void load()
 	spriteComponent->SetPosition(216, 180);
 	scene.Add(logo);
 
+	//logo->RemoveComponent<rift2d::TextComponent>();
+	//logo->RemoveComponent<rift2d::SpriteComponent>();
+	logo->RemoveComponent(spriteComponent);
+
+
 }
 
 int main(int, char*[]) {
