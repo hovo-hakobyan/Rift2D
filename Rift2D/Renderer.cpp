@@ -77,3 +77,14 @@ void rift2d::Renderer::RegisterComponent(std::shared_ptr<IRenderable> component)
 {
 	m_Renderables.push_back(component);
 }
+
+void rift2d::Renderer::UnregisterComponent(const std::shared_ptr<IRenderable>& component)
+{
+	auto newEnd = std::remove_if(m_Renderables.begin(), m_Renderables.end(),
+		[&component](const std::shared_ptr<IRenderable>& renderable)
+		{
+			return renderable == component;
+		});
+
+	m_Renderables.erase(newEnd, m_Renderables.end());
+}

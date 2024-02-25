@@ -45,5 +45,23 @@ namespace rift2d
 			
 			return component;
 		}
+
+		template<typename ComponentType>
+		std::shared_ptr<ComponentType> GetComponent() const
+		{
+			static_assert(std::is_base_of<BaseComponent, ComponentType>::value, "ComponentType must derive from BaseComponent");
+
+			for (const auto& comp : m_Components)
+			{
+				auto castedComp = std::dynamic_pointer_cast<ComponentType>(comp);
+				if (castedComp)
+				{
+					return castedComp;
+				}
+			}
+			
+			return nullptr;
+		}
+
 	};
 }

@@ -35,28 +35,11 @@ void load()
 	scene.Add(title);
 
 	auto logo = std::make_shared<rift2d::GameObject>();
-	 spriteComponent = logo->AddComponent<rift2d::SpriteComponent>();
+	spriteComponent = logo->AddComponent<rift2d::SpriteComponent>();
 	spriteComponent->SetTexture("logo.tga");
 	spriteComponent->SetPosition(216, 180);
 	scene.Add(logo);
 
-	
-
-	//auto sr = std::make_shared<rift2d::SpriteComponent>();
-
-	/*auto go = std::make_shared<rift2d::GameObject>();
-	go->SetTexture("background.tga");
-	scene.Add(go);
-
-	go = std::make_shared<rift2d::GameObject>();
-	go->SetTexture("logo.tga");
-	go->SetPosition(216, 180);
-	scene.Add(go);
-
-	auto font = rift2d::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	auto to = std::make_shared<rift2d::TextComponent>("Programming 4 Assignment", font);
-	to->SetPosition(80, 20);
-	scene.Add(to);*/
 }
 
 int main(int, char*[]) {

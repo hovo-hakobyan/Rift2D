@@ -31,6 +31,7 @@ namespace rift2d
 		void SetBackgroundColor(const SDL_Color& color) { m_clearColor = color; }
 
 		void RegisterComponent(std::shared_ptr<IRenderable> component);
+		void UnregisterComponent(const std::shared_ptr<IRenderable>& component);
 	};
 }
 
