@@ -39,6 +39,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Rift2D/Texture2D.h
   Rift2D/Transform.cpp
   Rift2D/Transform.h
+  Rift2D/TimeManager.h
   Rift2D/Interfaces.h
   Rift2D/SpriteComponent.cpp
   Rift2D/SpriteComponent.h

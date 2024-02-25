@@ -14,6 +14,7 @@
 #include "Rift2DEngine.h"
 #include "InputManager.h"
 #include "SceneManager.h"
+#include "TimeManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
 
@@ -104,29 +105,28 @@ void rift2d::Rift2DEngine::Run(const std::function<void()>& load)
 #ifndef __EMSCRIPTEN__
 
 	SceneManager::GetInstance().Init();
-
+	auto& timeManager = TimeManager::GetInstance();
 	using namespace std::chrono;
 
 	bool doContinue = true;
 	auto lastTime = high_resolution_clock::now();
 	float lag = 0.0f;
-	constexpr float fixedTimeStep{ 0.03f };
-	constexpr float desiredFps{ 60.0f };
-	constexpr float msPerFrame{ 1000.f / desiredFps };
+	const float msPerFrame{ 1000.f / timeManager.m_DesiredFps };
 
 	while (doContinue)
 	{
 		const auto currentTime = high_resolution_clock::now();
-		const float elapsedTime = duration<float>(currentTime - lastTime).count();
+		const float deltaTime = duration<float>(currentTime - lastTime).count();
+		timeManager.m_DeltaTime = deltaTime;
 		lastTime = currentTime;
-		lag += elapsedTime;
+		lag += deltaTime;
 
 		doContinue = InputManager::GetInstance().ProcessInput();
 
-		while (lag >= fixedTimeStep)
+		while (lag >= timeManager.m_FixedTime)
 		{
 			//fixed update
-			lag -= fixedTimeStep;
+			lag -= timeManager.m_FixedTime;
 		}
 
 		SceneManager::GetInstance().Update();

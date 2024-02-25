@@ -42,7 +42,7 @@ void load()
 
 	//logo->RemoveComponent<rift2d::TextComponent>();
 	//logo->RemoveComponent<rift2d::SpriteComponent>();
-	logo->RemoveComponent(spriteComponent);
+	//logo->RemoveComponent(spriteComponent);
 
 
 }
