@@ -15,6 +15,7 @@
 #include "Font.h"
 #include "SpriteComponent.h"
 #include "GameObject.h"
+#include "FPSComponent.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -31,7 +32,7 @@ void load()
 	auto font = rift2d::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto title = std::make_shared<rift2d::GameObject>();
 	auto to =title->AddComponent<rift2d::TextComponent>("Programming 4 Assignment", font);
-	to->SetPosition(80, 20);
+	to->SetPosition(80, 50);
 	scene.Add(title);
 
 	auto logo = std::make_shared<rift2d::GameObject>();
@@ -40,9 +41,11 @@ void load()
 	spriteComponent->SetPosition(216, 180);
 	scene.Add(logo);
 
-	//logo->RemoveComponent<rift2d::TextComponent>();
-	//logo->RemoveComponent<rift2d::SpriteComponent>();
-	//logo->RemoveComponent(spriteComponent);
+	auto fps = std::make_shared<rift2d::GameObject>();
+	fps->AddComponent<rift2d::FPSComponent>();
+	auto fpsText = fps->AddComponent<rift2d::TextComponent>("FPS", font);
+	fpsText->SetPosition(10, 10);
+	scene.Add(fps);
 
 
 }

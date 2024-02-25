@@ -18,6 +18,8 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Rift2D/BaseComponent.h
   Rift2D/Font.cpp
   Rift2D/Font.h
+  Rift2D/FPSComponent.cpp
+  Rift2D/FPSComponent.h
   Rift2D/GameObject.cpp
   Rift2D/GameObject.h
   Rift2D/InputManager.cpp

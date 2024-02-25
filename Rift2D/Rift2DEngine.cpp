@@ -125,7 +125,7 @@ void rift2d::Rift2DEngine::Run(const std::function<void()>& load)
 
 		while (lag >= timeManager.m_FixedTime)
 		{
-			//fixed update
+			//fixed update call
 			lag -= timeManager.m_FixedTime;
 		}
 
