@@ -1,6 +1,14 @@
 #include "SceneManager.h"
 #include "Scene.h"
 
+void rift2d::SceneManager::Init()
+{
+	for (auto& scene : m_scenes)
+	{
+		scene->Init();
+	}
+}
+
 void rift2d::SceneManager::Update()
 {
 	for(auto& scene : m_scenes)

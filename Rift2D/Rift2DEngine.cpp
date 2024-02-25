@@ -102,6 +102,9 @@ void rift2d::Rift2DEngine::Run(const std::function<void()>& load)
 {
 	load();
 #ifndef __EMSCRIPTEN__
+
+	SceneManager::GetInstance().Init();
+
 	using namespace std::chrono;
 
 	bool doContinue = true;

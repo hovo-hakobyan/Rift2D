@@ -12,6 +12,7 @@ namespace rift2d
 	public:
 		Scene& CreateScene(const std::string& name);
 
+		void Init();
 		void Update();
 	private:
 		friend class Singleton<SceneManager>;

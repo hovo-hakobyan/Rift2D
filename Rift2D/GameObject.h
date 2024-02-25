@@ -14,7 +14,8 @@ namespace rift2d
 		
 		std::vector<std::shared_ptr<BaseComponent>> m_Components;
 	public:
-		virtual void Update();
+		void Init();
+		void Update();
 
 		void SetPosition(float x, float y);
 

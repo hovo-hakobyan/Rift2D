@@ -12,6 +12,7 @@ namespace rift2d
 		void Remove(std::shared_ptr<GameObject> object);
 		void RemoveAll();
 
+		void Init();
 		void Update();
 		
 
