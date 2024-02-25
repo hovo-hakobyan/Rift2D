@@ -9,9 +9,10 @@ namespace rift2d
 {
 	class Font;
 	class Texture2D;
-	class TextRenderer final : public BaseComponent, public IRenderable
+	class TextComponent final : public BaseComponent, public IRenderable
 	{
 	public:
+		virtual void Init() override;
 		virtual void Update() override;
 		virtual void FixedUpdate() {}
 		virtual void Render() const override;
@@ -19,12 +20,14 @@ namespace rift2d
 		void SetText(const std::string& text);
 		void SetPosition(float x, float y);
 
-		TextRenderer(const std::string& text, std::shared_ptr<Font> font);
-		virtual ~TextRenderer() = default;
-		TextRenderer(const TextRenderer& other) = delete;
-		TextRenderer(TextRenderer&& other) = delete;
-		TextRenderer& operator=(const TextRenderer& other) = delete;
-		TextRenderer& operator=(TextRenderer&& other) = delete;
+		TextComponent(std::shared_ptr<GameObject> owner, const std::string& text, std::shared_ptr<Font> font);
+		virtual ~TextComponent() = default;
+		TextComponent(const TextComponent& other) = delete;
+		TextComponent(TextComponent&& other) = delete;
+		TextComponent& operator=(const TextComponent& other) = delete;
+		TextComponent& operator=(TextComponent&& other) = delete;
+
+
 	private:
 		bool m_needsUpdate;
 		std::string m_text;

@@ -1,15 +1,20 @@
 #include <stdexcept>
 #include <SDL_ttf.h>
-#include "TextRenderer.h"
+#include "TextComponent.h"
 #include "Renderer.h"
 #include "Font.h"
 #include "Texture2D.h"
 
-rift2d::TextRenderer::TextRenderer(const std::string& text, std::shared_ptr<Font> font) 
-	: m_needsUpdate(true), m_text(text), m_font(std::move(font)), m_textTexture(nullptr)
+
+rift2d::TextComponent::TextComponent(std::shared_ptr<GameObject> owner, const std::string& text, std::shared_ptr<Font> font)
+	: BaseComponent(owner), m_needsUpdate(true), m_text(text), m_font(std::move(font)), m_textTexture(nullptr)
 { }
 
-void rift2d::TextRenderer::Update()
+void rift2d::TextComponent::Init()
+{
+}
+
+void rift2d::TextComponent::Update()
 {
 	if (m_needsUpdate)
 	{
@@ -30,7 +35,7 @@ void rift2d::TextRenderer::Update()
 	}
 }
 
-void rift2d::TextRenderer::Render() const
+void rift2d::TextComponent::Render() const
 {
 	if (m_textTexture != nullptr)
 	{
@@ -40,13 +45,13 @@ void rift2d::TextRenderer::Render() const
 }
 
 // This implementation uses the "dirty flag" pattern
-void rift2d::TextRenderer::SetText(const std::string& text)
+void rift2d::TextComponent::SetText(const std::string& text)
 {
 	m_text = text;
 	m_needsUpdate = true;
 }
 
-void rift2d::TextRenderer::SetPosition(const float x, const float y)
+void rift2d::TextComponent::SetPosition(const float x, const float y)
 {
 	m_transform.SetPosition(x, y, 0.0f);
 }

@@ -10,9 +10,10 @@
 #include "Rift2DEngine.h"
 #include "SceneManager.h"
 #include "ResourceManager.h"
-#include "TextRenderer.h"
+#include "TextComponent.h"
 #include "Scene.h"
 #include "Font.h"
+#include "SpriteRenderer.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -22,11 +23,12 @@ void load()
 	auto& scene = rift2d::SceneManager::GetInstance().CreateScene("Demo");
 
 	auto font = rift2d::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	auto to = std::make_shared<rift2d::TextRenderer>("Programming 4 Assignment", font);
-	to->SetPosition(80, 20);
 	auto go = std::make_shared<rift2d::GameObject>();
-	go->AddComponent(to);
+	auto to =go->AddComponent<rift2d::TextComponent>("Programming 4 Assignment", font);
+	to->SetPosition(80, 20);
 	scene.Add(go);
+
+	//auto sr = std::make_shared<rift2d::SpriteRenderer>();
 
 	/*auto go = std::make_shared<rift2d::GameObject>();
 	go->SetTexture("background.tga");
@@ -38,7 +40,7 @@ void load()
 	scene.Add(go);
 
 	auto font = rift2d::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	auto to = std::make_shared<rift2d::TextRenderer>("Programming 4 Assignment", font);
+	auto to = std::make_shared<rift2d::TextComponent>("Programming 4 Assignment", font);
 	to->SetPosition(80, 20);
 	scene.Add(to);*/
 }

@@ -8,7 +8,7 @@ namespace rift2d
 {
 	class Texture2D;
 	class BaseComponent;
-	class GameObject final
+	class GameObject final: public std::enable_shared_from_this<GameObject>
 	{
 		Transform m_transform{};
 		
@@ -25,21 +25,23 @@ namespace rift2d
 		GameObject& operator=(const GameObject& other) = delete;
 		GameObject& operator=(GameObject&& other) = delete;
 
-		//Add component for non renderables
-		template<typename Component, typename std::enable_if<!std::is_base_of<IRenderable, Component>::value,int>::type = 0>
-		void AddComponent(std::unique_ptr<Component> component)
-		{
-			m_Components.push_back(component);
-		}
 
-		//Add component for renderables
-		template<typename Component, typename std::enable_if<std::is_base_of<IRenderable, Component>::value, int>::type = 0>
-		void AddComponent(std::shared_ptr<Component> component)
+		template<typename Component, typename... Args>
+		std::shared_ptr<Component> AddComponent(Args&&... args)
 		{
+			static_assert(std::is_base_of<BaseComponent, Component>::value, "Component must derive from BaseComponent");
+			
+
+			auto component = std::make_shared<Component>(shared_from_this(), std::forward<Args>(args)...);
 			m_Components.push_back(component);
 
-			auto renderableComponent = std::static_pointer_cast<IRenderable>(component);
-			Renderer::GetInstance().RegisterComponent(component);
+			if constexpr (std::is_base_of<IRenderable, Component>::value)
+			{
+				auto renderableComponent = std::static_pointer_cast<IRenderable>(component);
+				Renderer::GetInstance().RegisterComponent(renderableComponent);
+			}
+			
+			return component;
 		}
 	};
 }

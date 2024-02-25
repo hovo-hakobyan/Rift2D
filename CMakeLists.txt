@@ -33,8 +33,8 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Rift2D/Scene.h
   Rift2D/SceneManager.cpp
   Rift2D/SceneManager.h
-  Rift2D/TextRenderer.cpp
-  Rift2D/TextRenderer.h
+  Rift2D/TextComponent.cpp
+  Rift2D/TextComponent.h
   Rift2D/Texture2D.cpp
   Rift2D/Texture2D.h
   Rift2D/Transform.cpp
