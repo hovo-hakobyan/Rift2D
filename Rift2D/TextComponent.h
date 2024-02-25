@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <memory>
-#include "GameObject.h"
 #include "Transform.h"
 #include "BaseComponent.h"
 
@@ -9,6 +8,7 @@ namespace rift2d
 {
 	class Font;
 	class Texture2D;
+	class GameObject;
 	class TextComponent final : public BaseComponent, public IRenderable
 	{
 	public:
@@ -31,7 +31,6 @@ namespace rift2d
 	private:
 		bool m_needsUpdate;
 		std::string m_text;
-		Transform m_transform{};
 		std::shared_ptr<Font> m_font;
 		std::shared_ptr<Texture2D> m_textTexture;
 	};

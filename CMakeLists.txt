@@ -40,8 +40,8 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Rift2D/Transform.cpp
   Rift2D/Transform.h
   Rift2D/Interfaces.h
-  Rift2D/SpriteRenderer.cpp
-  Rift2D/SpriteRenderer.h
+  Rift2D/SpriteComponent.cpp
+  Rift2D/SpriteComponent.h
 )
 
 # enable c++20 features

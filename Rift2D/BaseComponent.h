@@ -19,8 +19,8 @@ namespace rift2d
 		virtual void Init() = 0;
 		virtual void Update() {}
 		virtual void FixedUpdate() {}
-		
 
+		
 	protected:
 		std::weak_ptr<GameObject> m_Owner;
 		BaseComponent(std::shared_ptr<GameObject> owner) : m_Owner{ owner }{}

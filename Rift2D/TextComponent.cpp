@@ -4,6 +4,7 @@
 #include "Renderer.h"
 #include "Font.h"
 #include "Texture2D.h"
+#include "GameObject.h"
 
 
 rift2d::TextComponent::TextComponent(std::shared_ptr<GameObject> owner, const std::string& text, std::shared_ptr<Font> font)
@@ -39,8 +40,13 @@ void rift2d::TextComponent::Render() const
 {
 	if (m_textTexture != nullptr)
 	{
-		const auto& pos = m_transform.GetPosition();
-		Renderer::GetInstance().RenderTexture(*m_textTexture, pos.x, pos.y);
+		auto owner = m_Owner.lock();
+		if (owner)
+		{
+			auto& pos = owner->GetTransform().GetPosition();
+			Renderer::GetInstance().RenderTexture(*m_textTexture, pos.x, pos.y);
+		}
+		
 	}
 }
 
@@ -53,7 +59,14 @@ void rift2d::TextComponent::SetText(const std::string& text)
 
 void rift2d::TextComponent::SetPosition(const float x, const float y)
 {
-	m_transform.SetPosition(x, y, 0.0f);
+	auto owner = m_Owner.lock();
+	if (owner)
+	{
+		auto& transform = owner->GetTransform();
+		transform.SetPosition(x, y, 0.0f);
+	}
+
+	
 }
 
 
