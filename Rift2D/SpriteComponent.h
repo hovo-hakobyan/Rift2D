@@ -12,7 +12,6 @@ namespace rift2d
 	public:
 		virtual void Init() override;
 		virtual void Update() override;
-		virtual void FixedUpdate() {}
 		virtual void Render() const override;
 
 		void SetTexture(const std::string& filename);

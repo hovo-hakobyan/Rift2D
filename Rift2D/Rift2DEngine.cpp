@@ -75,7 +75,7 @@ rift2d::Rift2DEngine::Rift2DEngine(const std::filesystem::path &dataPath)
 	}
 
 	g_window = SDL_CreateWindow(
-		"Programming 4 assignment",
+		"Programming 4 assignment - Howhannes Hakobyan 2DAE09",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
 		640,
@@ -123,13 +123,8 @@ void rift2d::Rift2DEngine::Run(const std::function<void()>& load)
 
 		doContinue = InputManager::GetInstance().ProcessInput();
 
-		while (lag >= timeManager.m_FixedTime)
-		{
-			//fixed update call
-			lag -= timeManager.m_FixedTime;
-		}
-
 		SceneManager::GetInstance().Update();
+
 		Renderer::GetInstance().Render();
 
 		const auto sleepTime = currentTime + milliseconds(static_cast<int>(msPerFrame)) - high_resolution_clock::now();

@@ -9,7 +9,6 @@ namespace rift2d
 	public:
 		virtual void Init() override;
 		virtual void Update() override;
-		virtual void FixedUpdate() {}
 
 		FPSComponent(std::shared_ptr<GameObject> owner);
 		virtual ~FPSComponent() = default;
