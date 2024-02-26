@@ -34,7 +34,7 @@ void rift2d::FPSComponent::Update()
 	}
 
 	auto textComp = m_pText.lock();
-	textComp->SetText(std::format("{:.1f}", m_FrameCount / m_AccumulatedSeconds));
+	textComp->SetText(std::format("FPS: {:.1f}", m_FrameCount / m_AccumulatedSeconds));
 	m_FrameCount = 0;
 	m_AccumulatedSeconds = 0;
 
