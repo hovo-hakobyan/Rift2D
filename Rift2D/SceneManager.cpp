@@ -17,7 +17,13 @@ void rift2d::SceneManager::Update()
 	}
 }
 
-
+void rift2d::SceneManager::LateUpdate()
+{
+	for (auto& scene : m_scenes)
+	{
+		scene->LateUpdate();
+	}
+}
 
 rift2d::Scene& rift2d::SceneManager::CreateScene(const std::string& name)
 {

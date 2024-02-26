@@ -14,6 +14,7 @@ namespace rift2d
 
 		void Init();
 		void Update();
+		void LateUpdate();
 		
 
 		~Scene();

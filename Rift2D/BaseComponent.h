@@ -16,8 +16,9 @@ namespace rift2d
 		BaseComponent& operator=(const BaseComponent& other) = delete;
 		BaseComponent& operator=(BaseComponent&& other) = delete;
 		
-		virtual void Init() = 0;
-		virtual void Update() = 0;
+		virtual void Init(){}
+		virtual void Update() {}
+		virtual void LateUpdate() {}
 
 		void MarkForRemoval() { m_IsMarkedForRemoval = true; }
 		bool IsMarkedForRemoval() const { return m_IsMarkedForRemoval; }

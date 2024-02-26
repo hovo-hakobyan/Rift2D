@@ -11,9 +11,6 @@ rift2d::TextComponent::TextComponent(std::shared_ptr<GameObject> owner, const st
 	: BaseComponent(owner), m_needsUpdate(true), m_text(text), m_font(std::move(font)), m_textTexture(nullptr)
 { }
 
-void rift2d::TextComponent::Init()
-{
-}
 
 void rift2d::TextComponent::Update()
 {

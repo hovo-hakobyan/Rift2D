@@ -10,10 +10,6 @@ rift2d::SpriteComponent::SpriteComponent(std::shared_ptr<GameObject> owner) :
 }
 
 
-void rift2d::SpriteComponent::Init()
-{
-}
-
 void rift2d::SpriteComponent::Update()
 {
 }

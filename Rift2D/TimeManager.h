@@ -12,7 +12,6 @@ namespace rift2d
 		
 	private:
 		float m_DeltaTime = 0.0f; 
-		float m_FixedTime = 0.03f;
 		float m_DesiredFps = 60.0f;
 	};
 }

@@ -47,14 +47,23 @@ void Scene::Update()
 		object->Update();
 	}
 
+}
+
+void rift2d::Scene::LateUpdate()
+{
+	for (auto& object : m_objects)
+	{
+		object->LateUpdate();
+	}
+
+	//Remove dead game objects
 	ProcessGameObjectRemovals();
 
+	//for the remaining game objects, remove their dead components
 	for (auto& object : m_objects)
 	{
 		object->ProcessRemovals();
 	}
-
-	
 }
 
 void rift2d::Scene::ProcessGameObjectRemovals()

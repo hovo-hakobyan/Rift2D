@@ -124,7 +124,7 @@ void rift2d::Rift2DEngine::Run(const std::function<void()>& load)
 		doContinue = InputManager::GetInstance().ProcessInput();
 
 		SceneManager::GetInstance().Update();
-
+		SceneManager::GetInstance().LateUpdate();
 		Renderer::GetInstance().Render();
 
 		const auto sleepTime = currentTime + milliseconds(static_cast<int>(msPerFrame)) - high_resolution_clock::now();

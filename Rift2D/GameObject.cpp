@@ -23,3 +23,11 @@ void rift2d::GameObject::Update()
 
 }
 
+void rift2d::GameObject::LateUpdate()
+{
+	for (auto& comp : m_Components)
+	{
+		comp->LateUpdate();
+	}
+}
+

@@ -12,7 +12,6 @@ namespace rift2d
 	class TextComponent final : public BaseComponent, public IRenderable
 	{
 	public:
-		virtual void Init() override;
 		virtual void Update() override;
 		virtual void Render() const override;
 
