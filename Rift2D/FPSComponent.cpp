@@ -11,7 +11,7 @@ rift2d::FPSComponent::FPSComponent(std::shared_ptr<GameObject> owner) :
 }
 void rift2d::FPSComponent::Init()
 {
-	auto owner = m_Owner.lock();
+	auto owner = GetParent().lock();
 	if (owner)
 	{
 		m_pText= owner->GetComponent<TextComponent>();

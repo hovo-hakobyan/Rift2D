@@ -37,7 +37,7 @@ void rift2d::TextComponent::Render() const
 {
 	if (m_textTexture != nullptr)
 	{
-		auto owner = m_Owner.lock();
+		auto owner = GetParent().lock();
 		if (owner)
 		{
 			auto& pos = owner->GetTransform().GetPosition();
@@ -56,7 +56,7 @@ void rift2d::TextComponent::SetText(const std::string& text)
 
 void rift2d::TextComponent::SetPosition(const float x, const float y)
 {
-	auto owner = m_Owner.lock();
+	auto owner = GetParent().lock();
 	if (owner)
 	{
 		auto& transform = owner->GetTransform();

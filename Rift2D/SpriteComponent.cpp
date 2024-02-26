@@ -18,7 +18,7 @@ void rift2d::SpriteComponent::Render() const
 {
 	if (m_texture != nullptr)
 	{
-		auto owner = m_Owner.lock();
+		auto owner = GetParent().lock();
 		if (owner)
 		{
 			auto& pos = owner->GetTransform().GetPosition();
@@ -35,7 +35,7 @@ void rift2d::SpriteComponent::SetTexture(const std::string& filename)
 
 void rift2d::SpriteComponent::SetPosition(float x, float y)
 {
-	auto owner = m_Owner.lock();
+	auto owner = GetParent().lock();
 	if (owner)
 	{
 		auto& transform = owner->GetTransform();
