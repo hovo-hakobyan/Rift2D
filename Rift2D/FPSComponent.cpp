@@ -2,8 +2,7 @@
 #include "GameObject.h"
 #include "TimeManager.h"
 #include "TextComponent.h"
-#include <sstream>
-#include <iomanip>
+#include <format>
 
 rift2d::FPSComponent::FPSComponent(std::shared_ptr<GameObject> owner) :
 	BaseComponent(owner)
@@ -26,9 +25,7 @@ void rift2d::FPSComponent::Update()
 		return;
 	}
 
-	const float deltaTime = TimeManager::GetInstance().GetDeltaTime();
-
-	m_AccumulatedSeconds += deltaTime;
+	m_AccumulatedSeconds += TimeManager::GetInstance().GetDeltaTime();
 	++m_FrameCount;
 
 	if (m_AccumulatedSeconds < m_UpdateInterval)
@@ -36,16 +33,9 @@ void rift2d::FPSComponent::Update()
 		return;
 	}
 
-	std::stringstream fpsText{};
-	float fps = m_FrameCount / m_AccumulatedSeconds;
-	fps = std::round(fps * 10) / 10;
-	fpsText << std::fixed << std::setprecision(1) << fps;
-	fpsText << " FPS";
-
-	m_FrameCount = 0;
-	m_AccumulatedSeconds -= m_UpdateInterval;
-	
 	auto textComp = m_pText.lock();
-	textComp->SetText(fpsText.str());
+	textComp->SetText(std::format("{:.1f}", m_FrameCount / m_AccumulatedSeconds));
+	m_FrameCount = 0;
+	m_AccumulatedSeconds = 0;
 
 }
