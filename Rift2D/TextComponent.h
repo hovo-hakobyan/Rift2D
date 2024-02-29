@@ -9,11 +9,12 @@ namespace rift2d
 	class Font;
 	class Texture2D;
 	class GameObject;
-	class TextComponent final : public BaseComponent, public IRenderable
+	class SpriteComponent;
+	class TextComponent final : public BaseComponent
 	{
 	public:
+		virtual void Init() override;
 		virtual void Update() override;
-		virtual void Render() const override;
 
 		void SetText(const std::string& text);
 		void SetPosition(float x, float y);
@@ -30,6 +31,6 @@ namespace rift2d
 		bool m_needsUpdate;
 		std::string m_text;
 		std::shared_ptr<Font> m_font;
-		std::shared_ptr<Texture2D> m_textTexture;
+		SpriteComponent* m_pSpriteComponent;
 	};
 }

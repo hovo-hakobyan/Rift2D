@@ -9,13 +9,25 @@ Scene::Scene(const std::string& name) : m_name(name) {}
 
 Scene::~Scene() = default;
 
-void Scene::Add(std::unique_ptr<GameObject> object)
+GameObject* Scene::Add(std::unique_ptr<GameObject> object)
 {
+	if (!object)
+	{
+		return nullptr;
+	}
+
+	GameObject* rawPtr = object.get();
 	m_objects.emplace_back(std::move(object));
+	return rawPtr;
 }
 
 void Scene::Remove(GameObject* object)
 {
+	if (!object)
+	{
+		return;
+	}
+
 	auto it = std::find_if(m_objects.begin(), m_objects.end(),
 		[object](const std::unique_ptr<GameObject>& obj)
 		{

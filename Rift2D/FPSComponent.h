@@ -18,7 +18,7 @@ namespace rift2d
 		FPSComponent& operator=(FPSComponent&& other) = delete;
 
 	private:
-		TextComponent* m_pText;
+		TextComponent* m_pText{};
 		float m_AccumulatedSeconds{0.0f};
 		int m_FrameCount{};
 		float m_UpdateInterval{ .1f };

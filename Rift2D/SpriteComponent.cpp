@@ -33,6 +33,11 @@ void rift2d::SpriteComponent::SetTexture(const std::string& filename)
 	m_texture = ResourceManager::GetInstance().LoadTexture(filename);
 }
 
+void rift2d::SpriteComponent::SetTexture(std::shared_ptr<Texture2D> texture)
+{
+	m_texture = texture;
+}
+
 void rift2d::SpriteComponent::SetPosition(float x, float y)
 {
 	auto owner = GetParent();

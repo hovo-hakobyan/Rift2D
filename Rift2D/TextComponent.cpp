@@ -5,12 +5,18 @@
 #include "Font.h"
 #include "Texture2D.h"
 #include "GameObject.h"
+#include "SpriteComponent.h"
 
 
 rift2d::TextComponent::TextComponent(GameObject* owner, const std::string& text, std::shared_ptr<Font> font)
-	: BaseComponent(owner), m_needsUpdate(true), m_text(text), m_font(std::move(font)), m_textTexture(nullptr)
+	: BaseComponent(owner), m_needsUpdate(true), m_text(text), m_font(std::move(font)), m_pSpriteComponent(nullptr)
 { }
 
+
+void rift2d::TextComponent::Init()
+{
+	m_pSpriteComponent = GetParent()->GetComponent<SpriteComponent>();
+}
 
 void rift2d::TextComponent::Update()
 {
@@ -28,28 +34,22 @@ void rift2d::TextComponent::Update()
 			throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());
 		}
 		SDL_FreeSurface(surf);
-		m_textTexture = std::make_shared<Texture2D>(texture);
+		
+		auto texture2d = std::make_shared<Texture2D>(texture);
+		m_pSpriteComponent->SetTexture(texture2d);
+		
 		m_needsUpdate = false;
 	}
 }
 
-void rift2d::TextComponent::Render() const
-{
-	if (m_textTexture)
-	{
-		auto owner = GetParent();
-		if (owner)
-		{
-			auto& pos = owner->GetTransform().GetPosition();
-			Renderer::GetInstance().RenderTexture(*m_textTexture, pos.x, pos.y);
-		}
-		
-	}
-}
 
 // This implementation uses the "dirty flag" pattern
 void rift2d::TextComponent::SetText(const std::string& text)
 {
+	if (!m_pSpriteComponent)
+	{
+		return;
+	}
 	m_text = text;
 	m_needsUpdate = true;
 }

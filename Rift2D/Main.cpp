@@ -35,6 +35,7 @@ void load()
 	gameObject = std::make_unique<rift2d::GameObject>();
 	auto to = gameObject->AddComponent<rift2d::TextComponent>("Programming 4 Assignment", font);
 	to->SetPosition(80, 50);
+	spriteComponent = gameObject->AddComponent<rift2d::SpriteComponent>();
 	scene.Add(std::move(gameObject));
 
 	gameObject = std::make_unique<rift2d::GameObject>();
@@ -47,6 +48,7 @@ void load()
 	gameObject->AddComponent<rift2d::FPSComponent>();
 	auto fpsText = gameObject->AddComponent<rift2d::TextComponent>("FPS", font);
 	fpsText->SetPosition(10, 10);
+	spriteComponent = gameObject->AddComponent<rift2d::SpriteComponent>();
 	scene.Add(std::move(gameObject));
 
 
