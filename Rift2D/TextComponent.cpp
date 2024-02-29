@@ -7,7 +7,7 @@
 #include "GameObject.h"
 
 
-rift2d::TextComponent::TextComponent(std::shared_ptr<GameObject> owner, const std::string& text, std::shared_ptr<Font> font)
+rift2d::TextComponent::TextComponent(GameObject* owner, const std::string& text, std::shared_ptr<Font> font)
 	: BaseComponent(owner), m_needsUpdate(true), m_text(text), m_font(std::move(font)), m_textTexture(nullptr)
 { }
 
@@ -35,9 +35,9 @@ void rift2d::TextComponent::Update()
 
 void rift2d::TextComponent::Render() const
 {
-	if (m_textTexture != nullptr)
+	if (m_textTexture)
 	{
-		auto owner = GetParent().lock();
+		auto owner = GetParent();
 		if (owner)
 		{
 			auto& pos = owner->GetTransform().GetPosition();
@@ -56,7 +56,7 @@ void rift2d::TextComponent::SetText(const std::string& text)
 
 void rift2d::TextComponent::SetPosition(const float x, const float y)
 {
-	auto owner = GetParent().lock();
+	auto owner = GetParent();
 	if (owner)
 	{
 		auto& transform = owner->GetTransform();

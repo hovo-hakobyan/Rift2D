@@ -16,7 +16,7 @@ namespace rift2d
 		void SetTexture(const std::string& filename);
 		void SetPosition(float x, float y);
 
-		SpriteComponent(std::shared_ptr<GameObject> owner);
+		SpriteComponent(GameObject* owner);
 		virtual ~SpriteComponent() = default;
 		SpriteComponent(const SpriteComponent& other) = delete;
 		SpriteComponent(SpriteComponent&& other) = delete;

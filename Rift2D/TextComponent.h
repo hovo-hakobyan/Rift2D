@@ -18,7 +18,7 @@ namespace rift2d
 		void SetText(const std::string& text);
 		void SetPosition(float x, float y);
 
-		TextComponent(std::shared_ptr<GameObject> owner, const std::string& text, std::shared_ptr<Font> font);
+		TextComponent(GameObject* owner, const std::string& text, std::shared_ptr<Font> font);
 		virtual ~TextComponent() = default;
 		TextComponent(const TextComponent& other) = delete;
 		TextComponent(TextComponent&& other) = delete;

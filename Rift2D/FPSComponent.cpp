@@ -4,14 +4,14 @@
 #include "TextComponent.h"
 #include <format>
 
-rift2d::FPSComponent::FPSComponent(std::shared_ptr<GameObject> owner) :
+rift2d::FPSComponent::FPSComponent(GameObject* owner) :
 	BaseComponent(owner)
 {
 
 }
 void rift2d::FPSComponent::Init()
 {
-	auto owner = GetParent().lock();
+	auto owner = GetParent();
 	if (owner)
 	{
 		m_pText= owner->GetComponent<TextComponent>();
@@ -20,7 +20,7 @@ void rift2d::FPSComponent::Init()
 
 void rift2d::FPSComponent::Update()
 {
-	if (m_pText.expired())
+	if (!m_pText)
 	{
 		return;
 	}
@@ -33,7 +33,7 @@ void rift2d::FPSComponent::Update()
 		return;
 	}
 
-	auto textComp = m_pText.lock();
+	auto textComp = m_pText;
 	textComp->SetText(std::format("FPS: {:.1f}", m_FrameCount / m_AccumulatedSeconds));
 	m_FrameCount = 0;
 	m_AccumulatedSeconds = 0;

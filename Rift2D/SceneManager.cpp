@@ -1,6 +1,9 @@
 #include "SceneManager.h"
 #include "Scene.h"
 
+rift2d::SceneManager::SceneManager() = default;
+rift2d::SceneManager::~SceneManager() = default;
+
 void rift2d::SceneManager::Init()
 {
 	for (auto& scene : m_scenes)
@@ -27,7 +30,6 @@ void rift2d::SceneManager::LateUpdate()
 
 rift2d::Scene& rift2d::SceneManager::CreateScene(const std::string& name)
 {
-	const auto& scene = std::shared_ptr<Scene>(new Scene(name));
-	m_scenes.push_back(scene);
-	return *scene;
+	m_scenes.emplace_back(std::unique_ptr<Scene>(new Scene(name)));
+	return *m_scenes.back();
 }

@@ -73,18 +73,13 @@ void rift2d::Renderer::RenderTexture(const Texture2D& texture, const float x, co
 
 SDL_Renderer* rift2d::Renderer::GetSDLRenderer() const { return m_renderer; }
 
-void rift2d::Renderer::RegisterComponent(std::shared_ptr<IRenderable> component)
+void rift2d::Renderer::RegisterComponent(IRenderable* component)
 {
 	m_Renderables.push_back(component);
 }
 
-void rift2d::Renderer::UnregisterComponent(const std::shared_ptr<IRenderable>& component)
+void rift2d::Renderer::UnregisterComponent(IRenderable* component)
 {
-	auto newEnd = std::remove_if(m_Renderables.begin(), m_Renderables.end(),
-		[&component](const std::shared_ptr<IRenderable>& renderable)
-		{
-			return renderable == component;
-		});
-
+	auto newEnd = std::remove(m_Renderables.begin(), m_Renderables.end(), component);
 	m_Renderables.erase(newEnd, m_Renderables.end());
 }

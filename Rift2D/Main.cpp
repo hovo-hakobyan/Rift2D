@@ -8,10 +8,9 @@
 #endif
 
 #include "Rift2DEngine.h"
-#include "SceneManager.h"
+#include "Scene.h"
 #include "ResourceManager.h"
 #include "TextComponent.h"
-#include "Scene.h"
 #include "Font.h"
 #include "SpriteComponent.h"
 #include "GameObject.h"
@@ -24,28 +23,31 @@ void load()
 {
 	auto& scene = rift2d::SceneManager::GetInstance().CreateScene("Demo");
 
-	auto bg = std::make_shared<rift2d::GameObject>();
-	auto spriteComponent = bg->AddComponent<rift2d::SpriteComponent>();
-	spriteComponent->SetTexture("background.tga");
-	scene.Add(bg);
-
+	//Resources
 	auto font = rift2d::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	auto title = std::make_shared<rift2d::GameObject>();
-	auto to =title->AddComponent<rift2d::TextComponent>("Programming 4 Assignment", font);
-	to->SetPosition(80, 50);
-	scene.Add(title);
 
-	auto logo = std::make_shared<rift2d::GameObject>();
-	spriteComponent = logo->AddComponent<rift2d::SpriteComponent>();
+	auto gameObject = std::make_unique<rift2d::GameObject>();
+	auto spriteComponent = gameObject->AddComponent<rift2d::SpriteComponent>();
+	spriteComponent->SetTexture("background.tga");
+	scene.Add(std::move(gameObject));
+
+	
+	gameObject = std::make_unique<rift2d::GameObject>();
+	auto to = gameObject->AddComponent<rift2d::TextComponent>("Programming 4 Assignment", font);
+	to->SetPosition(80, 50);
+	scene.Add(std::move(gameObject));
+
+	gameObject = std::make_unique<rift2d::GameObject>();
+	spriteComponent = gameObject->AddComponent<rift2d::SpriteComponent>();
 	spriteComponent->SetTexture("logo.tga");
 	spriteComponent->SetPosition(216, 180);
-	scene.Add(logo);
+	scene.Add(std::move(gameObject));
 
-	auto fps = std::make_shared<rift2d::GameObject>();
-	fps->AddComponent<rift2d::FPSComponent>();
-	auto fpsText = fps->AddComponent<rift2d::TextComponent>("FPS", font);
+	gameObject = std::make_unique<rift2d::GameObject>();
+	gameObject->AddComponent<rift2d::FPSComponent>();
+	auto fpsText = gameObject->AddComponent<rift2d::TextComponent>("FPS", font);
 	fpsText->SetPosition(10, 10);
-	scene.Add(fps);
+	scene.Add(std::move(gameObject));
 
 
 }

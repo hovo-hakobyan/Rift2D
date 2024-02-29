@@ -4,7 +4,7 @@
 #include "GameObject.h"
 
 
-rift2d::SpriteComponent::SpriteComponent(std::shared_ptr<GameObject> owner) :
+rift2d::SpriteComponent::SpriteComponent(GameObject* owner) :
 	BaseComponent(owner), m_texture(nullptr)
 {
 }
@@ -16,9 +16,9 @@ void rift2d::SpriteComponent::Update()
 
 void rift2d::SpriteComponent::Render() const
 {
-	if (m_texture != nullptr)
+	if (m_texture)
 	{
-		auto owner = GetParent().lock();
+		auto owner = GetParent();
 		if (owner)
 		{
 			auto& pos = owner->GetTransform().GetPosition();
@@ -35,7 +35,7 @@ void rift2d::SpriteComponent::SetTexture(const std::string& filename)
 
 void rift2d::SpriteComponent::SetPosition(float x, float y)
 {
-	auto owner = GetParent().lock();
+	auto owner = GetParent();
 	if (owner)
 	{
 		auto& transform = owner->GetTransform();
