@@ -130,6 +130,7 @@ void rift2d::Rift2DEngine::Run(const std::function<void()>& load)
 		const auto sleepTime = currentTime + milliseconds(static_cast<int>(msPerFrame)) - high_resolution_clock::now();
 		std::this_thread::sleep_for(sleepTime);
 	}
+	SceneManager::GetInstance().End();
 		
 #else
 	emscripten_set_main_loop_arg(&LoopCallback, this, 0, true);

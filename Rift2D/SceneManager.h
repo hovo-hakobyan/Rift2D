@@ -15,6 +15,7 @@ namespace rift2d
 		void Init();
 		void Update();
 		void LateUpdate();
+		void End();
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager();

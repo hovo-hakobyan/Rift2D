@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 #include "Transform.h"
 #include "Interfaces.h"
 #include "Renderer.h"
@@ -14,11 +13,13 @@ namespace rift2d
 		
 		std::vector<std::unique_ptr<BaseComponent>> m_Components;
 		std::vector<BaseComponent*> m_DeadComponents;
+		static bool m_GameStarted;
 
 	public:
 		void Init();
 		void Update();
 		void LateUpdate();
+		void End();
 
 		Transform& GetTransform() { return m_transform; }
 		const Transform& GetTransform() const { return m_transform; }
@@ -35,10 +36,14 @@ namespace rift2d
 		Component* AddComponent(Args&&... args)
 		{
 			static_assert(std::is_base_of<BaseComponent, Component>::value, "Component must derive from BaseComponent");
-			
+		
 
 			auto component = std::make_unique<Component>(this, std::forward<Args>(args)...);
 			auto rawPtr = component.get();
+			if (m_GameStarted)
+			{
+				component->Init();
+			}
 
 			m_Components.push_back(std::move(component));
 
@@ -117,8 +122,8 @@ namespace rift2d
 
 				if (it != m_Components.end())
 				{
-					it->MarkForRemoval();
-					m_DeadComponents.push_back(it->get());
+					componentToRemove->MarkForRemoval();
+					m_DeadComponents.push_back(componentToRemove);
 				}
 			
 		}
@@ -132,6 +137,9 @@ namespace rift2d
 				{
 					Renderer::GetInstance().UnregisterComponent(renderable);
 				}
+
+				compToRemove->NotifyRemoval();
+				compToRemove->End();
 
 				m_Components.erase(std::remove_if(m_Components.begin(), m_Components.end(),
 					[compToRemove](const std::unique_ptr<BaseComponent>& componentPtr) {

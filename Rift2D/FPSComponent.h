@@ -4,11 +4,12 @@
 namespace rift2d
 {
 	class TextComponent;
-	class FPSComponent final : public BaseComponent
+	class FPSComponent final : public BaseComponent, public IComponentWatcher
 	{
 	public:
 		virtual void Init() override;
 		virtual void Update() override;
+		virtual void End() override;
 
 		FPSComponent(GameObject* owner);
 		virtual ~FPSComponent() = default;
@@ -16,6 +17,8 @@ namespace rift2d
 		FPSComponent(FPSComponent&& other) = delete;
 		FPSComponent& operator=(const FPSComponent& other) = delete;
 		FPSComponent& operator=(FPSComponent&& other) = delete;
+
+		virtual void OnComponentRemoved(BaseComponent* component);
 
 	private:
 		TextComponent* m_pText{};

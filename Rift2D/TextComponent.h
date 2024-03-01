@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 #include <memory>
 #include "Transform.h"
 #include "BaseComponent.h"
@@ -10,11 +9,12 @@ namespace rift2d
 	class Texture2D;
 	class GameObject;
 	class SpriteComponent;
-	class TextComponent final : public BaseComponent
+	class TextComponent final : public BaseComponent, public IComponentWatcher
 	{
 	public:
 		virtual void Init() override;
 		virtual void Update() override;
+		virtual void End() override;
 
 		void SetText(const std::string& text);
 		void SetPosition(float x, float y);
@@ -26,7 +26,7 @@ namespace rift2d
 		TextComponent& operator=(const TextComponent& other) = delete;
 		TextComponent& operator=(TextComponent&& other) = delete;
 
-
+		virtual void OnComponentRemoved(BaseComponent* component) override;
 	private:
 		bool m_needsUpdate;
 		std::string m_text;

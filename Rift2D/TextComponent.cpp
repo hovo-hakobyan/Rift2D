@@ -13,14 +13,20 @@ rift2d::TextComponent::TextComponent(GameObject* owner, const std::string& text,
 { }
 
 
+
+
 void rift2d::TextComponent::Init()
 {
 	m_pSpriteComponent = GetParent()->GetComponent<SpriteComponent>();
+	if (m_pSpriteComponent)
+	{
+		m_pSpriteComponent->RegisterWatcher(this);
+	}
 }
 
 void rift2d::TextComponent::Update()
 {
-	if (m_needsUpdate)
+	if (m_needsUpdate and m_pSpriteComponent)
 	{
 		const SDL_Color color = { 255,255,255,255 }; // only white text is supported now
 		const auto surf = TTF_RenderText_Blended(m_font->GetFont(), m_text.c_str(), color);
@@ -42,14 +48,16 @@ void rift2d::TextComponent::Update()
 	}
 }
 
+void rift2d::TextComponent::End()
+{
+	m_pSpriteComponent->UnregisterWatcher(this);
+	m_pSpriteComponent = nullptr;
+}
+
 
 // This implementation uses the "dirty flag" pattern
 void rift2d::TextComponent::SetText(const std::string& text)
 {
-	if (!m_pSpriteComponent)
-	{
-		return;
-	}
 	m_text = text;
 	m_needsUpdate = true;
 }
@@ -66,4 +74,11 @@ void rift2d::TextComponent::SetPosition(const float x, const float y)
 	
 }
 
+void rift2d::TextComponent::OnComponentRemoved(BaseComponent* component)
+{
+	if (component == static_cast<BaseComponent*>(m_pSpriteComponent)) 
+	{
+		m_pSpriteComponent = nullptr;
+	}
+}
 

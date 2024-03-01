@@ -48,9 +48,10 @@ void load()
 	gameObject->AddComponent<rift2d::FPSComponent>();
 	auto fpsText = gameObject->AddComponent<rift2d::TextComponent>("FPS", font);
 	fpsText->SetPosition(10, 10);
-	spriteComponent = gameObject->AddComponent<rift2d::SpriteComponent>();
+	gameObject->AddComponent<rift2d::SpriteComponent>();
 	scene.Add(std::move(gameObject));
 
+	
 
 }
 

@@ -28,6 +28,10 @@ void rift2d::SceneManager::LateUpdate()
 	}
 }
 
+void rift2d::SceneManager::End()
+{
+}
+
 rift2d::Scene& rift2d::SceneManager::CreateScene(const std::string& name)
 {
 	m_scenes.emplace_back(std::unique_ptr<Scene>(new Scene(name)));

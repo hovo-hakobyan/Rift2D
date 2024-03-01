@@ -81,6 +81,14 @@ void Scene::LateUpdate()
 	}
 }
 
+void rift2d::Scene::End()
+{
+	for (auto& object : m_objects)
+	{
+		object->End();
+	}
+}
+
 void Scene::ProcessGameObjectRemovals()
 {
 	for ( auto* objectToRemove : m_DeadObjects)
