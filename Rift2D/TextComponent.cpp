@@ -18,10 +18,14 @@ rift2d::TextComponent::TextComponent(GameObject* owner, const std::string& text,
 void rift2d::TextComponent::Init()
 {
 	m_pSpriteComponent = GetParent()->GetComponent<SpriteComponent>();
-	if (m_pSpriteComponent)
+	//if there is no sprite component, add one automatically
+	if (!m_pSpriteComponent)
 	{
-		m_pSpriteComponent->RegisterWatcher(this);
+		m_pSpriteComponent = GetParent()->AddComponent<SpriteComponent>();
+		
 	}
+
+	m_pSpriteComponent->RegisterWatcher(this);
 }
 
 void rift2d::TextComponent::Update()

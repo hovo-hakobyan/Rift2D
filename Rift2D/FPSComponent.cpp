@@ -3,6 +3,7 @@
 #include "TimeManager.h"
 #include "TextComponent.h"
 #include <format>
+#include "ResourceManager.h"
 
 rift2d::FPSComponent::FPSComponent(GameObject* owner) :
 	BaseComponent(owner)
@@ -12,14 +13,17 @@ rift2d::FPSComponent::FPSComponent(GameObject* owner) :
 
 void rift2d::FPSComponent::Init()
 {
-	auto owner = GetParent();
-	if (owner)
+	
+	if (auto owner = GetParent())
 	{
 		m_pText= owner->GetComponent<TextComponent>();
-		if (m_pText)
+		if (!m_pText)
 		{
-			m_pText->RegisterWatcher(this);
+			auto font = rift2d::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
+			m_pText = GetParent()->AddComponent<TextComponent>("FPS",font);
+			m_pText->SetPosition(10, 10);
 		}
+		m_pText->RegisterWatcher(this);
 	}
 }
 
