@@ -43,6 +43,7 @@ void Scene::Remove(GameObject* object)
 
 void Scene::RemoveAll()
 {
+	End();
 	m_DeadObjects.clear();
 	m_objects.clear();
 }
@@ -98,6 +99,7 @@ void Scene::ProcessGameObjectRemovals()
 			{
 				return obj.get() == objectToRemove;
 			});
+		objectToRemove->End();
 		m_objects.erase(removeIt, m_objects.end());
 	}
 	m_DeadObjects.clear(); 
