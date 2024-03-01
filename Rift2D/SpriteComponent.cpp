@@ -10,41 +10,41 @@ rift2d::SpriteComponent::SpriteComponent(GameObject* owner) :
 }
 
 
-void rift2d::SpriteComponent::Update()
+void rift2d::SpriteComponent::update()
 {
 }
 
-void rift2d::SpriteComponent::Render() const
+void rift2d::SpriteComponent::render() const
 {
 	if (m_texture)
 	{
-		auto owner = GetParent();
+		auto owner = getParent();
 		if (owner)
 		{
-			auto& pos = owner->GetTransform().GetPosition();
-			Renderer::GetInstance().RenderTexture(*m_texture, pos.x, pos.y);
+			auto& pos = owner->getTransform().getPosition();
+			Renderer::GetInstance().renderTexture(*m_texture, pos.x, pos.y);
 		}
 
 	}
 }
 
-void rift2d::SpriteComponent::SetTexture(const std::string& filename)
+void rift2d::SpriteComponent::setTexture(const std::string& filename)
 {
-	m_texture = ResourceManager::GetInstance().LoadTexture(filename);
+	m_texture = ResourceManager::GetInstance().loadTexture(filename);
 }
 
-void rift2d::SpriteComponent::SetTexture(std::shared_ptr<Texture2D> texture)
+void rift2d::SpriteComponent::setTexture(std::shared_ptr<Texture2D> texture)
 {
 	m_texture = texture;
 }
 
-void rift2d::SpriteComponent::SetPosition(float x, float y)
+void rift2d::SpriteComponent::setPosition(float x, float y)
 {
-	auto owner = GetParent();
+	auto owner = getParent();
 	if (owner)
 	{
-		auto& transform = owner->GetTransform();
-		transform.SetPosition(x, y, 0.0f);
+		auto& transform = owner->getTransform();
+		transform.setPosition(x, y, 0.0f);
 	}
 }
 

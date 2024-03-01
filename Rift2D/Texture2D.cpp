@@ -6,14 +6,14 @@ rift2d::Texture2D::~Texture2D()
 	SDL_DestroyTexture(m_texture);
 }
 
-glm::ivec2 rift2d::Texture2D::GetSize() const
+glm::ivec2 rift2d::Texture2D::getSize() const
 {
 	SDL_Rect dst;
-	SDL_QueryTexture(GetSDLTexture(), nullptr, nullptr, &dst.w, &dst.h);
+	SDL_QueryTexture(getSdlTexture(), nullptr, nullptr, &dst.w, &dst.h);
 	return { dst.w,dst.h };
 }
 
-SDL_Texture* rift2d::Texture2D::GetSDLTexture() const
+SDL_Texture* rift2d::Texture2D::getSdlTexture() const
 {
 	return m_texture;
 }

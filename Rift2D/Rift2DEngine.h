@@ -11,7 +11,7 @@ namespace rift2d
 	public:
 		explicit Rift2DEngine(const std::filesystem::path& dataPath);
 		~Rift2DEngine();
-		void Run(const std::function<void()>& load);
+		void run(const std::function<void()>& load);
 
 		Rift2DEngine(const Rift2DEngine& other) = delete;
 		Rift2DEngine(Rift2DEngine&& other) = delete;

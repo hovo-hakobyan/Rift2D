@@ -10,12 +10,12 @@ namespace rift2d
 	class SceneManager final : public Singleton<SceneManager>
 	{
 	public:
-		Scene& CreateScene(const std::string& name);
+		Scene& createScene(const std::string& name);
 		~SceneManager();
-		void Init();
-		void Update();
-		void LateUpdate();
-		void End();
+		void init();
+		void update();
+		void lateUpdate();
+		void end();
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager();

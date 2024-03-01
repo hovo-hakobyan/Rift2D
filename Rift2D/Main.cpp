@@ -21,32 +21,31 @@ namespace fs = std::filesystem;
 
 void load()
 {
-	auto& scene = rift2d::SceneManager::GetInstance().CreateScene("Demo");
+	auto& scene = rift2d::SceneManager::GetInstance().createScene("Demo");
 
 	//Resources
-	auto font = rift2d::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
+	auto font = rift2d::ResourceManager::GetInstance().loadFont("Lingua.otf", 36);
 
 	auto gameObject = std::make_unique<rift2d::GameObject>();
-	auto spriteComponent = gameObject->AddComponent<rift2d::SpriteComponent>();
-	spriteComponent->SetTexture("background.tga");
-	scene.Add(std::move(gameObject));
+	auto spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
+	spriteComponent->setTexture("background.tga");
+	scene.add(std::move(gameObject));
 
 	
 	gameObject = std::make_unique<rift2d::GameObject>();
-	auto to = gameObject->AddComponent<rift2d::TextComponent>("Programming 4 Assignment", font);
-	to->SetPosition(80, 50);
-	scene.Add(std::move(gameObject));
+	auto to = gameObject->addComponent<rift2d::TextComponent>("Programming 4 Assignment", font);
+	to->setPosition(80, 50);
+	scene.add(std::move(gameObject));
 
 	gameObject = std::make_unique<rift2d::GameObject>();
-	spriteComponent = gameObject->AddComponent<rift2d::SpriteComponent>();
-	spriteComponent->SetTexture("logo.tga");
-	spriteComponent->SetPosition(216, 180);
-	scene.Add(std::move(gameObject));
+	spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
+	spriteComponent->setTexture("logo.tga");
+	spriteComponent->setPosition(216, 180);
+	scene.add(std::move(gameObject));
 
 	gameObject = std::make_unique<rift2d::GameObject>();
-	gameObject->AddComponent<rift2d::FPSComponent>();
-	
-	scene.Add(std::move(gameObject));
+	gameObject->addComponent<rift2d::FPSComponent>();
+	scene.add(std::move(gameObject));
 
 	
 
@@ -61,6 +60,6 @@ int main(int, char*[]) {
 		data_location = "../Data/";
 #endif
 	rift2d::Rift2DEngine engine(data_location);
-	engine.Run(load);
+	engine.run(load);
     return 0;
 }

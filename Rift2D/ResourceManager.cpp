@@ -6,7 +6,7 @@
 #include "Texture2D.h"
 #include "Font.h"
 
-void rift2d::ResourceManager::Init(const std::filesystem::path& dataPath)
+void rift2d::ResourceManager::init(const std::filesystem::path& dataPath)
 {
 	m_dataPath = dataPath;
 
@@ -16,10 +16,10 @@ void rift2d::ResourceManager::Init(const std::filesystem::path& dataPath)
 	}
 }
 
-std::shared_ptr<rift2d::Texture2D> rift2d::ResourceManager::LoadTexture(const std::string& file) const
+std::shared_ptr<rift2d::Texture2D> rift2d::ResourceManager::loadTexture(const std::string& file) const
 {
 	const auto fullPath = m_dataPath/file;
-	auto texture = IMG_LoadTexture(Renderer::GetInstance().GetSDLRenderer(), fullPath.string().c_str());
+	auto texture = IMG_LoadTexture(Renderer::GetInstance().getSDLRenderer(), fullPath.string().c_str());
 	if (texture == nullptr)
 	{
 		throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());
@@ -27,7 +27,7 @@ std::shared_ptr<rift2d::Texture2D> rift2d::ResourceManager::LoadTexture(const st
 	return std::make_shared<Texture2D>(texture);
 }
 
-std::shared_ptr<rift2d::Font> rift2d::ResourceManager::LoadFont(const std::string& file, unsigned int size) const
+std::shared_ptr<rift2d::Font> rift2d::ResourceManager::loadFont(const std::string& file, unsigned int size) const
 {
 	const auto fullPath = m_dataPath/file;
 	return std::make_shared<Font>(fullPath.string(), size);

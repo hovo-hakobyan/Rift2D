@@ -12,21 +12,21 @@ namespace rift2d
 	class TextComponent final : public BaseComponent, public IComponentWatcher
 	{
 	public:
-		virtual void Init() override;
-		virtual void Update() override;
-		virtual void End() override;
+		virtual void init() override;
+		virtual void update() override;
+		virtual void end() override;
 
-		void SetText(const std::string& text);
-		void SetPosition(float x, float y);
+		void setText(const std::string& text);
+		void setPosition(float x, float y);
 
 		TextComponent(GameObject* owner, const std::string& text, std::shared_ptr<Font> font);
-		virtual ~TextComponent() = default;
+		virtual ~TextComponent() override = default;
 		TextComponent(const TextComponent& other) = delete;
 		TextComponent(TextComponent&& other) = delete;
 		TextComponent& operator=(const TextComponent& other) = delete;
 		TextComponent& operator=(TextComponent&& other) = delete;
 
-		virtual void OnComponentRemoved(BaseComponent* component) override;
+		virtual void onComponentRemoved(BaseComponent* component) override;
 	private:
 		bool m_needsUpdate;
 		std::string m_text;

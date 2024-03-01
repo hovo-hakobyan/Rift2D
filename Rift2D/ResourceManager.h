@@ -11,9 +11,9 @@ namespace rift2d
 	class ResourceManager final : public Singleton<ResourceManager>
 	{
 	public:
-		void Init(const std::filesystem::path& data);
-		std::shared_ptr<Texture2D> LoadTexture(const std::string& file) const;
-		std::shared_ptr<Font> LoadFont(const std::string& file, unsigned int size) const;
+		void init(const std::filesystem::path& data);
+		std::shared_ptr<Texture2D> loadTexture(const std::string& file) const;
+		std::shared_ptr<Font> loadFont(const std::string& file, unsigned int size) const;
 	private:
 		friend class Singleton<ResourceManager>;
 		ResourceManager() = default;

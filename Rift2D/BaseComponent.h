@@ -9,12 +9,12 @@ namespace rift2d
 	class NullOwnerException
 	{
 	public:
-		NullOwnerException(const std::string& message): m_Message{message}{}
+		explicit NullOwnerException(const std::string& message): m_message{message}{}
 
-		const std::string& What() const { return m_Message; }
+		const std::string& what() const { return m_message; }
 
 	private:
-		std::string m_Message{};
+		std::string m_message{};
 	};
 
 	class GameObject;
@@ -29,43 +29,43 @@ namespace rift2d
 		BaseComponent& operator=(const BaseComponent& other) = delete;
 		BaseComponent& operator=(BaseComponent&& other) = delete;
 		
-		virtual void Init(){}
-		virtual void Update() {}
-		virtual void LateUpdate() {}
-		virtual void End() {}
+		virtual void init(){}
+		virtual void update() {}
+		virtual void lateUpdate() {}
+		virtual void end() {}
 
-		void MarkForRemoval() { m_IsMarkedForRemoval = true; }
-		bool IsMarkedForRemoval() const { return m_IsMarkedForRemoval; }
+		void markForRemoval() { m_isMarkedForRemoval = true; }
+		bool isMarkedForRemoval() const { return m_isMarkedForRemoval; }
 
-		void RegisterWatcher(IComponentWatcher* watcher) { m_Watchers.push_back(watcher); }
-		void UnregisterWatcher(IComponentWatcher* watcher) { m_Watchers.remove(watcher); }
+		void registerWatcher(IComponentWatcher* watcher) { m_watchers.push_back(watcher); }
+		void unregisterWatcher(IComponentWatcher* watcher) { m_watchers.remove(watcher); }
 
-		void NotifyRemoval()
+		void notifyRemoval()
 		{
-			if (m_Watchers.empty())
+			if (m_watchers.empty())
 			{
 				return;
 			}
 
-			for (auto* watcher : m_Watchers)
+			for (auto* watcher : m_watchers)
 			{
-				watcher->OnComponentRemoved(this);
+				watcher->onComponentRemoved(this);
 			}
 		}
 
 	protected:
-		BaseComponent(GameObject* owner) : m_pOwner{ owner }
+		explicit BaseComponent(GameObject* owner) : m_pOwner{ owner }
 		{
 			if (!owner)
 			{
 				throw NullOwnerException("BaseComponent must have a non-null owner");
 			}
 		}
-		GameObject* GetParent() const { return m_pOwner; }
+		GameObject* getParent() const { return m_pOwner; }
 	private:
-		bool m_IsMarkedForRemoval{};
+		bool m_isMarkedForRemoval{};
 		GameObject* m_pOwner;
-		std::list<IComponentWatcher*> m_Watchers;
+		std::list<IComponentWatcher*> m_watchers;
 		
 	};
 

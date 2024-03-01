@@ -6,16 +6,16 @@ namespace rift2d
 {
 	class Scene final
 	{
-		friend Scene& SceneManager::CreateScene(const std::string& name);
+		friend Scene& SceneManager::createScene(const std::string& name);
 	public:
-		GameObject* Add(std::unique_ptr<GameObject> object);
-		void Remove(GameObject* object);
-		void RemoveAll();
+		GameObject* add(std::unique_ptr<GameObject> object);
+		void remove(GameObject* object);
+		void removeAll();
 
-		void Init();
-		void Update();
-		void LateUpdate();
-		void End();
+		void init();
+		void update();
+		void lateUpdate();
+		void end();
 		
 
 		~Scene();
@@ -29,11 +29,11 @@ namespace rift2d
 
 		std::string m_name;
 		std::vector <std::unique_ptr<GameObject>> m_objects{};
-		std::vector <GameObject*> m_DeadObjects{};
+		std::vector <GameObject*> m_deadObjects{};
 
 		static unsigned int m_idCounter; 
 
-		void ProcessGameObjectRemovals();
+		void processGameObjectRemovals();
 	};
 
 }

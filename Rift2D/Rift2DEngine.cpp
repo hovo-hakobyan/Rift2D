@@ -87,50 +87,50 @@ rift2d::Rift2DEngine::Rift2DEngine(const std::filesystem::path &dataPath)
 		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 	}
 
-	Renderer::GetInstance().Init(g_window);
-	ResourceManager::GetInstance().Init(dataPath);
+	Renderer::GetInstance().init(g_window);
+	ResourceManager::GetInstance().init(dataPath);
 }
 
 rift2d::Rift2DEngine::~Rift2DEngine()
 {
-	Renderer::GetInstance().Destroy();
+	Renderer::GetInstance().destroy();
 	SDL_DestroyWindow(g_window);
 	g_window = nullptr;
 	SDL_Quit();
 }
 
-void rift2d::Rift2DEngine::Run(const std::function<void()>& load)
+void rift2d::Rift2DEngine::run(const std::function<void()>& load)
 {
 	load();
 #ifndef __EMSCRIPTEN__
 
-	SceneManager::GetInstance().Init();
+	SceneManager::GetInstance().init();
 	auto& timeManager = TimeManager::GetInstance();
 	using namespace std::chrono;
 
 	bool doContinue = true;
 	auto lastTime = high_resolution_clock::now();
 	float lag = 0.0f;
-	const float msPerFrame{ 1000.f / timeManager.m_DesiredFps };
+	const float msPerFrame{ 1000.f / timeManager.m_desiredFps };
 
 	while (doContinue)
 	{
 		const auto currentTime = high_resolution_clock::now();
 		const float deltaTime = duration<float>(currentTime - lastTime).count();
-		timeManager.m_DeltaTime = deltaTime;
+		timeManager.m_deltaTime = deltaTime;
 		lastTime = currentTime;
 		lag += deltaTime;
 
-		doContinue = InputManager::GetInstance().ProcessInput();
+		doContinue = InputManager::GetInstance().processInput();
 
-		SceneManager::GetInstance().Update();
-		SceneManager::GetInstance().LateUpdate();
-		Renderer::GetInstance().Render();
+		SceneManager::GetInstance().update();
+		SceneManager::GetInstance().lateUpdate();
+		Renderer::GetInstance().render();
 
 		const auto sleepTime = currentTime + milliseconds(static_cast<int>(msPerFrame)) - high_resolution_clock::now();
 		std::this_thread::sleep_for(sleepTime);
 	}
-	SceneManager::GetInstance().End();
+	SceneManager::GetInstance().end();
 		
 #else
 	emscripten_set_main_loop_arg(&LoopCallback, this, 0, true);

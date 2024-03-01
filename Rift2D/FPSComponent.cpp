@@ -11,51 +11,51 @@ rift2d::FPSComponent::FPSComponent(GameObject* owner) :
 
 }
 
-void rift2d::FPSComponent::Init()
+void rift2d::FPSComponent::init()
 {
 	
-	if (auto owner = GetParent())
+	if (auto owner = getParent())
 	{
-		m_pText= owner->GetComponent<TextComponent>();
+		m_pText= owner->getComponent<TextComponent>();
 		if (!m_pText)
 		{
-			auto font = rift2d::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-			m_pText = GetParent()->AddComponent<TextComponent>("FPS",font);
-			m_pText->SetPosition(10, 10);
+			auto font = rift2d::ResourceManager::GetInstance().loadFont("Lingua.otf", 36);
+			m_pText = getParent()->addComponent<TextComponent>("FPS",font);
+			m_pText->setPosition(10, 10);
 		}
-		m_pText->RegisterWatcher(this);
+		m_pText->registerWatcher(this);
 	}
 }
 
-void rift2d::FPSComponent::Update()
+void rift2d::FPSComponent::update()
 {
 	if (!m_pText)
 	{
 		return;
 	}
 
-	m_AccumulatedSeconds += TimeManager::GetInstance().GetDeltaTime();
-	++m_FrameCount;
+	m_accumulatedSeconds += TimeManager::GetInstance().getDeltaTime();
+	++m_frameCount;
 
-	if (m_AccumulatedSeconds < m_UpdateInterval)
+	if (m_accumulatedSeconds < m_updateInterval)
 	{
 		return;
 	}
 
 	auto textComp = m_pText;
-	textComp->SetText(std::format("FPS: {:.1f}", m_FrameCount / m_AccumulatedSeconds));
-	m_FrameCount = 0;
-	m_AccumulatedSeconds = 0;
+	textComp->setText(std::format("FPS: {:.1f}", m_frameCount / m_accumulatedSeconds));
+	m_frameCount = 0;
+	m_accumulatedSeconds = 0;
 
 }
 
-void rift2d::FPSComponent::End()
+void rift2d::FPSComponent::end()
 {
-	m_pText->UnregisterWatcher(this);
+	m_pText->unregisterWatcher(this);
 	m_pText = nullptr;
 }
 
-void rift2d::FPSComponent::OnComponentRemoved(BaseComponent* component)
+void rift2d::FPSComponent::onComponentRemoved(BaseComponent* component)
 {
 	if (component == static_cast<BaseComponent*>(m_pText))
 	{

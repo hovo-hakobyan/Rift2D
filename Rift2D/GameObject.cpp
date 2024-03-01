@@ -4,38 +4,38 @@
 #include "Renderer.h"
 #include "BaseComponent.h"
 
-bool rift2d::GameObject::m_GameStarted{ false };
-void rift2d::GameObject::Init()
+bool rift2d::GameObject::m_gameStarted{ false };
+void rift2d::GameObject::init()
 {
-	for (auto& comp : m_Components)
+	for (auto& comp : m_components)
 	{
-		comp->Init();
+		comp->init();
 	}
-	m_GameStarted = true;
+	m_gameStarted = true;
 }
 
-void rift2d::GameObject::Update()
+void rift2d::GameObject::update()
 {
-	for (auto& comp : m_Components) 
+	for (auto& comp : m_components) 
 	{
-		comp->Update();
+		comp->update();
 	}
 
 }
 
-void rift2d::GameObject::LateUpdate()
+void rift2d::GameObject::lateUpdate()
 {
-	for (auto& comp : m_Components)
+	for (auto& comp : m_components)
 	{
-		comp->LateUpdate();
+		comp->lateUpdate();
 	}
 }
 
-void rift2d::GameObject::End()
+void rift2d::GameObject::end()
 {
-	for (auto& comp : m_Components)
+	for (auto& comp : m_components)
 	{
-		comp->End();
+		comp->end();
 	}
 }
 

@@ -7,11 +7,11 @@ namespace rift2d
 	{
 		friend class Rift2DEngine;
 	public:
-		float GetDeltaTime() const { return m_DeltaTime; }
-		float GetDesiredFPS() const { return m_DesiredFps; }
+		float getDeltaTime() const { return m_deltaTime; }
+		float getDesiredFps() const { return m_desiredFps; }
 		
 	private:
-		float m_DeltaTime = 0.0f; 
-		float m_DesiredFps = 60.0f;
+		float m_deltaTime = 0.0f; 
+		float m_desiredFps = 60.0f;
 	};
 }

@@ -1,7 +1,7 @@
 #include <SDL.h>
 #include "InputManager.h"
 
-bool rift2d::InputManager::ProcessInput()
+bool rift2d::InputManager::processInput()
 {
 	SDL_Event e;
 	while (SDL_PollEvent(&e)) {

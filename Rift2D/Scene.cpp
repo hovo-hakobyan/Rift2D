@@ -9,7 +9,7 @@ Scene::Scene(const std::string& name) : m_name(name) {}
 
 Scene::~Scene() = default;
 
-GameObject* Scene::Add(std::unique_ptr<GameObject> object)
+GameObject* Scene::add(std::unique_ptr<GameObject> object)
 {
 	if (!object)
 	{
@@ -21,7 +21,7 @@ GameObject* Scene::Add(std::unique_ptr<GameObject> object)
 	return rawPtr;
 }
 
-void Scene::Remove(GameObject* object)
+void Scene::remove(GameObject* object)
 {
 	if (!object)
 	{
@@ -36,73 +36,73 @@ void Scene::Remove(GameObject* object)
 
 	if (it != m_objects.end())
 	{
-		m_DeadObjects.push_back(it->get());
+		m_deadObjects.push_back(it->get());
 	}
 	
 }
 
-void Scene::RemoveAll()
+void Scene::removeAll()
 {
-	End();
-	m_DeadObjects.clear();
+	end();
+	m_deadObjects.clear();
 	m_objects.clear();
 }
 
-void Scene::Init()
+void Scene::init()
 {
 	for (auto& object : m_objects)
 	{
-		object->Init();
+		object->init();
 	}
 }
 
-void Scene::Update()
+void Scene::update()
 {
 	for(auto& object : m_objects)
 	{
-		object->Update();
+		object->update();
 	}
 
 }
 
-void Scene::LateUpdate()
+void Scene::lateUpdate()
 {
 	for (auto& object : m_objects)
 	{
-		object->LateUpdate();
+		object->lateUpdate();
 	}
 
-	//Remove dead game objects
-	ProcessGameObjectRemovals();
+	//remove dead game objects
+	processGameObjectRemovals();
 
 	//for the remaining game objects, remove their dead components
 	for (auto& object : m_objects)
 	{
-		object->ProcessRemovals();
+		object->processRemovals();
 	}
 }
 
-void rift2d::Scene::End()
+void rift2d::Scene::end()
 {
 	for (auto& object : m_objects)
 	{
-		object->End();
+		object->end();
 	}
 }
 
-void Scene::ProcessGameObjectRemovals()
+void Scene::processGameObjectRemovals()
 {
-	for ( auto* objectToRemove : m_DeadObjects)
+	for ( auto* objectToRemove : m_deadObjects)
 	{
 		auto removeIt = std::remove_if(m_objects.begin(), m_objects.end(),
 			[objectToRemove](const std::unique_ptr<GameObject>& obj) 
 			{
 				return obj.get() == objectToRemove;
 			});
-		objectToRemove->End();
+		objectToRemove->end();
 		m_objects.erase(removeIt, m_objects.end());
 	}
-	m_DeadObjects.clear(); 
+	m_deadObjects.clear(); 
 }
 
 

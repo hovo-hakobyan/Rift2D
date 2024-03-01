@@ -9,15 +9,15 @@ namespace rift2d
 	class SpriteComponent final : public BaseComponent, public IRenderable
 	{
 	public:
-		virtual void Update() override;
-		virtual void Render() const override;
+		virtual void update() override;
+		virtual void render() const override;
 
-		void SetTexture(const std::string& filename);
-		void SetTexture(std::shared_ptr<Texture2D> texture);
-		void SetPosition(float x, float y);
+		void setTexture(const std::string& filename);
+		void setTexture(std::shared_ptr<Texture2D> texture);
+		void setPosition(float x, float y);
 
 		SpriteComponent(GameObject* owner);
-		virtual ~SpriteComponent() = default;
+		virtual ~SpriteComponent() override = default;
 		SpriteComponent(const SpriteComponent& other) = delete;
 		SpriteComponent(SpriteComponent&& other) = delete;
 		SpriteComponent& operator=(const SpriteComponent& other) = delete;

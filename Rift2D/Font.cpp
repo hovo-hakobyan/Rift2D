@@ -2,7 +2,7 @@
 #include <SDL_ttf.h>
 #include "Font.h"
 
-TTF_Font* rift2d::Font::GetFont() const {
+TTF_Font* rift2d::Font::getFont() const {
 	return m_font;
 }
 

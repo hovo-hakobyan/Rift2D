@@ -7,24 +7,24 @@ namespace rift2d
 	class FPSComponent final : public BaseComponent, public IComponentWatcher
 	{
 	public:
-		virtual void Init() override;
-		virtual void Update() override;
-		virtual void End() override;
+		virtual void init() override;
+		virtual void update() override;
+		virtual void end() override;
 
 		FPSComponent(GameObject* owner);
-		virtual ~FPSComponent() = default;
+		virtual ~FPSComponent() override = default;
 		FPSComponent(const FPSComponent& other) = delete;
 		FPSComponent(FPSComponent&& other) = delete;
 		FPSComponent& operator=(const FPSComponent& other) = delete;
 		FPSComponent& operator=(FPSComponent&& other) = delete;
 
-		virtual void OnComponentRemoved(BaseComponent* component);
+		virtual void onComponentRemoved(BaseComponent* component);
 
 	private:
 		TextComponent* m_pText{};
-		float m_AccumulatedSeconds{0.0f};
-		int m_FrameCount{};
-		float m_UpdateInterval{ .1f };
+		float m_accumulatedSeconds{0.0f};
+		int m_frameCount{};
+		float m_updateInterval{ .1f };
 	};
 
 }
