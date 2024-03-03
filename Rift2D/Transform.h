@@ -20,19 +20,11 @@ namespace rift2d
 		void setLocalPosition(float x, float y, float z);
 		void addLocalOffset(float x, float y);
 
-		float getLocalRotation(bool degrees = true) const;
-		float getWorldRotation(bool degrees = true);
-		void setLocalRotation(float rot, bool degrees = true);
-		void addLocalRotation(float angle, bool degree = true);
-
 
 		void broadcastDirtyTransform();
 	private:
 		glm::vec3 m_localPosition{};
 		glm::vec3 m_worldPosition{};
-
-		float m_localRotDegrees{};
-		float m_worldRotDegrees{};
 
 		bool m_isDirty{true};
 

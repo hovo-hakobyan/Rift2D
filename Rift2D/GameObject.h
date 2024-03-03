@@ -22,6 +22,7 @@ namespace rift2d
 		Transform* m_transform;
 		
 		std::vector<std::unique_ptr<BaseComponent>> m_components;
+		std::vector<std::unique_ptr<BaseComponent>> m_componentsCache;
 		std::vector<BaseComponent*> m_deadComponents;
 		static bool m_gameStarted;
 
@@ -39,7 +40,7 @@ namespace rift2d
 
 	public:
 		void init() const;
-		void update() const;
+		void update();
 		void lateUpdate() const;
 		void end();
 		
@@ -59,6 +60,8 @@ namespace rift2d
 		void processComponentRemovals();
 		void processChildRemovals();
 		void processTransfers();
+		void processComponentCache();
+
 		void setParent(const std::shared_ptr<GameObject>& pNewParent, bool keepWorldPosition);
 		void addChild(const std::shared_ptr<GameObject>& childToAdd);
 		std::shared_ptr<GameObject> getParent() const { return m_pParent.lock(); };
@@ -81,24 +84,17 @@ namespace rift2d
 		Component* addComponent(Args&&... args)
 		{
 			static_assert(std::is_base_of<BaseComponent, Component>::value, "Component must derive from BaseComponent");
-		
 
 			auto component = std::make_unique<Component>(this, std::forward<Args>(args)...);
 			auto rawPtr = component.get();
-			if (m_gameStarted)
-			{
-				component->init();
-			}
-
-			m_components.push_back(std::move(component));
 
 			if constexpr (std::is_base_of<IRenderable, Component>::value)
 			{
 				auto renderableComponent = static_cast<IRenderable*>(rawPtr);
 				Renderer::GetInstance().registerComponent(renderableComponent);
-				
 			}
-			
+
+			m_componentsCache.push_back(std::move(component));
 			return rawPtr;
 		}
 

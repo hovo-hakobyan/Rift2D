@@ -15,7 +15,7 @@ rift2d::FPSComponent::FPSComponent(GameObject* owner) :
 
 void rift2d::FPSComponent::init()
 {
-	
+	BaseComponent::init();
 	if (auto owner = getOwner())
 	{
 		m_pText= owner->getComponent<TextComponent>();

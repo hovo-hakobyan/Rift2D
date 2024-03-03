@@ -31,6 +31,8 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Rift2D/Renderer.h
   Rift2D/ResourceManager.cpp
   Rift2D/ResourceManager.h
+  Rift2D/Rotator.cpp
+  Rift2D/Rotator.h
   Rift2D/Scene.cpp
   Rift2D/Scene.h
   Rift2D/SceneManager.cpp
@@ -51,6 +53,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
 # set Rift2D as the default startup project
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${TARGET_NAME})
+
 
 include(FetchContent)
 # add glm
@@ -73,6 +76,7 @@ if (WIN32)
     URL https://www.libsdl.org/release/SDL2-devel-2.28.5-VC.zip 
     DOWNLOAD_NO_PROGRESS ON
     DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads 
+
   )
   FetchContent_GetProperties(SDL2)
   if(NOT SDL2_POPULATED)
@@ -238,5 +242,12 @@ elseif(WIN32)
   )
   add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
     COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Data" "$<TARGET_FILE_DIR:${TARGET_NAME}>/Data"
+
+    
   )
+
+  set_target_properties(${TARGET_NAME} PROPERTIES
+        LINK_FLAGS "/SUBSYSTEM:CONSOLE"
+    )
+  
 endif()

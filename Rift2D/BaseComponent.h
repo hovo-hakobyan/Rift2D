@@ -29,13 +29,14 @@ namespace rift2d
 		BaseComponent& operator=(const BaseComponent& other) = delete;
 		BaseComponent& operator=(BaseComponent&& other) = delete;
 		
-		virtual void init(){}
+		virtual void init() { m_isInitialized = true; }
 		virtual void update() {}
 		virtual void lateUpdate() {}
 		virtual void end() {}
 
 		void markForRemoval() { m_isMarkedForRemoval = true; }
 		bool isMarkedForRemoval() const { return m_isMarkedForRemoval; }
+		bool isInitialized() const { return m_isInitialized; }
 
 		void registerWatcher(IComponentWatcher* watcher) { m_watchers.push_back(watcher); }
 		void unregisterWatcher(IComponentWatcher* watcher) { m_watchers.remove(watcher); }
@@ -66,6 +67,7 @@ namespace rift2d
 		bool m_isMarkedForRemoval{};
 		GameObject* m_pOwner;
 		std::list<IComponentWatcher*> m_watchers;
+		bool m_isInitialized{ false };
 		
 	};
 

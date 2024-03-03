@@ -12,6 +12,9 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include "Rift2DEngine.h"
+
+#include <glm/glm.hpp>
+
 #include "InputManager.h"
 #include "SceneManager.h"
 #include "TimeManager.h"
@@ -110,16 +113,16 @@ void rift2d::Rift2DEngine::run(const std::function<void()>& load)
 
 	bool doContinue = true;
 	auto lastTime = high_resolution_clock::now();
-	float lag = 0.0f;
 	const float msPerFrame{ 1000.f / timeManager.m_desiredFps };
+	timeManager.m_deltaTime = 1.0f / timeManager.m_desiredFps;
+	const float minDeltaTime = 0.001f;
 
 	while (doContinue)
 	{
 		const auto currentTime = high_resolution_clock::now();
-		const float deltaTime = duration<float>(currentTime - lastTime).count();
-		timeManager.m_deltaTime = deltaTime;
+		const float deltaTime = duration<float, seconds::period>(currentTime - lastTime).count();
+		timeManager.m_deltaTime = glm::max(deltaTime, minDeltaTime);
 		lastTime = currentTime;
-		lag += deltaTime;
 
 		doContinue = InputManager::GetInstance().processInput();
 

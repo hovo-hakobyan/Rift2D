@@ -17,6 +17,8 @@
 #include "FPSComponent.h"
 
 #include <filesystem>
+
+#include "Rotator.h"
 namespace fs = std::filesystem;
 
 void load()
@@ -28,7 +30,6 @@ void load()
 
 	auto gameObject = std::make_shared<rift2d::GameObject>();
 	auto spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
-	spriteComponent->setPosition(5, 5);
 	spriteComponent->setTexture("background.tga");
 	const auto bgObj = scene.add(std::move(gameObject));
 
@@ -48,10 +49,23 @@ void load()
 	gameObject->addComponent<rift2d::FPSComponent>();
 	const auto fpsObj = scene.add(std::move(gameObject));
 
-	textObj.lock()->setParent(bgObj.lock(),true);
-	logoObj.lock()->setParent(bgObj.lock(),true);
-	fpsObj.lock()->setParent(logoObj.lock(),true);
+	gameObject = std::make_shared<rift2d::GameObject>();
+	gameObject->addComponent<rift2d::Rotator>(25.f, 200.f);
+	scene.add(std::move(gameObject));
 
+	gameObject = std::make_shared<rift2d::GameObject>();
+	gameObject->addComponent<rift2d::Rotator>(25.f, 200.f);
+	spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
+	spriteComponent->setTexture("Tom.jpg");
+	const auto mainObj = scene.add(std::move(gameObject));
+
+	gameObject = std::make_shared<rift2d::GameObject>();
+	gameObject->addComponent<rift2d::Rotator>(25.f, 200.f);
+	spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
+	spriteComponent->setTexture("Tom.jpg");
+	const auto enemyObj = scene.add(std::move(gameObject));
+
+	enemyObj.lock()->setParent(mainObj.lock(), false);
 
 }
 

@@ -27,17 +27,21 @@ void rift2d::GameObject::init() const
 	m_gameStarted = true;
 }
 
-void rift2d::GameObject::update() const
+void rift2d::GameObject::update() 
 {
-	for (auto& comp : m_components) 
+	processComponentCache();
+
+	for (const auto& comp : m_components) 
 	{
 		comp->update();
 	}
 
-	for (auto& child : m_children)
+	for (const auto& child : m_children)
 	{
 		child->update();
 	}
+
+	
 }
 
 void rift2d::GameObject::lateUpdate() const
@@ -266,4 +270,23 @@ void rift2d::GameObject::processTransfers()
 	{
 		child->processTransfers();
 	}
+}
+
+void rift2d::GameObject::processComponentCache()
+{
+	if(!m_componentsCache.empty())
+	{
+		std::ranges::move(m_componentsCache, std::back_inserter(m_components));
+		m_componentsCache.clear();
+		if (m_gameStarted)
+		{
+			for(auto& comp : m_components)
+			{
+				if (!comp->isInitialized()) comp->init();
+			}
+		}
+		
+	}
+
+	
 }
