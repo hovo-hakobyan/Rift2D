@@ -45,7 +45,7 @@ void load()
 	const auto logoObj = scene.add(std::move(gameObject));
 
 	gameObject = std::make_shared<rift2d::GameObject>();
-	auto fpscmp =gameObject->addComponent<rift2d::FPSComponent>();
+	gameObject->addComponent<rift2d::FPSComponent>();
 	const auto fpsObj = scene.add(std::move(gameObject));
 
 	gameObject = std::make_shared<rift2d::GameObject>();
@@ -60,7 +60,7 @@ void load()
 	logoObj.lock()->setParent(bgObj.lock());
 	fpsObj.lock()->setParent(logoObj.lock());
 
-	fpscmp->test(textObj.lock(),logoObj.lock());
+	logoObj.lock()->setParent(nullptr);
 
 }
 

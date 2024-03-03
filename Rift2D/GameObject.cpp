@@ -1,4 +1,3 @@
-#include <string>
 #include "GameObject.h"
 #include "ResourceManager.h"
 #include "Renderer.h"
@@ -106,6 +105,25 @@ void rift2d::GameObject::processComponentRemovals()
 	}
 }
 
+void rift2d::GameObject::processChildRemovals()
+{
+	for (auto it = m_children.begin(); it != m_children.end(); )
+	{
+		if ((*it)->isMarkedForDestruction()) {
+			// Call end() on the child marked for destruction
+			(*it)->end();
+
+			// Erase the child from the list of children
+			it = m_children.erase(it);
+		}
+		else {
+			// If not marked for destruction, recursively process this child's children
+			(*it)->processChildRemovals();
+			++it;
+		}
+	}
+}
+
 void rift2d::GameObject::setParent(const std::shared_ptr<GameObject>& pNewParent)
 {
 	const auto currentParent = m_pParent.lock();
@@ -136,6 +154,16 @@ void rift2d::GameObject::addChild(const std::shared_ptr<GameObject>& childToAdd)
 	childToAdd->m_pParent = shared_from_this();
 }
 
+void rift2d::GameObject::markForDestroy()
+{
+	m_isMarkedForDestruction = true;
+
+	for (auto& child : m_children) 
+	{
+		child->markForDestroy();
+	}
+}
+
 bool rift2d::GameObject::isValidParent(GameObject* pNewParent) const
 {
 	if (pNewParent == this) return false;
@@ -154,7 +182,7 @@ void rift2d::GameObject::queueParentTransfer(const std::shared_ptr<GameObject>& 
 	m_transferQueue.push_back({ child,newParent });
 }
 
-void rift2d::GameObject::RemoveChild(std::shared_ptr<GameObject> child)
+void rift2d::GameObject::removeChild(std::shared_ptr<GameObject> child)
 {
 	m_children.erase(std::remove_if(m_children.begin(), m_children.end(),
 		[&child](const std::shared_ptr<GameObject>& obj)
@@ -163,9 +191,6 @@ void rift2d::GameObject::RemoveChild(std::shared_ptr<GameObject> child)
 		}), m_children.end());
 	child->m_pParent.reset(); // Remove parent reference
 }
-
-
-
 
 
 void rift2d::GameObject::processTransfers()
@@ -185,14 +210,14 @@ void rift2d::GameObject::processTransfers()
 				//transfer to new parent
 				//remove from old parent
 				//set the new parent to its parent
-				RemoveChild(childPtr);
+				removeChild(childPtr);
 				newParentPtr->addChild(childPtr);
 			}
 			else
 			{
 				if(m_pScene)
 				{
-					RemoveChild(childPtr);
+					removeChild(childPtr);
 					m_pScene->add(childPtr);
 				}
 			}

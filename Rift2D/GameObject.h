@@ -26,13 +26,14 @@ namespace rift2d
 		std::vector<std::shared_ptr<GameObject>> m_children;
 		std::weak_ptr<GameObject> m_pParent;
 		std::vector<ParentChangeRequest> m_transferQueue;
+		bool m_isMarkedForDestruction{false};
 
 		Scene* m_pScene;
 
 		bool isValidParent(GameObject* pNewParent) const;
 		void queueParentTransfer(const std::shared_ptr<GameObject>& child, const std::shared_ptr<GameObject>& newParent);
-		void RemoveChild(std::shared_ptr<GameObject> child);
-	
+		void removeChild(std::shared_ptr<GameObject> child);
+		
 
 	public:
 		void init() const;
@@ -54,13 +55,14 @@ namespace rift2d
 		GameObject& operator=(GameObject&& other) = delete;
 
 		void processComponentRemovals();
+		void processChildRemovals();
 		void processTransfers();
 		void setParent(const std::shared_ptr<GameObject>& pNewParent);
-
 		void addChild(const std::shared_ptr<GameObject>& childToAdd);
-		
 		std::shared_ptr<GameObject> getParent() const { return m_pParent.lock(); };
 
+		void markForDestroy();
+		bool isMarkedForDestruction()const { return m_isMarkedForDestruction; }
 
 		/// <summary>
 	/// Adds a component to the GameObject.

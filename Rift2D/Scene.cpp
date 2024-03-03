@@ -30,23 +30,13 @@ void Scene::remove(const std::shared_ptr<GameObject>& gameObject)
 		return;
 	}
 
-	auto it = std::find_if(m_rootGameObjects.begin(), m_rootGameObjects.end(),
-		[gameObject](const std::shared_ptr<GameObject>& obj)
-		{
-			return obj == gameObject;
-		});
+	gameObject->markForDestroy();
 
-	if (it != m_rootGameObjects.end())
-	{
-		m_deadObjects.push_back(std::weak_ptr<GameObject>(*it));
-	}
-	
 }
 
 void Scene::removeAll()
 {
 	end();
-	m_deadObjects.clear();
 	m_rootGameObjects.clear();
 }
 
@@ -86,8 +76,6 @@ void rift2d::Scene::end() const
 
 void Scene::frameCleanup() 
 {
-	//remove dead game objects
-	processGameObjectRemovals();
 
 	//for the remaining game objects,run down their hierarchy and handle transfers / removals
 	for (const auto& object : m_rootGameObjects)
@@ -98,6 +86,9 @@ void Scene::frameCleanup()
 
 	//Handle transfers from the scene to game objects
 	processObjectReleases();
+
+	//remove dead game objects
+	processGameObjectRemovals();
 }
 
 void Scene::queueObjectRelease(const std::shared_ptr<GameObject>& child, const std::shared_ptr<GameObject>& newParent)
@@ -135,28 +126,31 @@ void Scene::processObjectReleases()
 }
 
 
-
 void Scene::processGameObjectRemovals()
 {
-	for (auto& weakObjToRemove : m_deadObjects)
-	{
-		if (auto sharedObjToRemove = weakObjToRemove.lock())
+	auto predicate = [](const std::shared_ptr<GameObject>& obj)
 		{
-			auto removeIt = std::remove_if(m_rootGameObjects.begin(), m_rootGameObjects.end(),
-				[&sharedObjToRemove](const std::shared_ptr<GameObject>& obj)
-				{
-					return obj == sharedObjToRemove;
-				});
+			return obj->isMarkedForDestruction();
+		};
 
-			if (removeIt != m_rootGameObjects.end())
-			{
-				
-				(*removeIt)->end();
-				m_rootGameObjects.erase(removeIt, m_rootGameObjects.end());
-			}
+	for (auto it = m_rootGameObjects.begin(); it != m_rootGameObjects.end(); )
+	{
+		// If GameObject is marked for destruction
+		if (predicate(*it))
+		{
+			// Call end() before removal
+			(*it)->end();
+
+			// Remove the GameObject
+			it = m_rootGameObjects.erase(it);
+		}
+		else
+		{
+			// Recursively check and process child GameObject removals
+			(*it)->processChildRemovals();
+			++it;
 		}
 	}
-	m_deadObjects.clear();
 }
 
 
