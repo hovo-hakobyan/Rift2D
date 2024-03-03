@@ -7,15 +7,21 @@ namespace rift2d
 	class Scene final
 	{
 		friend Scene& SceneManager::createScene(const std::string& name);
+		
+
 	public:
-		GameObject* add(std::unique_ptr<GameObject> object);
-		void remove(GameObject* object);
+		std::weak_ptr<GameObject> add(std::shared_ptr<GameObject> object);
+		void remove(const std::shared_ptr<GameObject>& gameObject);
 		void removeAll();
 
-		void init();
-		void update();
-		void lateUpdate();
-		void end();
+		void init() const;
+		void update() const;
+		void lateUpdate() const;
+		void end() const;
+		void frameCleanup() ;
+
+		void queueObjectRelease(const std::shared_ptr<GameObject>& child, const std::shared_ptr<GameObject>& newParent);
+		void processObjectReleases();
 		
 
 		~Scene();
@@ -24,16 +30,18 @@ namespace rift2d
 		Scene& operator=(const Scene& other) = delete;
 		Scene& operator=(Scene&& other) = delete;
 
-	private: 
+	private:
 		explicit Scene(const std::string& name);
 
 		std::string m_name;
-		std::vector <std::unique_ptr<GameObject>> m_objects{};
-		std::vector <GameObject*> m_deadObjects{};
+		std::vector <std::shared_ptr<GameObject>> m_rootGameObjects{};
+		std::vector <std::weak_ptr<GameObject>> m_deadObjects{};
+		std::vector<ParentChangeRequest> m_childrenToTransfer;
 
 		static unsigned int m_idCounter; 
 
 		void processGameObjectRemovals();
+
 	};
 
 }

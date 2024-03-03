@@ -6,8 +6,16 @@
 
 namespace rift2d
 {
+
+	struct ParentChangeRequest
+	{
+		std::weak_ptr<GameObject> child;
+		std::weak_ptr<GameObject> newParent;
+	};
+
 	class Texture2D;
-	class GameObject final
+	class Scene;
+	class GameObject final: public std::enable_shared_from_this<GameObject>
 	{
 		Transform m_transform{};
 		
@@ -15,11 +23,25 @@ namespace rift2d
 		std::vector<BaseComponent*> m_deadComponents;
 		static bool m_gameStarted;
 
+		std::vector<std::shared_ptr<GameObject>> m_children;
+		std::weak_ptr<GameObject> m_pParent;
+		std::vector<ParentChangeRequest> m_transferQueue;
+
+		Scene* m_pScene;
+
+		bool isValidParent(GameObject* pNewParent) const;
+		void queueParentTransfer(const std::shared_ptr<GameObject>& child, const std::shared_ptr<GameObject>& newParent);
+		void RemoveChild(std::shared_ptr<GameObject> child);
+	
+
 	public:
-		void init();
-		void update();
-		void lateUpdate();
+		void init() const;
+		void update() const;
+		void lateUpdate() const;
 		void end();
+		
+
+		void setOwningScene(Scene* pScene);
 
 		Transform& getTransform() { return m_transform; }
 		const Transform& getTransform() const { return m_transform; }
@@ -30,6 +52,15 @@ namespace rift2d
 		GameObject(GameObject&& other) = delete;
 		GameObject& operator=(const GameObject& other) = delete;
 		GameObject& operator=(GameObject&& other) = delete;
+
+		void processComponentRemovals();
+		void processTransfers();
+		void setParent(const std::shared_ptr<GameObject>& pNewParent);
+
+		void addChild(const std::shared_ptr<GameObject>& childToAdd);
+		
+		std::shared_ptr<GameObject> getParent() const { return m_pParent.lock(); };
+
 
 		/// <summary>
 	/// Adds a component to the GameObject.
@@ -60,6 +91,7 @@ namespace rift2d
 			{
 				auto renderableComponent = static_cast<IRenderable*>(rawPtr);
 				Renderer::GetInstance().registerComponent(renderableComponent);
+				
 			}
 			
 			return rawPtr;
@@ -154,29 +186,8 @@ namespace rift2d
 			
 		}
 
-		void processRemovals()
-		{
-			for ( auto* compToRemove : m_deadComponents)
-			{
-				// Unregister from Renderer if it's renderable
-				if (auto* renderable = dynamic_cast<IRenderable*>(compToRemove))
-				{
-					Renderer::GetInstance().unregisterComponent(renderable);
-				}
-
-				compToRemove->notifyRemoval();
-				compToRemove->end();
-
-				m_components.erase(std::remove_if(m_components.begin(), m_components.end(),
-					[compToRemove](const std::unique_ptr<BaseComponent>& componentPtr) {
-						return componentPtr.get() == compToRemove;
-					}),
-					m_components.end());
-
-			}
-
-			m_deadComponents.clear();
-		}
+		
+		
 			
 	};
 }

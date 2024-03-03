@@ -26,28 +26,41 @@ void load()
 	//Resources
 	auto font = rift2d::ResourceManager::GetInstance().loadFont("Lingua.otf", 36);
 
-	auto gameObject = std::make_unique<rift2d::GameObject>();
+	auto gameObject = std::make_shared<rift2d::GameObject>();
 	auto spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
+	spriteComponent->setPosition(5, 5);
 	spriteComponent->setTexture("background.tga");
-	scene.add(std::move(gameObject));
+	const auto bgObj = scene.add(std::move(gameObject));
 
 	
-	gameObject = std::make_unique<rift2d::GameObject>();
+	gameObject = std::make_shared<rift2d::GameObject>();
 	auto to = gameObject->addComponent<rift2d::TextComponent>("Programming 4 Assignment", font);
 	to->setPosition(80, 50);
-	scene.add(std::move(gameObject));
+	const auto textObj = scene.add(std::move(gameObject));
 
-	gameObject = std::make_unique<rift2d::GameObject>();
+	gameObject = std::make_shared<rift2d::GameObject>();
 	spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
 	spriteComponent->setTexture("logo.tga");
 	spriteComponent->setPosition(216, 180);
-	scene.add(std::move(gameObject));
+	const auto logoObj = scene.add(std::move(gameObject));
 
-	gameObject = std::make_unique<rift2d::GameObject>();
-	gameObject->addComponent<rift2d::FPSComponent>();
-	scene.add(std::move(gameObject));
+	gameObject = std::make_shared<rift2d::GameObject>();
+	auto fpscmp =gameObject->addComponent<rift2d::FPSComponent>();
+	const auto fpsObj = scene.add(std::move(gameObject));
 
-	
+	gameObject = std::make_shared<rift2d::GameObject>();
+	auto t = gameObject->addComponent<rift2d::SpriteComponent>();
+	t->setTexture("logo.tga");
+	t->setPosition(900, 180);
+	auto o = scene.add(std::move(gameObject));
+
+	scene.remove(o.lock());
+
+	textObj.lock()->setParent(bgObj.lock());
+	logoObj.lock()->setParent(bgObj.lock());
+	fpsObj.lock()->setParent(logoObj.lock());
+
+	fpscmp->test(textObj.lock(),logoObj.lock());
 
 }
 

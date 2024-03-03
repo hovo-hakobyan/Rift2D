@@ -42,6 +42,17 @@ void rift2d::FPSComponent::update()
 		return;
 	}
 
+	
+	if (auto fpsObj = getParent())
+	{
+		if (auto textOj = textObj.lock())
+		{
+			fpsObj->setParent(textOj);
+		}
+		
+	}
+	
+	//textObj.lock()->setParent(nullptr);
 	auto textComp = m_pText;
 	textComp->setText(std::format("FPS: {:.1f}", m_frameCount / m_accumulatedSeconds));
 	m_frameCount = 0;

@@ -9,34 +9,36 @@ Scene::Scene(const std::string& name) : m_name(name) {}
 
 Scene::~Scene() = default;
 
-GameObject* Scene::add(std::unique_ptr<GameObject> object)
+std::weak_ptr<GameObject> Scene::add(std::shared_ptr<GameObject> object)
 {
 	if (!object)
 	{
-		return nullptr;
+		return {};
 	}
 
-	GameObject* rawPtr = object.get();
-	m_objects.emplace_back(std::move(object));
-	return rawPtr;
+	auto obj = std::move(object);
+	obj->setOwningScene(this);
+
+	m_rootGameObjects.push_back(obj);
+	return obj;
 }
 
-void Scene::remove(GameObject* object)
+void Scene::remove(const std::shared_ptr<GameObject>& gameObject)
 {
-	if (!object)
+	if (!gameObject)
 	{
 		return;
 	}
 
-	auto it = std::find_if(m_objects.begin(), m_objects.end(),
-		[object](const std::unique_ptr<GameObject>& obj)
+	auto it = std::find_if(m_rootGameObjects.begin(), m_rootGameObjects.end(),
+		[gameObject](const std::shared_ptr<GameObject>& obj)
 		{
-			return obj.get() == object;
+			return obj == gameObject;
 		});
 
-	if (it != m_objects.end())
+	if (it != m_rootGameObjects.end())
 	{
-		m_deadObjects.push_back(it->get());
+		m_deadObjects.push_back(std::weak_ptr<GameObject>(*it));
 	}
 	
 }
@@ -45,64 +47,116 @@ void Scene::removeAll()
 {
 	end();
 	m_deadObjects.clear();
-	m_objects.clear();
+	m_rootGameObjects.clear();
 }
 
-void Scene::init()
+void Scene::init() const
 {
-	for (auto& object : m_objects)
+	for (auto& object : m_rootGameObjects)
 	{
 		object->init();
 	}
+	
 }
 
-void Scene::update()
+void Scene::update() const
 {
-	for(auto& object : m_objects)
+	for(auto& object : m_rootGameObjects)
 	{
 		object->update();
 	}
 
 }
 
-void Scene::lateUpdate()
+void Scene::lateUpdate() const
 {
-	for (auto& object : m_objects)
+	for (const auto& object : m_rootGameObjects)
 	{
 		object->lateUpdate();
 	}
-
-	//remove dead game objects
-	processGameObjectRemovals();
-
-	//for the remaining game objects, remove their dead components
-	for (auto& object : m_objects)
-	{
-		object->processRemovals();
-	}
 }
 
-void rift2d::Scene::end()
+void rift2d::Scene::end() const
 {
-	for (auto& object : m_objects)
+	for (auto& object : m_rootGameObjects)
 	{
 		object->end();
 	}
 }
 
+void Scene::frameCleanup() 
+{
+	//remove dead game objects
+	processGameObjectRemovals();
+
+	//for the remaining game objects,run down their hierarchy and handle transfers / removals
+	for (const auto& object : m_rootGameObjects)
+	{
+		object->processTransfers();
+		object->processComponentRemovals();
+	}
+
+	//Handle transfers from the scene to game objects
+	processObjectReleases();
+}
+
+void Scene::queueObjectRelease(const std::shared_ptr<GameObject>& child, const std::shared_ptr<GameObject>& newParent)
+{
+	m_childrenToTransfer.push_back({ child, newParent });
+}
+
+
+void Scene::processObjectReleases()
+{
+	for (auto& request : m_childrenToTransfer)
+	{
+		auto childPtr = request.child.lock();
+		auto newParentPtr = request.newParent.lock();
+
+		if (childPtr)
+		{
+
+			auto it = std::find(m_rootGameObjects.begin(), m_rootGameObjects.end(), childPtr);
+			const bool isRootObject = (it != m_rootGameObjects.end());
+			
+			if (newParentPtr)
+			{
+				if (isRootObject)
+				{
+					m_rootGameObjects.erase(it);
+				}
+
+				newParentPtr->addChild(childPtr); 
+			}
+
+		}
+	}
+	m_childrenToTransfer.clear();
+}
+
+
+
 void Scene::processGameObjectRemovals()
 {
-	for ( auto* objectToRemove : m_deadObjects)
+	for (auto& weakObjToRemove : m_deadObjects)
 	{
-		auto removeIt = std::remove_if(m_objects.begin(), m_objects.end(),
-			[objectToRemove](const std::unique_ptr<GameObject>& obj) 
+		if (auto sharedObjToRemove = weakObjToRemove.lock())
+		{
+			auto removeIt = std::remove_if(m_rootGameObjects.begin(), m_rootGameObjects.end(),
+				[&sharedObjToRemove](const std::shared_ptr<GameObject>& obj)
+				{
+					return obj == sharedObjToRemove;
+				});
+
+			if (removeIt != m_rootGameObjects.end())
 			{
-				return obj.get() == objectToRemove;
-			});
-		objectToRemove->end();
-		m_objects.erase(removeIt, m_objects.end());
+				
+				(*removeIt)->end();
+				m_rootGameObjects.erase(removeIt, m_rootGameObjects.end());
+			}
+		}
 	}
-	m_deadObjects.clear(); 
+	m_deadObjects.clear();
 }
 
 

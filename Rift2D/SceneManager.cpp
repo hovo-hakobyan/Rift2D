@@ -4,36 +4,34 @@
 rift2d::SceneManager::SceneManager() = default;
 rift2d::SceneManager::~SceneManager() = default;
 
-void rift2d::SceneManager::init()
+void rift2d::SceneManager::init() const
 {
-	for (auto& scene : m_scenes)
-	{
-		scene->init();
-	}
+	m_scenes[m_currentSceneIdx]->init();
 }
 
-void rift2d::SceneManager::update()
+void rift2d::SceneManager::update() const
 {
-	for(auto& scene : m_scenes)
-	{
-		scene->update();
-	}
+	m_scenes[m_currentSceneIdx]->update();
 }
 
-void rift2d::SceneManager::lateUpdate()
+void rift2d::SceneManager::lateUpdate() const
 {
-	for (auto& scene : m_scenes)
-	{
-		scene->lateUpdate();
-	}
+	m_scenes[m_currentSceneIdx]->lateUpdate();
 }
 
-void rift2d::SceneManager::end()
+void rift2d::SceneManager::end() const
 {
+	m_scenes[m_currentSceneIdx]->end();
+}
+
+void rift2d::SceneManager::frameCleanup() const
+{
+	m_scenes[m_currentSceneIdx]->frameCleanup();
 }
 
 rift2d::Scene& rift2d::SceneManager::createScene(const std::string& name)
 {
 	m_scenes.emplace_back(std::unique_ptr<Scene>(new Scene(name)));
+	++m_currentSceneIdx;
 	return *m_scenes.back();
 }
