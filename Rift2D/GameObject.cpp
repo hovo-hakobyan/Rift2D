@@ -185,7 +185,7 @@ void rift2d::GameObject::processTransfers()
 				//transfer to new parent
 				//remove from old parent
 				//set the new parent to its parent
-				newParentPtr->RemoveChild(childPtr);
+				RemoveChild(childPtr);
 				newParentPtr->addChild(childPtr);
 			}
 			else
