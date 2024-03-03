@@ -16,13 +16,13 @@ rift2d::FPSComponent::FPSComponent(GameObject* owner) :
 void rift2d::FPSComponent::init()
 {
 	
-	if (auto owner = getParent())
+	if (auto owner = getOwner())
 	{
 		m_pText= owner->getComponent<TextComponent>();
 		if (!m_pText)
 		{
 			auto font = rift2d::ResourceManager::GetInstance().loadFont("Lingua.otf", 36);
-			m_pText = getParent()->addComponent<TextComponent>("FPS",font);
+			m_pText = getOwner()->addComponent<TextComponent>("FPS",font);
 			m_pText->setPosition(10, 10);
 		}
 		m_pText->registerWatcher(this);

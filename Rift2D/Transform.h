@@ -1,14 +1,32 @@
 #pragma once
 #include <glm/glm.hpp>
+#include "BaseComponent.h"
 
 namespace rift2d
 {
-	class Transform final
+	class Transform final : public BaseComponent
 	{
 	public:
-		const glm::vec3& getPosition() const { return m_position; }
-		void setPosition(float x, float y, float z);
+		Transform(GameObject* owner);
+		virtual ~Transform() override = default;
+
+		Transform(const Transform& other) = delete;
+		Transform(Transform&& other) = delete;
+		Transform& operator=(const Transform& other) = delete;
+		Transform& operator=(Transform&& other) = delete;
+
+		const glm::vec3& getLocalPosition() const { return m_localPosition; }
+		const glm::vec3& getWorldPosition();
+
+		void setLocalPosition(float x, float y, float z);
+		void addLocalOffset(float x, float y);
+
+		void broadcastDirtyPos();
 	private:
-		glm::vec3 m_position{};
+		glm::vec3 m_localPosition{};
+		glm::vec3 m_worldPosition{};
+		bool m_isDirty{true};
+
+		void updateWorldPosition();
 	};
 }

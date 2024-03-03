@@ -48,19 +48,10 @@ void load()
 	gameObject->addComponent<rift2d::FPSComponent>();
 	const auto fpsObj = scene.add(std::move(gameObject));
 
-	gameObject = std::make_shared<rift2d::GameObject>();
-	auto t = gameObject->addComponent<rift2d::SpriteComponent>();
-	t->setTexture("logo.tga");
-	t->setPosition(900, 180);
-	auto o = scene.add(std::move(gameObject));
+	textObj.lock()->setParent(bgObj.lock(),true);
+	logoObj.lock()->setParent(bgObj.lock(),true);
+	fpsObj.lock()->setParent(logoObj.lock(),true);
 
-	scene.remove(o.lock());
-
-	textObj.lock()->setParent(bgObj.lock());
-	logoObj.lock()->setParent(bgObj.lock());
-	fpsObj.lock()->setParent(logoObj.lock());
-
-	logoObj.lock()->setParent(nullptr);
 
 }
 

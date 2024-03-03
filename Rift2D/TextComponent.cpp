@@ -17,11 +17,11 @@ rift2d::TextComponent::TextComponent(GameObject* owner, const std::string& text,
 
 void rift2d::TextComponent::init()
 {
-	m_pSpriteComponent = getParent()->getComponent<SpriteComponent>();
+	m_pSpriteComponent = getOwner()->getComponent<SpriteComponent>();
 	//if there is no sprite component, add one automatically
 	if (!m_pSpriteComponent)
 	{
-		m_pSpriteComponent = getParent()->addComponent<SpriteComponent>();
+		m_pSpriteComponent = getOwner()->addComponent<SpriteComponent>();
 		
 	}
 
@@ -70,13 +70,13 @@ void rift2d::TextComponent::setText(const std::string& text)
 	m_needsUpdate = true;
 }
 
-void rift2d::TextComponent::setPosition(const float x, const float y)
+void rift2d::TextComponent::setPosition(const float x, const float y) const
 {
-	auto owner = getParent();
+	auto owner = getOwner();
 	if (owner)
 	{
-		auto& transform = owner->getTransform();
-		transform.setPosition(x, y, 0.0f);
+		auto transform = owner->getTransform();
+		transform->setLocalPosition(x, y, 0.0f);
 	}
 
 	

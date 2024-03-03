@@ -61,7 +61,7 @@ namespace rift2d
 				throw NullOwnerException("BaseComponent must have a non-null owner");
 			}
 		}
-		GameObject* getParent() const { return m_pOwner; }
+		GameObject* getOwner() const { return m_pOwner; }
 	private:
 		bool m_isMarkedForRemoval{};
 		GameObject* m_pOwner;

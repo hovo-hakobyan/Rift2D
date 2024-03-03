@@ -6,10 +6,14 @@
 
 bool rift2d::GameObject::m_gameStarted{ false };
 
-
+rift2d::GameObject::GameObject()
+{
+	m_transform = addComponent<Transform>();
+}
 
 void rift2d::GameObject::init() const
 {
+
 	for (auto& comp : m_components)
 	{
 		comp->init();
@@ -77,6 +81,8 @@ void rift2d::GameObject::setOwningScene(Scene* pScene)
 	m_pScene = pScene;
 }
 
+
+
 void rift2d::GameObject::processComponentRemovals()
 {
 	for (auto* compToRemove : m_deadComponents)
@@ -124,25 +130,25 @@ void rift2d::GameObject::processChildRemovals()
 	}
 }
 
-void rift2d::GameObject::setParent(const std::shared_ptr<GameObject>& pNewParent)
+void rift2d::GameObject::setParent(const std::shared_ptr<GameObject>& pNewParent,bool keepWorldPosition)
 {
 	const auto currentParent = m_pParent.lock();
 	//The new parent is not a valid candidate
-	if (pNewParent == currentParent or !isValidParent(pNewParent.get())) return;
+	if ( pNewParent == currentParent or !isValidParent(pNewParent.get())) return;
 
 	//Nullptr passed, means detach from parent
-	//Destroy since you cannot exist without parent
 	if(!pNewParent)
 	{
 		if (currentParent)
 		{
-			currentParent->queueParentTransfer(shared_from_this(), nullptr);
+			//transfer to the scene
+			currentParent->queueParentTransfer(shared_from_this(), nullptr,keepWorldPosition);
 		}
 		return;
 	}
 
-	if (currentParent) currentParent->queueParentTransfer(shared_from_this(), pNewParent);
-	else if (m_pScene) m_pScene->queueObjectRelease(shared_from_this(), pNewParent);
+	if (currentParent) currentParent->queueParentTransfer(shared_from_this(), pNewParent,keepWorldPosition);
+	else if (m_pScene) m_pScene->queueObjectRelease(shared_from_this(), pNewParent,keepWorldPosition);
 }
 
 void rift2d::GameObject::addChild(const std::shared_ptr<GameObject>& childToAdd)
@@ -177,9 +183,14 @@ bool rift2d::GameObject::isValidParent(GameObject* pNewParent) const
 }
 
 void rift2d::GameObject::queueParentTransfer(const std::shared_ptr<GameObject>& child,
-	const std::shared_ptr<GameObject>& newParent)
+	const std::shared_ptr<GameObject>& newParent, bool keepWorldPosition)
 {
-	m_transferQueue.push_back({ child,newParent });
+	glm::vec3 worldPositionBeforeChange{0,0,0};
+	if (keepWorldPosition)
+	{
+		worldPositionBeforeChange = child->getTransform()->getWorldPosition();
+	}
+	m_transferQueue.push_back({ child,newParent,keepWorldPosition,worldPositionBeforeChange });
 }
 
 void rift2d::GameObject::removeChild(std::shared_ptr<GameObject> child)
@@ -212,6 +223,20 @@ void rift2d::GameObject::processTransfers()
 				//set the new parent to its parent
 				removeChild(childPtr);
 				newParentPtr->addChild(childPtr);
+
+				glm::vec3 newLocalPosition{ 0,0,0 };
+				if (request.keepWorldPosition)
+				{
+					if(auto parentTransform = newParentPtr->getTransform())
+					{
+						newLocalPosition = request.originalWorldPos;
+						const glm::vec3 parentWorldPosition = parentTransform->getWorldPosition();
+						newLocalPosition -= parentWorldPosition;
+					}
+					
+				}
+				childPtr->getTransform()->setLocalPosition(newLocalPosition.x, newLocalPosition.y, newLocalPosition.z);
+				
 			}
 			else
 			{

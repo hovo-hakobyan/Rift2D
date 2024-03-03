@@ -18,10 +18,10 @@ void rift2d::SpriteComponent::render() const
 {
 	if (m_texture)
 	{
-		auto owner = getParent();
+		auto owner = getOwner();
 		if (owner)
 		{
-			auto& pos = owner->getTransform().getPosition();
+			auto& pos = owner->getTransform()->getWorldPosition();
 			Renderer::GetInstance().renderTexture(*m_texture, pos.x, pos.y);
 		}
 
@@ -40,11 +40,11 @@ void rift2d::SpriteComponent::setTexture(std::shared_ptr<Texture2D> texture)
 
 void rift2d::SpriteComponent::setPosition(float x, float y)
 {
-	auto owner = getParent();
+	auto owner = getOwner();
 	if (owner)
 	{
-		auto& transform = owner->getTransform();
-		transform.setPosition(x, y, 0.0f);
+		auto transform = owner->getTransform();
+		transform->setLocalPosition(x, y, 0.0f);
 	}
 }
 

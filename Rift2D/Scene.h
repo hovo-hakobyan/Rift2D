@@ -20,7 +20,7 @@ namespace rift2d
 		void end() const;
 		void frameCleanup() ;
 
-		void queueObjectRelease(const std::shared_ptr<GameObject>& child, const std::shared_ptr<GameObject>& newParent);
+		void queueObjectRelease(const std::shared_ptr<GameObject>& child, const std::shared_ptr<GameObject>& newParent, bool keepWorldPosition);
 		void processObjectReleases();
 		
 

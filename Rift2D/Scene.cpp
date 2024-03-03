@@ -91,9 +91,14 @@ void Scene::frameCleanup()
 	processGameObjectRemovals();
 }
 
-void Scene::queueObjectRelease(const std::shared_ptr<GameObject>& child, const std::shared_ptr<GameObject>& newParent)
+void Scene::queueObjectRelease(const std::shared_ptr<GameObject>& child, const std::shared_ptr<GameObject>& newParent, bool keepWorldPosition)
 {
-	m_childrenToTransfer.push_back({ child, newParent });
+	glm::vec3 worldPositionBeforeChange{0,0,0};
+	if (keepWorldPosition)
+	{
+		worldPositionBeforeChange = child->getTransform()->getWorldPosition();
+	}
+	m_childrenToTransfer.push_back({ child, newParent,keepWorldPosition,worldPositionBeforeChange });
 }
 
 
@@ -106,6 +111,7 @@ void Scene::processObjectReleases()
 
 		if (childPtr)
 		{
+			
 
 			auto it = std::find(m_rootGameObjects.begin(), m_rootGameObjects.end(), childPtr);
 			const bool isRootObject = (it != m_rootGameObjects.end());
@@ -116,6 +122,24 @@ void Scene::processObjectReleases()
 				{
 					m_rootGameObjects.erase(it);
 				}
+
+				
+				glm::vec3 newLocalPosition{0,0,0};
+				const auto childTransform = childPtr->getTransform();
+				if (request.keepWorldPosition)
+				{
+					const auto parentTransform = newParentPtr->getTransform();
+					
+					if (parentTransform and childTransform)
+					{
+						newLocalPosition = request.originalWorldPos;
+						const glm::vec3 parentWorldPosition = parentTransform->getWorldPosition();
+						newLocalPosition -= parentWorldPosition;
+						
+					}
+					
+				}
+				childTransform->setLocalPosition(newLocalPosition.x, newLocalPosition.y, newLocalPosition.z);
 
 				newParentPtr->addChild(childPtr); 
 			}

@@ -17,7 +17,7 @@ namespace rift2d
 		virtual void end() override;
 
 		void setText(const std::string& text);
-		void setPosition(float x, float y);
+		void setPosition(float x, float y) const;
 
 		TextComponent(GameObject* owner, const std::string& text, std::shared_ptr<Font> font);
 		virtual ~TextComponent() override = default;

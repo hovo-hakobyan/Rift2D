@@ -11,13 +11,15 @@ namespace rift2d
 	{
 		std::weak_ptr<GameObject> child;
 		std::weak_ptr<GameObject> newParent;
+		bool keepWorldPosition;
+		glm::vec3 originalWorldPos; //only to be used if keepWorldPosition is true
 	};
 
 	class Texture2D;
 	class Scene;
 	class GameObject final: public std::enable_shared_from_this<GameObject>
 	{
-		Transform m_transform{};
+		Transform* m_transform;
 		
 		std::vector<std::unique_ptr<BaseComponent>> m_components;
 		std::vector<BaseComponent*> m_deadComponents;
@@ -31,7 +33,7 @@ namespace rift2d
 		Scene* m_pScene;
 
 		bool isValidParent(GameObject* pNewParent) const;
-		void queueParentTransfer(const std::shared_ptr<GameObject>& child, const std::shared_ptr<GameObject>& newParent);
+		void queueParentTransfer(const std::shared_ptr<GameObject>& child, const std::shared_ptr<GameObject>& newParent, bool keepWorldPosition);
 		void removeChild(std::shared_ptr<GameObject> child);
 		
 
@@ -44,10 +46,10 @@ namespace rift2d
 
 		void setOwningScene(Scene* pScene);
 
-		Transform& getTransform() { return m_transform; }
-		const Transform& getTransform() const { return m_transform; }
+		Transform* getTransform() { return m_transform; }
+		const Transform* getTransform() const { return m_transform; }
 
-		GameObject() = default;
+		GameObject();
 		~GameObject() = default;
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
@@ -57,9 +59,10 @@ namespace rift2d
 		void processComponentRemovals();
 		void processChildRemovals();
 		void processTransfers();
-		void setParent(const std::shared_ptr<GameObject>& pNewParent);
+		void setParent(const std::shared_ptr<GameObject>& pNewParent, bool keepWorldPosition);
 		void addChild(const std::shared_ptr<GameObject>& childToAdd);
 		std::shared_ptr<GameObject> getParent() const { return m_pParent.lock(); };
+		const std::vector<std::shared_ptr<GameObject>>& getChildren() const { return m_children; }
 
 		void markForDestroy();
 		bool isMarkedForDestruction()const { return m_isMarkedForDestruction; }
