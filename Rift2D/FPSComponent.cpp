@@ -35,6 +35,7 @@ void rift2d::FPSComponent::update()
 	{
 		return;
 	}
+	
 
 	m_accumulatedSeconds += TimeManager::GetInstance().getDeltaTime();
 	++m_frameCount;

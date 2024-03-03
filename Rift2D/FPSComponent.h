@@ -24,7 +24,7 @@ namespace rift2d
 		TextComponent* m_pText{};
 		float m_accumulatedSeconds{0.0f};
 		int m_frameCount{};
-		float m_updateInterval{ .1f };
+		float m_updateInterval{ 3.1f };
 	};
 
 }

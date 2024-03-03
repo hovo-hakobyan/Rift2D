@@ -216,6 +216,7 @@ void rift2d::GameObject::processTransfers()
 			// Check if the child still exists
 			// If newParentPtr is expired, it means either no parent was specified (root level)
 			// or the new parent was destroyed before the transfer could be processed.
+			glm::vec3 newLocalPosition{ 0,0,0 };
 			if (newParentPtr)
 			{
 				//transfer to new parent
@@ -224,19 +225,18 @@ void rift2d::GameObject::processTransfers()
 				removeChild(childPtr);
 				newParentPtr->addChild(childPtr);
 
-				glm::vec3 newLocalPosition{ 0,0,0 };
+				
 				if (request.keepWorldPosition)
 				{
-					if(auto parentTransform = newParentPtr->getTransform())
+					if (auto parentTransform = newParentPtr->getTransform())
 					{
 						newLocalPosition = request.originalWorldPos;
 						const glm::vec3 parentWorldPosition = parentTransform->getWorldPosition();
 						newLocalPosition -= parentWorldPosition;
 					}
-					
+
 				}
-				childPtr->getTransform()->setLocalPosition(newLocalPosition.x, newLocalPosition.y, newLocalPosition.z);
-				
+
 			}
 			else
 			{
@@ -244,8 +244,18 @@ void rift2d::GameObject::processTransfers()
 				{
 					removeChild(childPtr);
 					m_pScene->add(childPtr);
+
+					if (request.keepWorldPosition)
+					{
+						newLocalPosition = request.originalWorldPos;
+					}
 				}
+
+
 			}
+
+			
+			childPtr->getTransform()->setLocalPosition(newLocalPosition.x, newLocalPosition.y, newLocalPosition.z);
 			
 		}
 	}
