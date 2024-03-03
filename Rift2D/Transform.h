@@ -17,16 +17,25 @@ namespace rift2d
 
 		const glm::vec3& getLocalPosition() const { return m_localPosition; }
 		const glm::vec3& getWorldPosition();
-
 		void setLocalPosition(float x, float y, float z);
 		void addLocalOffset(float x, float y);
 
-		void broadcastDirtyPos();
+		float getLocalRotation(bool degrees = true) const;
+		float getWorldRotation(bool degrees = true);
+		void setLocalRotation(float rot, bool degrees = true);
+		void addLocalRotation(float angle, bool degree = true);
+
+
+		void broadcastDirtyTransform();
 	private:
 		glm::vec3 m_localPosition{};
 		glm::vec3 m_worldPosition{};
+
+		float m_localRotDegrees{};
+		float m_worldRotDegrees{};
+
 		bool m_isDirty{true};
 
-		void updateWorldPosition();
+		void updateWorldTransform();
 	};
 }
