@@ -7,17 +7,9 @@
 namespace rift2d
 {
 
-	struct ParentChangeRequest
-	{
-		std::weak_ptr<GameObject> child;
-		std::weak_ptr<GameObject> newParent;
-		bool keepWorldPosition;
-		glm::vec3 originalWorldPos; //only to be used if keepWorldPosition is true
-	};
-
 	class Texture2D;
 	class Scene;
-	class GameObject final: public std::enable_shared_from_this<GameObject>
+	class GameObject final
 	{
 		Transform* m_transform;
 		
@@ -26,31 +18,24 @@ namespace rift2d
 		std::vector<BaseComponent*> m_deadComponents;
 		static bool m_gameStarted;
 
-		std::vector<std::shared_ptr<GameObject>> m_children;
-		std::weak_ptr<GameObject> m_pParent;
-		std::vector<ParentChangeRequest> m_transferQueue;
+		std::vector<std::unique_ptr<GameObject>> m_children;
+		GameObject* m_pParent;
 		bool m_isMarkedForDestruction{false};
 
 		Scene* m_pScene;
 
 		bool isValidParent(GameObject* pNewParent) const;
-		void queueParentTransfer(const std::shared_ptr<GameObject>& child, const std::shared_ptr<GameObject>& newParent, bool keepWorldPosition);
-		void removeChild(std::shared_ptr<GameObject> child);
-		
 
 	public:
 		void init() const;
 		void update();
 		void lateUpdate() const;
 		void end();
-		
-
-		void setOwningScene(Scene* pScene);
 
 		Transform* getTransform() { return m_transform; }
 		const Transform* getTransform() const { return m_transform; }
 
-		GameObject();
+		GameObject(Scene* pOwner);
 		~GameObject() = default;
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
@@ -58,14 +43,13 @@ namespace rift2d
 		GameObject& operator=(GameObject&& other) = delete;
 
 		void processComponentRemovals();
-		void processChildRemovals();
-		void processTransfers();
+		void processGameObjectRemovals();
 		void processComponentCache();
 
-		void setParent(const std::shared_ptr<GameObject>& pNewParent, bool keepWorldPosition);
-		void addChild(const std::shared_ptr<GameObject>& childToAdd);
-		std::shared_ptr<GameObject> getParent() const { return m_pParent.lock(); };
-		const std::vector<std::shared_ptr<GameObject>>& getChildren() const { return m_children; }
+		void setParent(GameObject* pParent, bool keepWorldPosition);
+		
+		GameObject* getParent() const { return m_pParent; };
+		const std::vector<std::unique_ptr<GameObject>>& getChildren() const { return m_children; }
 
 		void markForDestroy();
 		bool isMarkedForDestruction()const { return m_isMarkedForDestruction; }

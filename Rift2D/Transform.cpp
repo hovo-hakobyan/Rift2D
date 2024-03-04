@@ -23,6 +23,12 @@ void rift2d::Transform::setLocalPosition(const float x, const float y, const flo
 	broadcastDirtyTransform();
 }
 
+void rift2d::Transform::setLocalPosition(const glm::vec3& pos)
+{
+	m_localPosition = pos;
+	broadcastDirtyTransform();
+}
+
 void rift2d::Transform::addLocalOffset(float x, float y)
 {
 	m_localPosition.x += x;
@@ -41,7 +47,7 @@ void rift2d::Transform::broadcastDirtyTransform()
 	{
 		const auto& children = owner->getChildren();
 
-		std::ranges::for_each(children, [](const std::shared_ptr<GameObject>& child)
+		std::ranges::for_each(children, [](const std::unique_ptr<GameObject>& child)
 		{
 				if (const auto tr = child->getTransform())
 				{

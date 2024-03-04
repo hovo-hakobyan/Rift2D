@@ -1,36 +1,36 @@
 #include "Scene.h"
 #include <algorithm>
+#include <ranges>
 
 using namespace rift2d;
 
 unsigned int Scene::m_idCounter = 0;
 
-Scene::Scene(const std::string& name) : m_name(name) {}
+Scene::Scene(std::string name) : m_name(std::move(name)) {}
 
 Scene::~Scene() = default;
 
-std::weak_ptr<GameObject> Scene::add(std::shared_ptr<GameObject> object)
+GameObject* Scene::add(std::unique_ptr<GameObject> object)
 {
 	if (!object)
 	{
-		return {};
+		return nullptr;
 	}
 
 	auto obj = std::move(object);
-	obj->setOwningScene(this);
+	const auto rawPtr = obj.get();
 
-	m_rootGameObjects.push_back(obj);
-	return obj;
+	m_rootGameObjects.push_back(std::move(obj));
+	return rawPtr;
 }
 
-void Scene::remove(const std::shared_ptr<GameObject>& gameObject)
+void Scene::remove(GameObject* object)
 {
-	if (!gameObject)
+	if (!object)
 	{
 		return;
 	}
-
-	gameObject->markForDestroy();
+	object->markForDestroy();
 
 }
 
@@ -76,105 +76,40 @@ void rift2d::Scene::end() const
 
 void Scene::frameCleanup() 
 {
+	//remove dead game objects
+	processGameObjectRemovals();
 
-	//for the remaining game objects,run down their hierarchy and handle transfers / removals
 	for (const auto& object : m_rootGameObjects)
 	{
-		object->processTransfers();
 		object->processComponentRemovals();
 	}
 
-	//Handle transfers from the scene to game objects
-	processObjectReleases();
-
-	//remove dead game objects
-	processGameObjectRemovals();
+	
 }
-
-void Scene::queueObjectRelease(const std::shared_ptr<GameObject>& child, const std::shared_ptr<GameObject>& newParent, bool keepWorldPosition)
-{
-	glm::vec3 worldPositionBeforeChange{0,0,0};
-	if (keepWorldPosition)
-	{
-		worldPositionBeforeChange = child->getTransform()->getWorldPosition();
-	}
-	m_childrenToTransfer.push_back({ child, newParent,keepWorldPosition,worldPositionBeforeChange });
-}
-
-
-void Scene::processObjectReleases()
-{
-	for (auto& request : m_childrenToTransfer)
-	{
-		auto childPtr = request.child.lock();
-		auto newParentPtr = request.newParent.lock();
-
-		if (childPtr)
-		{
-			
-
-			auto it = std::find(m_rootGameObjects.begin(), m_rootGameObjects.end(), childPtr);
-			const bool isRootObject = (it != m_rootGameObjects.end());
-			
-			if (newParentPtr)
-			{
-				if (isRootObject)
-				{
-					m_rootGameObjects.erase(it);
-				}
-
-				
-				glm::vec3 newLocalPosition{0,0,0};
-				const auto childTransform = childPtr->getTransform();
-				if (request.keepWorldPosition)
-				{
-					const auto parentTransform = newParentPtr->getTransform();
-					
-					if (parentTransform and childTransform)
-					{
-						newLocalPosition = request.originalWorldPos;
-						const glm::vec3 parentWorldPosition = parentTransform->getWorldPosition();
-						newLocalPosition -= parentWorldPosition;
-						
-					}
-					
-				}
-				childTransform->setLocalPosition(newLocalPosition.x, newLocalPosition.y, newLocalPosition.z);
-
-				newParentPtr->addChild(childPtr); 
-			}
-
-		}
-	}
-	m_childrenToTransfer.clear();
-}
-
 
 void Scene::processGameObjectRemovals()
 {
-	auto predicate = [](const std::shared_ptr<GameObject>& obj)
-		{
-			return obj->isMarkedForDestruction();
-		};
-
-	for (auto it = m_rootGameObjects.begin(); it != m_rootGameObjects.end(); )
+	// Filter elements that are marked for destruction and call end
+	//Invokes IsMarkedForDestruction for each child and if true, invokes end();
+	for (const auto& child : m_rootGameObjects | std::views::filter(&GameObject::isMarkedForDestruction))
 	{
-		// If GameObject is marked for destruction
-		if (predicate(*it))
-		{
-			// Call end() before removal
-			(*it)->end();
-
-			// Remove the GameObject
-			it = m_rootGameObjects.erase(it);
-		}
-		else
-		{
-			// Recursively check and process child GameObject removals
-			(*it)->processChildRemovals();
-			++it;
-		}
+		child->end();
 	}
+
+	m_rootGameObjects.erase(std::remove_if(m_rootGameObjects.begin(), m_rootGameObjects.end(),
+		[](const std::unique_ptr<GameObject>& child) { return child->isMarkedForDestruction(); }),
+		m_rootGameObjects.end());
+
+	//filter elements that are not marked for destruction
+	//Cannot bind function pointer because return is inverted
+	for (const auto& child : m_rootGameObjects)
+	{
+		child->processGameObjectRemovals();
+	}
+
+	
+
+	
 }
 
 

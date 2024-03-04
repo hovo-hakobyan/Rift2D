@@ -10,8 +10,8 @@ namespace rift2d
 		
 
 	public:
-		std::weak_ptr<GameObject> add(std::shared_ptr<GameObject> object);
-		void remove(const std::shared_ptr<GameObject>& gameObject);
+		GameObject* add(std::unique_ptr<GameObject> object);
+		void remove(GameObject* object);
 		void removeAll();
 
 		void init() const;
@@ -20,10 +20,6 @@ namespace rift2d
 		void end() const;
 		void frameCleanup() ;
 
-		void queueObjectRelease(const std::shared_ptr<GameObject>& child, const std::shared_ptr<GameObject>& newParent, bool keepWorldPosition);
-		void processObjectReleases();
-		
-
 		~Scene();
 		Scene(const Scene& other) = delete;
 		Scene(Scene&& other) = delete;
@@ -31,11 +27,10 @@ namespace rift2d
 		Scene& operator=(Scene&& other) = delete;
 
 	private:
-		explicit Scene(const std::string& name);
+		explicit Scene(std::string name);
 
 		std::string m_name;
-		std::vector <std::shared_ptr<GameObject>> m_rootGameObjects{};
-		std::vector<ParentChangeRequest> m_childrenToTransfer;
+		std::vector <std::unique_ptr<GameObject>> m_rootGameObjects{};
 
 		static unsigned int m_idCounter; 
 
