@@ -38,13 +38,4 @@ void rift2d::SpriteComponent::setTexture(std::shared_ptr<Texture2D> texture)
 	m_texture = texture;
 }
 
-void rift2d::SpriteComponent::setPosition(float x, float y)
-{
-	auto owner = getOwner();
-	if (owner)
-	{
-		auto transform = owner->getTransform();
-		transform->setLocalPosition(x, y, 0.0f);
-	}
-}
 

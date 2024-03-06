@@ -71,17 +71,6 @@ void rift2d::TextComponent::setText(const std::string& text)
 	m_needsUpdate = true;
 }
 
-void rift2d::TextComponent::setPosition(const float x, const float y) const
-{
-	auto owner = getOwner();
-	if (owner)
-	{
-		auto transform = owner->getTransform();
-		transform->setLocalPosition(x, y, 0.0f);
-	}
-
-	
-}
 
 void rift2d::TextComponent::onComponentRemoved(BaseComponent* component)
 {

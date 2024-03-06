@@ -9,7 +9,7 @@ namespace rift2d
 	class NullOwnerException
 	{
 	public:
-		explicit NullOwnerException(const std::string& message): m_message{message}{}
+		explicit NullOwnerException(std::string message): m_message{std::move(message)}{}
 
 		const std::string& what() const { return m_message; }
 

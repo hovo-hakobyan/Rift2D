@@ -23,7 +23,6 @@ void rift2d::FPSComponent::init()
 		{
 			auto font = rift2d::ResourceManager::GetInstance().loadFont("Lingua.otf", 36);
 			m_pText = getOwner()->addComponent<TextComponent>("FPS",font);
-			m_pText->setPosition(10, 10);
 		}
 		m_pText->registerWatcher(this);
 	}
@@ -35,7 +34,6 @@ void rift2d::FPSComponent::update()
 	{
 		return;
 	}
-	
 
 	m_accumulatedSeconds += TimeManager::GetInstance().getDeltaTime();
 	++m_frameCount;
@@ -44,7 +42,6 @@ void rift2d::FPSComponent::update()
 	{
 		return;
 	}
-
 
 	auto textComp = m_pText;
 	textComp->setText(std::format("FPS: {:.1f}", m_frameCount / m_accumulatedSeconds));

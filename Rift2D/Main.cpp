@@ -36,15 +36,15 @@ void load()
 
 	// Programming 4 Text
 	gameObject = std::make_unique<rift2d::GameObject>(&scene);
-	auto to = gameObject->addComponent<rift2d::TextComponent>("Programming 4 Assignment", font);
-	to->setPosition(80, 50);
+	gameObject->addComponent<rift2d::TextComponent>("Programming 4 Assignment", font);
+	gameObject->getTransform()->setLocalPosition(80.f, 50.f,1.f);
 	scene.add(std::move(gameObject));
 
 	//Logo
 	gameObject = std::make_unique<rift2d::GameObject>(&scene);
 	spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
 	spriteComponent->setTexture("logo.tga");
-	spriteComponent->setPosition(216, 180);
+	gameObject->getTransform()->setLocalPosition(216.f, 180.f,1.f);
 	scene.add(std::move(gameObject));
 
 	//FPS 
