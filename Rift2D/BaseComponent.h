@@ -21,7 +21,14 @@ namespace rift2d
 	class BaseComponent
 	{
 	public:
-		friend class GameObject;
+
+		explicit BaseComponent(GameObject* owner) : m_pOwner{ owner }
+		{
+			if (!owner)
+			{
+				throw NullOwnerException("BaseComponent must have a non-null owner");
+			}
+		}
 
 		virtual ~BaseComponent() = default;
 		BaseComponent(const BaseComponent& other) = delete;
@@ -55,13 +62,6 @@ namespace rift2d
 		}
 
 	protected:
-		explicit BaseComponent(GameObject* owner) : m_pOwner{ owner }
-		{
-			if (!owner)
-			{
-				throw NullOwnerException("BaseComponent must have a non-null owner");
-			}
-		}
 		GameObject* getOwner() const { return m_pOwner; }
 	private:
 		bool m_isMarkedForRemoval{};
