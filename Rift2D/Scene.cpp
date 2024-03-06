@@ -40,6 +40,22 @@ void Scene::removeAll()
 	m_rootGameObjects.clear();
 }
 
+std::unique_ptr<GameObject> Scene::releaseGameObject(GameObject* go)
+{
+	auto it = std::find_if(m_rootGameObjects.begin(), m_rootGameObjects.end(), [go](const auto& rootgo) {
+		return rootgo.get() == go;
+		});
+
+	std::unique_ptr<GameObject> child;
+	if (it != m_rootGameObjects.end())
+	{
+		child = std::move(*it);
+		m_rootGameObjects.erase(it);
+	}
+
+	return child;
+}
+
 void Scene::init() const
 {
 	for (auto& object : m_rootGameObjects)

@@ -18,8 +18,8 @@ namespace rift2d
 		std::vector<BaseComponent*> m_deadComponents;
 		static bool m_gameStarted;
 
-		std::vector<std::unique_ptr<GameObject>> m_children;
-		GameObject* m_pParent;
+		std::vector<std::unique_ptr<GameObject>> m_children{};
+		GameObject* m_pParent{};
 		bool m_isMarkedForDestruction{false};
 
 		Scene* m_pScene;
@@ -36,7 +36,7 @@ namespace rift2d
 		const Transform* getTransform() const { return m_transform; }
 
 		GameObject(Scene* pOwner);
-		~GameObject() = default;
+		~GameObject();
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
 		GameObject& operator=(const GameObject& other) = delete;

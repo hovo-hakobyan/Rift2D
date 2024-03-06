@@ -13,6 +13,8 @@ rift2d::GameObject::GameObject(Scene* pOwner):
 	m_transform = addComponent<Transform>();
 }
 
+rift2d::GameObject::~GameObject() = default;
+
 void rift2d::GameObject::init() const
 {
 
@@ -142,14 +144,11 @@ void rift2d::GameObject::processGameObjectRemovals()
 		child->processGameObjectRemovals();
 	}
 
-	
-
-	
 }
 
 void rift2d::GameObject::setParent(GameObject* pParent, bool keepWorldPosition)
 {
-	if (!isValidParent(pParent)) return;
+	if (!isValidParent(pParent) or m_pParent == pParent) return;
 
 	//Is root object
 	if(pParent == nullptr)
@@ -169,7 +168,7 @@ void rift2d::GameObject::setParent(GameObject* pParent, bool keepWorldPosition)
 	//Remove from old parent if there is one
 	if(m_pParent)
 	{
-		const auto it = std::find_if(m_pParent->m_children.begin(), m_pParent->m_children.end(), [this](const auto& go) {
+		auto it = std::find_if(m_pParent->m_children.begin(), m_pParent->m_children.end(), [this](const auto& go) {
 			return go.get() == this;
 			});
 
@@ -189,14 +188,9 @@ void rift2d::GameObject::setParent(GameObject* pParent, bool keepWorldPosition)
 		//We had no previous parent
 		if(!child)
 		{
-			child = std::unique_ptr<GameObject>(this);
+			child = m_pScene->releaseGameObject(this);
 		}
 		m_pParent->m_children.push_back(std::move(child));
-	}
-	else //Transfer back to scene
-	{
-		
-
 	}
 }
 
