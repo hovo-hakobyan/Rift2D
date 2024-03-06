@@ -66,14 +66,11 @@ void rift2d::Transform::updateWorldTransform()
 	if (!parent)
 	{
 		m_worldPosition = m_localPosition;
-		return;
 	}
-
-	if (const auto parentTransform = parent->getTransform())
+	else if (const auto parentTransform = parent->getTransform())
 	{
 		const auto parentPos = parentTransform->getWorldPosition();
 		m_worldPosition = parentPos + m_localPosition;
-		m_isDirty = false;
 	}
-
+	m_isDirty = false;
 }

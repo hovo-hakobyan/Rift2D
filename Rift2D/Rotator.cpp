@@ -17,6 +17,7 @@ void rift2d::Rotator::update()
 	m_currentAngleDegrees += m_rotationSpeed * deltaTime;
 
 	if (m_currentAngleDegrees >= 360.f) m_currentAngleDegrees -= 360.f;
+	if(m_currentAngleDegrees <= -360.f) m_currentAngleDegrees += 360.f;
 
 	const float currentAngleRadians = glm::radians(m_currentAngleDegrees);
 
