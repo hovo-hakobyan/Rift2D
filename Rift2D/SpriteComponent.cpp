@@ -12,6 +12,7 @@ rift2d::SpriteComponent::SpriteComponent(GameObject* owner) :
 
 void rift2d::SpriteComponent::update()
 {
+
 }
 
 void rift2d::SpriteComponent::render() const

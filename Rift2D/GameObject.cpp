@@ -11,6 +11,7 @@ rift2d::GameObject::GameObject(Scene* pOwner):
 	m_pScene{pOwner}
 {
 	m_transform = addComponent<Transform>();
+
 }
 
 rift2d::GameObject::~GameObject() = default;
@@ -191,6 +192,11 @@ void rift2d::GameObject::setParent(GameObject* pParent, bool keepWorldPosition)
 			child = m_pScene->releaseGameObject(this);
 		}
 		m_pParent->m_children.push_back(std::move(child));
+	}
+	else
+	{
+		//transfer back to scene
+		if (child) m_pScene->add(std::move(child));
 	}
 }
 

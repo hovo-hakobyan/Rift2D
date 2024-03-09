@@ -14,6 +14,7 @@ namespace rift2d
 		void remove(GameObject* object);
 		void removeAll();
 		std::unique_ptr<GameObject> releaseGameObject(GameObject* go);
+		
 
 		void init() const;
 		void update() const;
