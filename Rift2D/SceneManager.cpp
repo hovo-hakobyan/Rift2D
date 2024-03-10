@@ -24,6 +24,11 @@ void rift2d::SceneManager::end() const
 	m_scenes[m_currentSceneIdx]->end();
 }
 
+void rift2d::SceneManager::onImGui() const
+{
+	m_scenes[m_currentSceneIdx]->onImGui();
+}
+
 void rift2d::SceneManager::frameCleanup() const
 {
 	m_scenes[m_currentSceneIdx]->frameCleanup();

@@ -20,6 +20,7 @@ namespace rift2d
 		void update() const;
 		void lateUpdate() const;
 		void end() const;
+		void onImGui() const;
 		void frameCleanup() ;
 
 		~Scene();

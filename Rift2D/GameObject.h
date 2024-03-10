@@ -31,6 +31,7 @@ namespace rift2d
 		void update();
 		void lateUpdate() const;
 		void end();
+		void onImGui() const;
 
 		Transform* getTransform() { return m_transform; }
 		const Transform* getTransform() const { return m_transform; }

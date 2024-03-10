@@ -90,6 +90,14 @@ void rift2d::Scene::end() const
 	}
 }
 
+void Scene::onImGui() const
+{
+	for (auto& object : m_rootGameObjects)
+	{
+		object->onImGui();
+	}
+}
+
 void Scene::frameCleanup() 
 {
 	//remove dead game objects

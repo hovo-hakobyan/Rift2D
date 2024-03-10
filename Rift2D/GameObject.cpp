@@ -90,6 +90,20 @@ void rift2d::GameObject::end()
 
 }
 
+void rift2d::GameObject::onImGui() const
+{
+	for(auto& comp: m_components)
+	{
+		comp->onImGui();
+	}
+
+	for (auto& child : m_children)
+	{
+		child->onImGui();
+	}
+
+}
+
 
 void rift2d::GameObject::processComponentRemovals()
 {

@@ -16,6 +16,7 @@ namespace rift2d
 		void update() const;
 		void lateUpdate() const;
 		void end() const;
+		void onImGui() const;
 		void frameCleanup() const;
 
 		Scene* GetCurrentScene() const { return m_scenes[m_currentSceneIdx].get(); } 

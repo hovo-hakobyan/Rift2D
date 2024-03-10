@@ -13,6 +13,7 @@ namespace rift2d
 		LineGraph& operator=(const LineGraph& other) = delete;
 		LineGraph& operator=(LineGraph&& other) = delete;
 
+		virtual void onImGui() override;
 	private:
 
 	};

@@ -56,16 +56,12 @@ void rift2d::Renderer::render() const
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
-	ImGui::Begin("My ImPlot Demo");
+	//ImGui::Begin("My ImPlot Demo");
 
-	if (ImPlot::BeginPlot("My Plot")) {
-		float x_data[] = { 1, 2, 3, 4, 5 };
-		float y_data[] = { 1, 4, 9, 16, 25 };
+	SceneManager::GetInstance().onImGui();
 
-		ImPlot::PlotLine("My Line Plot", x_data, y_data, 5);
-		ImPlot::EndPlot();
-	}
-	ImGui::End();
+	
+	//ImGui::End();
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

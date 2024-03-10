@@ -40,6 +40,7 @@ namespace rift2d
 		virtual void update() {}
 		virtual void lateUpdate() {}
 		virtual void end() {}
+		virtual void onImGui(){}
 
 		void markForRemoval() { m_isMarkedForRemoval = true; }
 		bool isMarkedForRemoval() const { return m_isMarkedForRemoval; }

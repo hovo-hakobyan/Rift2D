@@ -17,6 +17,7 @@
 #include "FPSComponent.h"
 #include <filesystem>
 
+#include "LineGraph.h"
 #include "Rotator.h"
 namespace fs = std::filesystem;
 
@@ -70,7 +71,10 @@ void load()
 
 	mainObj->setParent(rootObj, false);
 	enemyObj->setParent(mainObj, false);
-	
+
+	gameObject = std::make_unique<rift2d::GameObject>(&scene);
+	gameObject->addComponent<rift2d::LineGraph>();
+	scene.add(std::move(gameObject));
 
 }
 
