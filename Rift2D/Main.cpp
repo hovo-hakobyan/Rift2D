@@ -19,6 +19,7 @@
 
 #include "LineGraph.h"
 #include "Rotator.h"
+#include "TrashTheCache.h"
 namespace fs = std::filesystem;
 
 void load()
@@ -73,7 +74,7 @@ void load()
 	enemyObj->setParent(mainObj, false);
 
 	gameObject = std::make_unique<rift2d::GameObject>(&scene);
-	gameObject->addComponent<rift2d::LineGraph>();
+	gameObject->addComponent<rift2d::TrashTheCache>();
 	scene.add(std::move(gameObject));
 
 }

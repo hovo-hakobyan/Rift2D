@@ -56,12 +56,9 @@ void rift2d::Renderer::render() const
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
-	//ImGui::Begin("My ImPlot Demo");
 
 	SceneManager::GetInstance().onImGui();
 
-	
-	//ImGui::End();
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
