@@ -12,9 +12,13 @@ add_library(ImGui STATIC
   backends/imgui_impl_sdl2.cpp
   backends/imgui_impl_sdlrenderer2.cpp
   backends/imgui_impl_opengl3.cpp
+# Add ImPlot source files here
+../implot/implot.cpp
+../implot/implot_items.cpp
+
 )
 
 set(ImGuiIncludeDir "${CMAKE_CURRENT_SOURCE_DIR}" PARENT_SCOPE)
 
 # Specify include directories for users of ImGui
-target_include_directories(ImGui PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${SDL2_INCLUDE_DIR})
+target_include_directories(ImGui PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/implot ${SDL2_INCLUDE_DIR})

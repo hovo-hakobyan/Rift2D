@@ -49,6 +49,8 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Rift2D/Interfaces.h
   Rift2D/SpriteComponent.cpp
   Rift2D/SpriteComponent.h
+  Rift2D/LineGraph.cpp
+  Rift2D/LineGraph.h
 )
 
 # enable c++20 features

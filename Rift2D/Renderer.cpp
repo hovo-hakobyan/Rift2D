@@ -10,6 +10,7 @@
 #include "SceneManager.h"
 #include "Texture2D.h"
 #include "Interfaces.h"
+#include "../3rdParty/implot/implot.h"
 
 int GetOpenGLDriverIndex()
 {
@@ -38,6 +39,7 @@ void rift2d::Renderer::init(SDL_Window* window)
 	ImGui::CreateContext();
 	ImGui_ImplSDL2_InitForOpenGL(window, SDL_GL_GetCurrentContext());
 	ImGui_ImplOpenGL3_Init();
+	ImPlot::CreateContext();
 }
 
 void rift2d::Renderer::render() const
@@ -54,10 +56,18 @@ void rift2d::Renderer::render() const
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
-	ImGui::ShowDemoWindow();
+	ImGui::Begin("My ImPlot Demo");
+
+	if (ImPlot::BeginPlot("My Plot")) {
+		float x_data[] = { 1, 2, 3, 4, 5 };
+		float y_data[] = { 1, 4, 9, 16, 25 };
+
+		ImPlot::PlotLine("My Line Plot", x_data, y_data, 5);
+		ImPlot::EndPlot();
+	}
+	ImGui::End();
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	
 
 	SDL_RenderPresent(m_renderer);
 }
@@ -67,6 +77,7 @@ void rift2d::Renderer::destroy()
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
+	ImPlot::DestroyContext();
 
 	if (m_renderer != nullptr)
 	{
