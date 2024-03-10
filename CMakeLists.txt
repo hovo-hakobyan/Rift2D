@@ -13,6 +13,8 @@ else()
   set(TARGET_PARAM WIN32)
 endif()
 
+
+
 # list source files here
 add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Rift2D/BaseComponent.h
@@ -141,12 +143,17 @@ if (WIN32)
     endif()
   endif()
 
+# Include the ImGui library
+add_subdirectory(3rdParty/imgui)
+
   # set all include directories
   target_include_directories(${TARGET_NAME} PRIVATE
     ${VLD_INCLUDE_DIR}
     ${SDL2_INCLUDE_DIR} 
     ${SDL2_IMAGE_INCLUDE_DIR} 
-    ${SDL2_TTF_INCLUDE_DIR})
+    ${SDL2_TTF_INCLUDE_DIR}
+    ${ImGuiIncludeDir}
+)
   
   # set libraries to link with
   target_link_libraries(${TARGET_NAME} PUBLIC
@@ -154,6 +161,7 @@ if (WIN32)
     ${SDL2_IMAGE_LIBRARIES} 
     ${SDL2_TTF_LIBRARIES} 
     ${VLD_LIBRARY}
+    ImGui 
   )
 
 elseif(NOT EMSCRIPTEN)
@@ -187,13 +195,17 @@ elseif(NOT EMSCRIPTEN)
   set(SDL2TTF_INSTALL OFF)
   FetchContent_MakeAvailable(SDL2_ttf)
 
+# Include the ImGui library
+add_subdirectory(3rdParty/imgui)
+
   target_include_directories("${TARGET_NAME}" PUBLIC 
     ${sdl2_SOURCE_DIR}/include
     ${sdl2_image_SOURCE_DIR}/include
     ${sdl2_ttf_SOURCE_DIR}
+    ${ImGuiIncludeDir}
   )
   target_link_libraries("${TARGET_NAME}" PUBLIC 
-    SDL2::SDL2main SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf
+  ImGui SDL2::SDL2main SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf 
   )
 endif()
 
