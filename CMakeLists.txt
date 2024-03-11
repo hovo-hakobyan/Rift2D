@@ -152,6 +152,7 @@ if (WIN32)
 
 # Include the ImGui library
 add_subdirectory(3rdParty/imgui)
+add_subdirectory(3rdParty/implot)
 
   # set all include directories
   target_include_directories(${TARGET_NAME} PRIVATE
@@ -160,6 +161,7 @@ add_subdirectory(3rdParty/imgui)
     ${SDL2_IMAGE_INCLUDE_DIR} 
     ${SDL2_TTF_INCLUDE_DIR}
     ${ImGuiIncludeDir}
+    ${ImPlotIncludeDir}
 )
   
   # set libraries to link with
@@ -168,7 +170,8 @@ add_subdirectory(3rdParty/imgui)
     ${SDL2_IMAGE_LIBRARIES} 
     ${SDL2_TTF_LIBRARIES} 
     ${VLD_LIBRARY}
-    ImGui 
+    ImGui
+    ImPlot
   )
 
 elseif(NOT EMSCRIPTEN)
@@ -204,15 +207,17 @@ elseif(NOT EMSCRIPTEN)
 
 # Include the ImGui library
 add_subdirectory(3rdParty/imgui)
+add_subdirectory(3rdParty/implot)
 
   target_include_directories("${TARGET_NAME}" PUBLIC 
     ${sdl2_SOURCE_DIR}/include
     ${sdl2_image_SOURCE_DIR}/include
     ${sdl2_ttf_SOURCE_DIR}
     ${ImGuiIncludeDir}
+    ${ImPlotIncludeDir}
   )
   target_link_libraries("${TARGET_NAME}" PUBLIC 
-  ImGui SDL2::SDL2main SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf 
+  ImGui ImPlot SDL2::SDL2main SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf 
   )
 endif()
 

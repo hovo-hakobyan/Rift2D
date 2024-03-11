@@ -10,7 +10,7 @@
 #include "SceneManager.h"
 #include "Texture2D.h"
 #include "Interfaces.h"
-#include "../3rdParty/implot/implot.h"
+#include "implot.h"
 
 int GetOpenGLDriverIndex()
 {
