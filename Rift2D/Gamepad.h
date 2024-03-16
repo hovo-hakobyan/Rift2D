@@ -1,6 +1,5 @@
 #pragma once
-#include <Windows.h>
-#include <Xinput.h>
+#include <memory>
 #include <glm/vec2.hpp>
 
 namespace rift2d
@@ -9,7 +8,7 @@ namespace rift2d
 	{
 	public:
 		explicit Gamepad(unsigned int id);
-		~Gamepad() = default;
+		~Gamepad();
 		Gamepad(const Gamepad& other) = delete;
 		Gamepad(Gamepad&& other) = delete;
 		Gamepad& operator=(const Gamepad& other) = delete;
@@ -29,13 +28,8 @@ namespace rift2d
 		
 
 	private:
-		unsigned int m_id{};
-		XINPUT_STATE m_previousState{};
-		XINPUT_STATE m_currentState{};
-		bool m_isConnected{ false };
-		unsigned int buttonsPressedThisFrame{};
-		unsigned int buttonsReleasedThisFrame{};
-		float m_deadZone{ 0.5f };
+		class Impl;
+		std::unique_ptr<Impl> m_pimpl;
 	};
 
 

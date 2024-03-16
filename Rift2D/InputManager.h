@@ -1,10 +1,11 @@
 #pragma once
-#include <memory>
 #include <vector>
 #include "Axis2DCommand.h"
 #include "Gamepad.h"
 #include "Singleton.h"
 #include <SDL.h>
+#include <Windows.h>
+#include <Xinput.h>
 
 namespace rift2d
 {
@@ -36,7 +37,6 @@ namespace rift2d
 		LThumbStick,
 		RThumbStick,
 		DPad
-
 	};
 
 	class InputManager final : public Singleton<InputManager>

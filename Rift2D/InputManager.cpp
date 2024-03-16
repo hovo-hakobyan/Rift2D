@@ -26,12 +26,11 @@ bool rift2d::InputManager::processInput()
 	processGamepadAxis();
 	processGamepadActions();
 
-	const bool over = processSDL();
+	if (!processSDL()) return false;
 	processKeyboardAxis();
 	processKeyboardActions();
 
-	return over;
-
+	return true;
 	
 }
 
