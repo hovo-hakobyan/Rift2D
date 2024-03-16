@@ -53,6 +53,13 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Rift2D/LineGraph.h
   Rift2D/TrashTheCache.cpp
   Rift2D/TrashTheCache.h
+  Rift2D/Gamepad.cpp
+  Rift2D/Gamepad.h
+  Rift2D/ShootCommand.cpp
+  Rift2D/ShootCommand.h
+  Rift2D/Axis2DCommand.h
+  Rift2D/MoveCommand.cpp
+  Rift2D/MoveCommand.h
 )
 
 
@@ -172,6 +179,7 @@ add_subdirectory(3rdParty/implot)
     ${VLD_LIBRARY}
     ImGui
     ImPlot
+    xinput
   )
 
 elseif(NOT EMSCRIPTEN)

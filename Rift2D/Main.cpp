@@ -11,15 +11,14 @@
 #include "Scene.h"
 #include "ResourceManager.h"
 #include "TextComponent.h"
-#include "Font.h"
 #include "SpriteComponent.h"
 #include "GameObject.h"
 #include "FPSComponent.h"
 #include <filesystem>
+#include "InputManager.h"
+#include "MoveCommand.h"
+#include "ShootCommand.h"
 
-#include "LineGraph.h"
-#include "Rotator.h"
-#include "TrashTheCache.h"
 namespace fs = std::filesystem;
 
 void load()
@@ -53,29 +52,21 @@ void load()
 	gameObject->addComponent<rift2d::FPSComponent>();
 	scene.add(std::move(gameObject));
 
-	//Root object characters
 	gameObject = std::make_unique<rift2d::GameObject>(&scene);
-	auto rootObj = scene.add(std::move(gameObject));
-	rootObj->getTransform()->setLocalPosition(80.f, 200.f, 1.f);
-
-	gameObject = std::make_unique<rift2d::GameObject>(&scene);
-	gameObject->addComponent<rift2d::Rotator>(40.f, 180.f);
 	spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
 	spriteComponent->setTexture("Tom.jpg");
-	auto mainObj = scene.add(std::move(gameObject));
-
-	gameObject = std::make_unique<rift2d::GameObject>(&scene);
-	gameObject->addComponent<rift2d::Rotator>(40.f, -360.f);
-	spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
-	spriteComponent->setTexture("Tom.jpg");
-	auto enemyObj = scene.add(std::move(gameObject));
-
-	mainObj->setParent(rootObj, false);
-	enemyObj->setParent(mainObj, false);
-
-	gameObject = std::make_unique<rift2d::GameObject>(&scene);
-	gameObject->addComponent<rift2d::TrashTheCache>();
+	gameObject->getTransform()->setLocalPosition(30.f, 150.f, 1.f);
+	//rift2d::InputManager::GetInstance().bindAction(rift2d::GamepadKey::A, 0, rift2d::InputEvent::Down,std::make_unique<rift2d::ShootCommand>(gameObject.get()));
+	rift2d::InputManager::GetInstance().bindAxis2D(rift2d::GamepadAxis2D::LThumbStick, 0, std::make_unique<rift2d::MoveCommand>(gameObject.get(),150.f));
 	scene.add(std::move(gameObject));
+
+	gameObject = std::make_unique<rift2d::GameObject>(&scene);
+	spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
+	spriteComponent->setTexture("Tom.jpg");
+	gameObject->getTransform()->setLocalPosition(30.f, 180.f, 1.f);
+
+	scene.add(std::move(gameObject));
+
 
 }
 

@@ -92,6 +92,7 @@ rift2d::Rift2DEngine::Rift2DEngine(const std::filesystem::path &dataPath)
 
 	Renderer::GetInstance().init(g_window);
 	ResourceManager::GetInstance().init(dataPath);
+	
 }
 
 rift2d::Rift2DEngine::~Rift2DEngine()
@@ -108,6 +109,7 @@ void rift2d::Rift2DEngine::run(const std::function<void()>& load)
 #ifndef __EMSCRIPTEN__
 
 	SceneManager::GetInstance().init();
+	InputManager::GetInstance().init();
 	auto& timeManager = TimeManager::GetInstance();
 	using namespace std::chrono;
 
