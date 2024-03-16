@@ -49,7 +49,7 @@ namespace rift2d
 		void bindAction(GamepadKey key, unsigned int gamepadId,InputEvent event, std::unique_ptr<ICommand> command);
 		void bindAction(SDL_KeyCode keyboardKey, InputEvent event, std::unique_ptr<ICommand> command);
 		void bindAxis2D(GamepadAxis2D axis2D, unsigned int gamepadId, std::unique_ptr<Axis2DCommand> command);
-		void bindAxis2D(SDL_KeyCode x, SDL_KeyCode y, SDL_KeyCode xNegative, SDL_KeyCode yNegative, std::unique_ptr<Axis2DCommand> command);
+		void bindAxis2D(SDL_Scancode x, SDL_Scancode y, SDL_Scancode xNegative, SDL_Scancode yNegative, std::unique_ptr<Axis2DCommand> command);
 
 		void unbindCommand(ICommand* command);
 
@@ -79,10 +79,10 @@ namespace rift2d
 
 		struct KeyboardAxis2DBinding
 		{
-			SDL_KeyCode x;
-			SDL_KeyCode y;
-			SDL_KeyCode xNegative;
-			SDL_KeyCode yNegative;
+			SDL_Scancode x;
+			SDL_Scancode y;
+			SDL_Scancode xNegative;
+			SDL_Scancode yNegative;
 			std::unique_ptr<Axis2DCommand> command;
 		};
 

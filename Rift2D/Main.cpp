@@ -63,7 +63,7 @@ void load()
 	gameObject = std::make_unique<rift2d::GameObject>(&scene);
 	spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
 	spriteComponent->setTexture("Tom.jpg");
-	rift2d::InputManager::GetInstance().bindAxis2D(SDLK_d,SDLK_s,SDLK_a, SDLK_w,
+	rift2d::InputManager::GetInstance().bindAxis2D(SDL_SCANCODE_D, SDL_SCANCODE_S, SDL_SCANCODE_A, SDL_SCANCODE_W,
 		std::make_unique<rift2d::MoveCommand>(gameObject.get(), 150.f));
 	gameObject->getTransform()->setLocalPosition(30.f, 180.f, 1.f);
 	scene.add(std::move(gameObject));

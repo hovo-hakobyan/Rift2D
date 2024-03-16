@@ -58,7 +58,7 @@ void rift2d::InputManager::bindAxis2D(GamepadAxis2D axis, unsigned gamepadId, st
 	m_gamepadAxis2DBindings.push_back({ axis,gamepadId,std::move(command) });
 }
 
-void rift2d::InputManager::bindAxis2D(SDL_KeyCode x, SDL_KeyCode y, SDL_KeyCode xNegative, SDL_KeyCode yNegative,
+void rift2d::InputManager::bindAxis2D(SDL_Scancode x, SDL_Scancode y, SDL_Scancode xNegative, SDL_Scancode yNegative,
 	std::unique_ptr<Axis2DCommand> command)
 {
 	command->getObject()->registerCommand(command.get());
@@ -239,7 +239,7 @@ bool rift2d::InputManager::processSDL()
 		}
 		if (e.type == SDL_KEYDOWN)
 		{
-			m_keyStatesSDL[e.key.keysym.sym] = true;
+			m_keyStatesSDL[e.key.keysym.scancode] = true;
 			if (e.key.repeat == 0)
 			{
 				for (auto& keyboardActionBinding : m_keyboardActionBindings)
@@ -251,7 +251,7 @@ bool rift2d::InputManager::processSDL()
 		}
 		if (e.type == SDL_KEYUP) 
 		{
-			m_keyStatesSDL[e.key.keysym.sym] = false;
+			m_keyStatesSDL[e.key.keysym.scancode] = false;
 			if (e.key.repeat == 0)
 			{
 				for (auto& keyboardActionBinding : m_keyboardActionBindings)
