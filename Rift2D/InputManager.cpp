@@ -1,8 +1,6 @@
-#include <SDL.h>
+
 #include "InputManager.h"
-
 #include <iostream>
-
 #include "backends/imgui_impl_sdl2.h"
 
 void rift2d::InputManager::init()
@@ -30,6 +28,7 @@ bool rift2d::InputManager::processInput()
 
 	const bool over = processSDL();
 	processKeyboardAxis();
+	processKeyboardActions();
 
 	return over;
 
@@ -42,12 +41,17 @@ void rift2d::InputManager::bindAction(GamepadKey key, unsigned int gamepadId, In
 	m_gamepadActionBindings.push_back({ key,gamepadId,event,std::move(command) });
 }
 
+void rift2d::InputManager::bindAction(SDL_KeyCode keyboardKey, InputEvent event, std::unique_ptr<ICommand> command)
+{
+	m_keyboardActionBindings.push_back({ keyboardKey,event,std::move(command) });
+}
+
 void rift2d::InputManager::bindAxis2D(GamepadAxis2D axis, unsigned gamepadId, std::unique_ptr<Axis2DCommand> command)
 {
 	m_gamepadAxis2DBindings.push_back({ axis,gamepadId,std::move(command) });
 }
 
-void rift2d::InputManager::bindAxis2D(int x, int y, int xNegative, int yNegative,
+void rift2d::InputManager::bindAxis2D(SDL_KeyCode x, SDL_KeyCode y, SDL_KeyCode xNegative, SDL_KeyCode yNegative,
 	std::unique_ptr<Axis2DCommand> command)
 {
 	m_keyboardAxis2DBindings.push_back({ x,y,xNegative,yNegative,std::move(command) });
@@ -60,6 +64,8 @@ void rift2d::InputManager::processGamepadActions() const
 	{
 		if (const auto gamepad = m_gamepads[action.gamepadId].get())
 		{
+			if (!gamepad->isStateChanged()) continue;
+			
 			bool shouldExecute = false;
 			switch (action.event)
 			{
@@ -149,6 +155,18 @@ void rift2d::InputManager::processKeyboardAxis() const
 	}
 }
 
+void rift2d::InputManager::processKeyboardActions() 
+{
+	for (auto& keyboardActionBinding : m_keyboardActionBindings)
+	{
+		if(keyboardActionBinding.shouldExecute)
+		{
+			keyboardActionBinding.command->execute();
+			keyboardActionBinding.shouldExecute = false;
+		}
+	}
+}
+
 bool rift2d::InputManager::processSDL()
 {
 	SDL_Event e;
@@ -161,10 +179,26 @@ bool rift2d::InputManager::processSDL()
 		if (e.type == SDL_KEYDOWN)
 		{
 			m_keyStatesSDL[e.key.keysym.sym] = true;
+			if (e.key.repeat == 0)
+			{
+				for (auto& keyboardActionBinding : m_keyboardActionBindings)
+				{
+					if (keyboardActionBinding.event == InputEvent::Down && e.key.keysym.sym == keyboardActionBinding.key)
+						keyboardActionBinding.shouldExecute = true;
+				}
+			}
 		}
 		if (e.type == SDL_KEYUP) 
 		{
 			m_keyStatesSDL[e.key.keysym.sym] = false;
+			if (e.key.repeat == 0)
+			{
+				for (auto& keyboardActionBinding : m_keyboardActionBindings)
+				{
+					if (keyboardActionBinding.event == InputEvent::Up && e.key.keysym.sym == keyboardActionBinding.key)
+						keyboardActionBinding.shouldExecute = true;
+				}
+			}
 		}
 
 		ImGui_ImplSDL2_ProcessEvent(&e);

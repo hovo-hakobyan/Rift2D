@@ -21,6 +21,7 @@ namespace rift2d
 		bool isDown(unsigned int button) const;
 		bool isPressed(unsigned int button) const;
 		bool isUp(unsigned int button) const;
+		bool isStateChanged() const;
 
 		glm::vec2 getThumbL2D() const;
 		glm::vec2 getThumbR2D() const;
@@ -35,7 +36,6 @@ namespace rift2d
 		unsigned int buttonsPressedThisFrame{};
 		unsigned int buttonsReleasedThisFrame{};
 		float m_deadZone{ 0.5f };
-
 	};
 
 

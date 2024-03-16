@@ -4,6 +4,7 @@
 #include "Axis2DCommand.h"
 #include "Gamepad.h"
 #include "Singleton.h"
+#include <SDL.h>
 
 namespace rift2d
 {
@@ -44,9 +45,9 @@ namespace rift2d
 		void init();
 		bool processInput();
 		void bindAction(GamepadKey key, unsigned int gamepadId,InputEvent event, std::unique_ptr<ICommand> command);
-		void bindAction(unsigned int keyboardKey, InputEvent event, std::unique_ptr<ICommand> command);
+		void bindAction(SDL_KeyCode keyboardKey, InputEvent event, std::unique_ptr<ICommand> command);
 		void bindAxis2D(GamepadAxis2D axis2D, unsigned int gamepadId, std::unique_ptr<Axis2DCommand> command);
-		void bindAxis2D(int x,  int y, int xNegative, int yNegative, std::unique_ptr<Axis2DCommand> command);
+		void bindAxis2D(SDL_KeyCode x, SDL_KeyCode y, SDL_KeyCode xNegative, SDL_KeyCode yNegative, std::unique_ptr<Axis2DCommand> command);
 
 	private:
 		struct GamepadActionBinding
@@ -66,17 +67,18 @@ namespace rift2d
 
 		struct KeyboardActionBinding
 		{
-			unsigned int key;
+			SDL_KeyCode key;
 			InputEvent event;
 			std::unique_ptr<ICommand> command;
+			bool shouldExecute = false;
 		};
 
 		struct KeyboardAxis2DMapping
 		{
-			int x;
-			int y;
-			int xNegative;
-			int yNegative;
+			SDL_KeyCode x;
+			SDL_KeyCode y;
+			SDL_KeyCode xNegative;
+			SDL_KeyCode yNegative;
 			std::unique_ptr<Axis2DCommand> command;
 		};
 
@@ -84,12 +86,14 @@ namespace rift2d
 		std::vector<GamepadAxisBinding2D> m_gamepadAxis2DBindings;
 		std::vector<KeyboardActionBinding> m_keyboardActionBindings;
 		std::vector<KeyboardAxis2DMapping> m_keyboardAxis2DBindings;
+
 		std::vector<std::unique_ptr<Gamepad>> m_gamepads;
 		std::vector<bool> m_keyStatesSDL;
 
 		void processGamepadActions() const;
 		void processGamepadAxis() const;
 		void processKeyboardAxis() const;
+		void processKeyboardActions();
 		bool processSDL();
 	};
 

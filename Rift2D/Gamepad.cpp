@@ -61,6 +61,11 @@ bool rift2d::Gamepad::isUp(unsigned button) const
     return buttonsReleasedThisFrame & button;
 }
 
+bool rift2d::Gamepad::isStateChanged() const
+{
+    return m_currentState.dwPacketNumber != m_previousState.dwPacketNumber;
+}
+
 glm::vec2 rift2d::Gamepad::getThumbL2D() const
 {
 	const float deadzoneThreshold = m_deadZone * 32767;
