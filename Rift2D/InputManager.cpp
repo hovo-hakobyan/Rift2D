@@ -1,6 +1,8 @@
 
 #include "InputManager.h"
 #include <iostream>
+
+#include "GameObject.h"
 #include "backends/imgui_impl_sdl2.h"
 
 void rift2d::InputManager::init()
@@ -37,24 +39,84 @@ bool rift2d::InputManager::processInput()
 void rift2d::InputManager::bindAction(GamepadKey key, unsigned int gamepadId, InputEvent event,
 	std::unique_ptr<ICommand> command)
 {
+	command->getObject()->registerCommand(command.get());
+	command->setBindingType(ICommand::BindingType::GamepadAction);
 	m_gamepadActionBindings.push_back({ key,gamepadId,event,std::move(command) });
 }
 
 void rift2d::InputManager::bindAction(SDL_KeyCode keyboardKey, InputEvent event, std::unique_ptr<ICommand> command)
 {
+	command->getObject()->registerCommand(command.get());
+	command->setBindingType(ICommand::BindingType::KeyboardAction);
 	m_keyboardActionBindings.push_back({ keyboardKey,event,std::move(command) });
 }
 
 void rift2d::InputManager::bindAxis2D(GamepadAxis2D axis, unsigned gamepadId, std::unique_ptr<Axis2DCommand> command)
 {
+	command->getObject()->registerCommand(command.get());
+	command->setBindingType(ICommand::BindingType::GamepadAxis);
 	m_gamepadAxis2DBindings.push_back({ axis,gamepadId,std::move(command) });
 }
 
 void rift2d::InputManager::bindAxis2D(SDL_KeyCode x, SDL_KeyCode y, SDL_KeyCode xNegative, SDL_KeyCode yNegative,
 	std::unique_ptr<Axis2DCommand> command)
 {
+	command->getObject()->registerCommand(command.get());
+	command->setBindingType(ICommand::BindingType::KeyboardAxis);
 	m_keyboardAxis2DBindings.push_back({ x,y,xNegative,yNegative,std::move(command) });
 }
+
+void rift2d::InputManager::unbindCommand(ICommand* command)
+{
+	if (!command) return;
+
+	switch (command->getBindingType())
+	{
+	case ICommand::BindingType::GamepadAction:
+	{
+		auto it = std::remove_if(m_gamepadActionBindings.begin(), m_gamepadActionBindings.end(), [command](auto& binding)
+			{
+				return binding.command.get() == command;
+			});
+
+		m_gamepadActionBindings.erase(it, m_gamepadActionBindings.end());
+		break;
+	}
+	case ICommand::BindingType::KeyboardAction:
+	{
+		auto it = std::remove_if(m_keyboardActionBindings.begin(), m_keyboardActionBindings.end(), [command](auto& binding)
+			{
+				return binding.command.get() == command;
+			});
+
+		m_keyboardActionBindings.erase(it, m_keyboardActionBindings.end());
+		break;
+	}
+	case ICommand::BindingType::GamepadAxis:
+		{
+		auto it = std::remove_if(m_gamepadAxis2DBindings.begin(), m_gamepadAxis2DBindings.end(), [command](auto& binding)
+			{
+				return binding.command.get() == command;
+			});
+
+		m_gamepadAxis2DBindings.erase(it, m_gamepadAxis2DBindings.end());
+		break;
+		}
+	case ICommand::BindingType::KeyboardAxis:
+		{
+		auto it = std::remove_if(m_keyboardAxis2DBindings.begin(), m_keyboardAxis2DBindings.end(), [command](auto& binding)
+			{
+				return binding.command.get() == command;
+			});
+
+		m_keyboardAxis2DBindings.erase(it, m_keyboardAxis2DBindings.end());
+		break;
+		}
+		
+	}
+}
+
+
 
 void rift2d::InputManager::processGamepadActions() const
 {

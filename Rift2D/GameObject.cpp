@@ -5,6 +5,8 @@
 #include "Scene.h"
 #include  <ranges>
 
+#include "InputManager.h"
+
 bool rift2d::GameObject::m_gameStarted{ false };
 
 rift2d::GameObject::GameObject(Scene* pOwner):
@@ -87,6 +89,12 @@ void rift2d::GameObject::end()
 		child->end();
 	}
 	m_children.clear();
+
+	for (const auto command : m_commands)
+	{
+		InputManager::GetInstance().unbindCommand(command);
+	}
+	
 
 }
 
@@ -223,6 +231,11 @@ void rift2d::GameObject::markForDestroy()
 	{
 		child->markForDestroy();
 	}
+}
+
+void rift2d::GameObject::registerCommand(ICommand* command)
+{
+	m_commands.push_back(command);
 }
 
 bool rift2d::GameObject::isValidParent(GameObject* pNewParent) const

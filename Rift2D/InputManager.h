@@ -39,6 +39,8 @@ namespace rift2d
 		DPad
 	};
 
+	
+
 	class InputManager final : public Singleton<InputManager>
 	{
 	public:
@@ -48,6 +50,8 @@ namespace rift2d
 		void bindAction(SDL_KeyCode keyboardKey, InputEvent event, std::unique_ptr<ICommand> command);
 		void bindAxis2D(GamepadAxis2D axis2D, unsigned int gamepadId, std::unique_ptr<Axis2DCommand> command);
 		void bindAxis2D(SDL_KeyCode x, SDL_KeyCode y, SDL_KeyCode xNegative, SDL_KeyCode yNegative, std::unique_ptr<Axis2DCommand> command);
+
+		void unbindCommand(ICommand* command);
 
 	private:
 		struct GamepadActionBinding
@@ -73,7 +77,7 @@ namespace rift2d
 			bool shouldExecute = false;
 		};
 
-		struct KeyboardAxis2DMapping
+		struct KeyboardAxis2DBinding
 		{
 			SDL_KeyCode x;
 			SDL_KeyCode y;
@@ -85,7 +89,7 @@ namespace rift2d
 		std::vector<GamepadActionBinding> m_gamepadActionBindings;
 		std::vector<GamepadAxisBinding2D> m_gamepadAxis2DBindings;
 		std::vector<KeyboardActionBinding> m_keyboardActionBindings;
-		std::vector<KeyboardAxis2DMapping> m_keyboardAxis2DBindings;
+		std::vector<KeyboardAxis2DBinding> m_keyboardAxis2DBindings;
 
 		std::vector<std::unique_ptr<Gamepad>> m_gamepads;
 		std::vector<bool> m_keyStatesSDL;

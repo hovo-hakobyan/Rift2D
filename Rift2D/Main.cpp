@@ -65,8 +65,8 @@ void load()
 	rift2d::InputManager::GetInstance().bindAxis2D(SDLK_d,SDLK_s,SDLK_a, SDLK_w, std::make_unique<rift2d::MoveCommand>(gameObject.get(), 150.f));
 	gameObject->getTransform()->setLocalPosition(30.f, 180.f, 1.f);
 
-	scene.add(std::move(gameObject));
-
+	auto o = scene.add(std::move(gameObject));
+	o->markForDestroy();
 
 }
 
