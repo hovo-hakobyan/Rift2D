@@ -56,17 +56,17 @@ void load()
 	spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
 	spriteComponent->setTexture("Tom.jpg");
 	gameObject->getTransform()->setLocalPosition(30.f, 150.f, 1.f);
-	rift2d::InputManager::GetInstance().bindAxis2D(rift2d::GamepadAxis2D::DPad, 0, std::make_unique<rift2d::MoveCommand>(gameObject.get(),300.f));
+	rift2d::InputManager::GetInstance().bindAxis2D(rift2d::GamepadAxis2D::DPad, 0,
+		std::make_unique<rift2d::MoveCommand>(gameObject.get(),300.f));
 	scene.add(std::move(gameObject));
 
 	gameObject = std::make_unique<rift2d::GameObject>(&scene);
 	spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
 	spriteComponent->setTexture("Tom.jpg");
-	rift2d::InputManager::GetInstance().bindAxis2D(SDLK_d,SDLK_s,SDLK_a, SDLK_w, std::make_unique<rift2d::MoveCommand>(gameObject.get(), 150.f));
+	rift2d::InputManager::GetInstance().bindAxis2D(SDLK_d,SDLK_s,SDLK_a, SDLK_w,
+		std::make_unique<rift2d::MoveCommand>(gameObject.get(), 150.f));
 	gameObject->getTransform()->setLocalPosition(30.f, 180.f, 1.f);
-
-	auto o = scene.add(std::move(gameObject));
-	o->markForDestroy();
+	scene.add(std::move(gameObject));
 
 }
 

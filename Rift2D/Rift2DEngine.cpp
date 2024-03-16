@@ -92,6 +92,7 @@ rift2d::Rift2DEngine::Rift2DEngine(const std::filesystem::path &dataPath)
 
 	Renderer::GetInstance().init(g_window);
 	ResourceManager::GetInstance().init(dataPath);
+	SDL_GL_SetSwapInterval(1); //Enable VSync
 	
 }
 
@@ -115,14 +116,13 @@ void rift2d::Rift2DEngine::run(const std::function<void()>& load)
 
 	bool doContinue = true;
 	auto lastTime = high_resolution_clock::now();
-	const float msPerFrame{ 1000.f / timeManager.m_desiredFps };
-	timeManager.m_deltaTime = 1.0f / timeManager.m_desiredFps;
+	timeManager.m_deltaTime = 1.0f / 144.f;
 	const float minDeltaTime = 0.001f;
 
 	while (doContinue)
 	{
 		const auto currentTime = high_resolution_clock::now();
-		const float deltaTime = duration<float, seconds::period>(currentTime - lastTime).count();
+		const float deltaTime = duration<float>(currentTime - lastTime).count();
 		timeManager.m_deltaTime = glm::max(deltaTime, minDeltaTime);
 		lastTime = currentTime;
 
@@ -132,9 +132,7 @@ void rift2d::Rift2DEngine::run(const std::function<void()>& load)
 		SceneManager::GetInstance().lateUpdate();
 		SceneManager::GetInstance().frameCleanup();
 		Renderer::GetInstance().render();
-
-		const auto sleepTime = currentTime + milliseconds(static_cast<int>(msPerFrame)) - high_resolution_clock::now();
-		std::this_thread::sleep_for(sleepTime);
+		
 	}
 	SceneManager::GetInstance().end();
 		
