@@ -3,6 +3,8 @@
 #include <iostream>
 #include <SDL_syswm.h>
 
+#include "InputManager.h"
+
 
 rift2d::Gamepad::Gamepad(unsigned int id): m_id{id}
 {
@@ -77,4 +79,16 @@ glm::vec2 rift2d::Gamepad::getThumbR2D() const
 	const float y = std::abs(m_currentState.Gamepad.sThumbRY) < deadzoneThreshold ? 0.0f : m_currentState.Gamepad.sThumbRY / 32767.0f;
 
     return glm::vec2{ x,-1.f * y };
+}
+
+glm::vec2 rift2d::Gamepad::getDPad2D() const
+{
+    glm::vec2 axis{};
+    if (isPressed(static_cast<unsigned int>(rift2d::GamepadKey::DPad_Left))) axis.x = -1.f;
+    else if (isPressed(static_cast<unsigned int>(rift2d::GamepadKey::DPad_Right))) axis.x = 1.0f;
+
+    if (isPressed(static_cast<unsigned int>(rift2d::GamepadKey::DPad_Down))) axis.y = 1.f;
+    else if (isPressed(static_cast<unsigned int>(rift2d::GamepadKey::DPad_Up))) axis.y = -1.0f;
+
+    return axis;
 }

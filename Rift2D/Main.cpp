@@ -57,7 +57,7 @@ void load()
 	spriteComponent->setTexture("Tom.jpg");
 	gameObject->getTransform()->setLocalPosition(30.f, 150.f, 1.f);
 	//rift2d::InputManager::GetInstance().bindAction(rift2d::GamepadKey::A, 0, rift2d::InputEvent::Down,std::make_unique<rift2d::ShootCommand>(gameObject.get()));
-	rift2d::InputManager::GetInstance().bindAxis2D(rift2d::GamepadAxis2D::LThumbStick, 0, std::make_unique<rift2d::MoveCommand>(gameObject.get(),150.f));
+	rift2d::InputManager::GetInstance().bindAxis2D(rift2d::GamepadAxis2D::DPad, 0, std::make_unique<rift2d::MoveCommand>(gameObject.get(),150.f));
 	scene.add(std::move(gameObject));
 
 	gameObject = std::make_unique<rift2d::GameObject>(&scene);

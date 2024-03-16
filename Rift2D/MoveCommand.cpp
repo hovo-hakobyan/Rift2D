@@ -12,7 +12,7 @@ Axis2DCommand(obj),m_speed(speed)
 
 void rift2d::MoveCommand::execute()
 {
-	auto offset = m_axisValue * m_speed * TimeManager::GetInstance().getDeltaTime();
+	const auto offset = m_axisValue * m_speed * TimeManager::GetInstance().getDeltaTime();
 	getObject()->getTransform()->addLocalOffset(offset.x, offset.y);
 
 }

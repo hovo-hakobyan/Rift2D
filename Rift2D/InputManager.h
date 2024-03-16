@@ -34,6 +34,7 @@ namespace rift2d
 	{
 		LThumbStick,
 		RThumbStick,
+		DPad
 
 	};
 
@@ -64,6 +65,10 @@ namespace rift2d
 		std::vector<ActionBinding> m_actionBindings;
 		std::vector<AxisBinding2D> m_axisBinding2Ds;
 		std::vector<std::unique_ptr<Gamepad>> m_gamepads;
+
+		void processGamepadActions() const;
+		void processGamepadAxis() const;
+		bool processSDL() const;
 	};
 
 }

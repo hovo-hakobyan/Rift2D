@@ -24,6 +24,7 @@ namespace rift2d
 
 		glm::vec2 getThumbL2D() const;
 		glm::vec2 getThumbR2D() const;
+		glm::vec2 getDPad2D() const;
 		
 
 	private:

@@ -21,10 +21,30 @@ bool rift2d::InputManager::processInput()
 		gamepad->update();
 	}
 
+	processGamepadAxis();
+	processGamepadActions();
+	return processSDL();
+
+	
+}
+
+void rift2d::InputManager::bindAction(GamepadKey key, unsigned int gamepadId, InputEvent event,
+	std::unique_ptr<ICommand> command)
+{
+	m_actionBindings.push_back({ key,gamepadId,event,std::move(command) });
+}
+
+void rift2d::InputManager::bindAxis2D(GamepadAxis2D axis, unsigned gamepadId, std::unique_ptr<Axis2DCommand> command)
+{
+	m_axisBinding2Ds.push_back({ axis,gamepadId,std::move(command) });
+}
+
+void rift2d::InputManager::processGamepadActions() const
+{
 	//process input actions
-	for(const auto& action : m_actionBindings)
+	for (const auto& action : m_actionBindings)
 	{
-		if(const auto gamepad = m_gamepads[action.gamepadId].get())
+		if (const auto gamepad = m_gamepads[action.gamepadId].get())
 		{
 			bool shouldExecute = false;
 			switch (action.event)
@@ -43,14 +63,18 @@ bool rift2d::InputManager::processInput()
 			if (shouldExecute) action.command->execute();
 		}
 	}
+}
 
-	for(const auto& axisEvent: m_axisBinding2Ds)
+void rift2d::InputManager::processGamepadAxis() const
+{
+	//process input axis
+	for (const auto& axisBinding2D : m_axisBinding2Ds)
 	{
-		if(const auto gamepad = m_gamepads[axisEvent.gamepadId].get())
+		if (const auto gamepad = m_gamepads[axisBinding2D.gamepadId].get())
 		{
 			bool shouldExecute = false;
-			glm::vec2 axisVal{0.f,0.f};
-			switch(axisEvent.axis2D)
+			glm::vec2 axisVal{ 0.f,0.f };
+			switch (axisBinding2D.axis2D)
 			{
 			case GamepadAxis2D::LThumbStick:
 				axisVal = gamepad->getThumbL2D();
@@ -58,29 +82,41 @@ bool rift2d::InputManager::processInput()
 				break;
 			case GamepadAxis2D::RThumbStick:
 				axisVal = gamepad->getThumbR2D();
+				shouldExecute = true;
+				break;
+			case GamepadAxis2D::DPad:
+				axisVal = gamepad->getDPad2D();
+				shouldExecute = true;
 				break;
 			}
 
 			if (!shouldExecute) continue;
 			if (std::abs(axisVal.x) > 0.f || std::abs(axisVal.y) > 0.0f)
 			{
-				axisEvent.command->setAxisValue(axisVal);
-				axisEvent.command->execute();
+				axisBinding2D.command->setAxisValue(axisVal);
+				axisBinding2D.command->execute();
 			}
 
 		}
 	}
+}
 
+bool rift2d::InputManager::processSDL() const
+{
 	SDL_Event e;
-	while (SDL_PollEvent(&e)) {
-		if (e.type == SDL_QUIT) {
+	while (SDL_PollEvent(&e))
+	{
+		if (e.type == SDL_QUIT)
+		{
 			return false;
 		}
-		if (e.type == SDL_KEYDOWN) {
-			
+		if (e.type == SDL_KEYDOWN)
+		{
+
 		}
-		if (e.type == SDL_MOUSEBUTTONDOWN) {
-			
+		if (e.type == SDL_MOUSEBUTTONDOWN)
+		{
+
 		}
 		// etc...
 
@@ -88,16 +124,5 @@ bool rift2d::InputManager::processInput()
 	}
 
 	return true;
-}
-
-void rift2d::InputManager::bindAction(GamepadKey key, unsigned int gamepadId, InputEvent event,
-	std::unique_ptr<ICommand> command)
-{
-	m_actionBindings.push_back({ key,gamepadId,event,std::move(command) });
-}
-
-void rift2d::InputManager::bindAxis2D(GamepadAxis2D axis, unsigned gamepadId, std::unique_ptr<Axis2DCommand> command)
-{
-	m_axisBinding2Ds.push_back({ axis,gamepadId,std::move(command) });
 }
 
