@@ -60,6 +60,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Rift2D/Axis2DCommand.h
   Rift2D/MoveCommand.cpp
   Rift2D/MoveCommand.h
+  Rift2D/Event.h
 )
 
 
