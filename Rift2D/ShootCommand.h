@@ -9,7 +9,8 @@ namespace rift2d
 	public:
 		explicit ShootCommand(GameObject* shooter);
 		void execute() override;
-
+	private:
+		GameObject* m_pShooter{};
 	};
 
 }

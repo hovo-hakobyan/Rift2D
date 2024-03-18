@@ -2,7 +2,7 @@
 #include <iostream>
 
 rift2d::ShootCommand::ShootCommand(GameObject* shooter):
-ICommand(shooter)
+m_pShooter(shooter)
 {
 }
 

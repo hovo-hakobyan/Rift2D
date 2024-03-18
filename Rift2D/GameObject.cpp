@@ -89,13 +89,6 @@ void rift2d::GameObject::end()
 		child->end();
 	}
 	m_children.clear();
-
-	for (const auto command : m_commands)
-	{
-		InputManager::GetInstance().unbindCommand(command);
-	}
-	
-
 }
 
 void rift2d::GameObject::onImGui() const
@@ -233,10 +226,6 @@ void rift2d::GameObject::markForDestroy()
 	}
 }
 
-void rift2d::GameObject::registerCommand(ICommand* command)
-{
-	m_commands.push_back(command);
-}
 
 bool rift2d::GameObject::isValidParent(GameObject* pNewParent) const
 {

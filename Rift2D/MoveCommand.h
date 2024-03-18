@@ -11,6 +11,7 @@ namespace rift2d
 			void execute() override;
 
 		private:
+			GameObject* m_pGameObj{};
 			float m_speed;
 	};
 

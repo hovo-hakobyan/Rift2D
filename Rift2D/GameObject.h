@@ -16,7 +16,6 @@ namespace rift2d
 		std::vector<std::unique_ptr<BaseComponent>> m_components;
 		std::vector<std::unique_ptr<BaseComponent>> m_componentsCache;
 		std::vector<BaseComponent*> m_deadComponents;
-		std::vector<ICommand*> m_commands;
 		static bool m_gameStarted;
 
 		std::vector<std::unique_ptr<GameObject>> m_children{};
@@ -55,8 +54,6 @@ namespace rift2d
 
 		void markForDestroy();
 		bool isMarkedForDestruction()const { return m_isMarkedForDestruction; }
-
-		void registerCommand(ICommand* command);
 
 		/// <summary>
 	/// Adds a component to the GameObject.

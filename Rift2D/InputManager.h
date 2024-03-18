@@ -39,17 +39,15 @@ namespace rift2d
 		DPad
 	};
 
-	
-
 	class InputManager final : public Singleton<InputManager>
 	{
 	public:
 		void init();
 		bool processInput();
-		void bindAction(GamepadKey key, unsigned int gamepadId,InputEvent event, std::unique_ptr<ICommand> command);
-		void bindAction(SDL_KeyCode keyboardKey, InputEvent event, std::unique_ptr<ICommand> command);
-		void bindAxis2D(GamepadAxis2D axis2D, unsigned int gamepadId, std::unique_ptr<Axis2DCommand> command);
-		void bindAxis2D(SDL_Scancode x, SDL_Scancode y, SDL_Scancode xNegative, SDL_Scancode yNegative, std::unique_ptr<Axis2DCommand> command);
+		ICommand* bindAction(GamepadKey key, unsigned int gamepadId,InputEvent event, std::unique_ptr<ICommand> command);
+		ICommand* bindAction(SDL_KeyCode keyboardKey, InputEvent event, std::unique_ptr<ICommand> command);
+		ICommand* bindAxis2D(GamepadAxis2D axis2D, unsigned int gamepadId, std::unique_ptr<Axis2DCommand> command);
+		ICommand* bindAxis2D(SDL_Scancode x, SDL_Scancode y, SDL_Scancode xNegative, SDL_Scancode yNegative, std::unique_ptr<Axis2DCommand> command);
 
 		void unbindCommand(ICommand* command);
 
