@@ -10,20 +10,23 @@ namespace rift2d
 	class SceneManager final : public Singleton<SceneManager>
 	{
 	public:
-		Scene& createScene(const std::string& name);
-		~SceneManager();
+		Scene* addScene(std::unique_ptr<Scene> scene);
+		~SceneManager() override;
 		void init() const;
 		void update() const;
 		void lateUpdate() const;
 		void end() const;
 		void onImGui() const;
-		void frameCleanup() const;
+		void frameCleanup();
 
-		Scene* GetCurrentScene() const { return m_scenes[m_currentSceneIdx].get(); } 
+		Scene* getActiveScene() const { return m_scenes[m_activeSceneIdx].get(); }
+		void setActiveScene(int sceneIdx);
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager();
 		std::vector<std::unique_ptr<Scene>> m_scenes;
-		int m_currentSceneIdx{-1};
+		int m_activeSceneIdx{-1};
+		int m_newSceneIdx{};
+		bool m_shouldSwapScene{};
 	};
 }

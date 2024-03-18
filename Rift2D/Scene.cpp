@@ -36,7 +36,7 @@ void Scene::remove(GameObject* object)
 
 void Scene::removeAll()
 {
-	end();
+	rootEnd();
 	m_rootGameObjects.clear();
 }
 
@@ -56,49 +56,59 @@ std::unique_ptr<GameObject> Scene::releaseGameObject(GameObject* go)
 	return child;
 }
 
-void Scene::init() const
+void Scene::rootInit()
 {
+	init();
+
 	for (auto& object : m_rootGameObjects)
 	{
 		object->init();
 	}
-	
+	m_isInitialized = true;
 }
 
-void Scene::update() const
+void Scene::rootUpdate() 
 {
-	for(auto& object : m_rootGameObjects)
+	update();
+
+	for(const auto& object : m_rootGameObjects)
 	{
 		object->update();
 	}
 
 }
 
-void Scene::lateUpdate() const
+void Scene::rootLateUpdate() 
 {
+	lateUpdate();
+
 	for (const auto& object : m_rootGameObjects)
 	{
 		object->lateUpdate();
 	}
 }
 
-void rift2d::Scene::end() const
+void rift2d::Scene::rootEnd()
 {
+	end();
+
 	for (auto& object : m_rootGameObjects)
 	{
 		object->end();
 	}
 }
 
-void Scene::onImGui() const
+void Scene::rootOnImGui()
 {
-	for (auto& object : m_rootGameObjects)
+	onImGui();
+
+	for (const auto& object : m_rootGameObjects)
 	{
 		object->onImGui();
 	}
 }
 
-void Scene::frameCleanup() 
+void Scene::rootFrameCleanup() 
 {
 	//remove dead game objects
 	processGameObjectRemovals();
@@ -131,9 +141,6 @@ void Scene::processGameObjectRemovals()
 		child->processGameObjectRemovals();
 	}
 
-	
-
-	
 }
 
 

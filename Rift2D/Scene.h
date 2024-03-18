@@ -4,40 +4,45 @@
 
 namespace rift2d
 {
-	class Scene final
+	class Scene
 	{
-		friend Scene& SceneManager::createScene(const std::string& name);
-		
-
 	public:
 		GameObject* add(std::unique_ptr<GameObject> object);
 		void remove(GameObject* object);
 		void removeAll();
 		std::unique_ptr<GameObject> releaseGameObject(GameObject* go);
-		
 
-		void init() const;
-		void update() const;
-		void lateUpdate() const;
-		void end() const;
-		void onImGui() const;
-		void frameCleanup() ;
+		bool isInitialized() const { return m_isInitialized; }
 
-		~Scene();
+		virtual ~Scene();
 		Scene(const Scene& other) = delete;
 		Scene(Scene&& other) = delete;
 		Scene& operator=(const Scene& other) = delete;
 		Scene& operator=(Scene&& other) = delete;
 
-	private:
+	protected:
 		explicit Scene(std::string name);
+
+		virtual void init() = 0;
+		virtual void update() {}
+		virtual void lateUpdate() {}
+		virtual void end() {}
+		virtual void onImGui() {}
+	private:
+		friend class SceneManager;
 
 		std::string m_name;
 		std::vector <std::unique_ptr<GameObject>> m_rootGameObjects{};
-
+		bool m_isInitialized{ false };
 		static unsigned int m_idCounter; 
-
 		void processGameObjectRemovals();
+
+		void rootInit();
+		void rootUpdate() ;
+		void rootLateUpdate() ;
+		void rootEnd() ;
+		void rootOnImGui() ;
+		void rootFrameCleanup();
 
 	};
 
