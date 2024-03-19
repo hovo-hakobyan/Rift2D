@@ -8,10 +8,10 @@
 #endif
 
 #include "Rift2DEngine.h"
-#include "Scene.h"
 #include "ResourceManager.h"
 #include <filesystem>
 #include "MenuScene.h"
+#include "SceneManager.h"
 
 namespace fs = std::filesystem;
 

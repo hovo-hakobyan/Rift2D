@@ -1,16 +1,16 @@
 #pragma once
-#include "SceneManager.h"
-#include "GameObject.h"
+#include <memory>
+#include <string>
+#include <vector>
 
 namespace rift2d
 {
+	class RiftActor;
 	class Scene
 	{
 	public:
-		GameObject* add(std::unique_ptr<GameObject> object);
-		void remove(GameObject* object);
-		void removeAll();
-		std::unique_ptr<GameObject> releaseGameObject(GameObject* go);
+		RiftActor* addRiftActor(std::unique_ptr<RiftActor> object);
+		void removeRiftActor(RiftActor* actor);
 
 		bool isInitialized() const { return m_isInitialized; }
 
@@ -19,6 +19,13 @@ namespace rift2d
 		Scene(Scene&& other) = delete;
 		Scene& operator=(const Scene& other) = delete;
 		Scene& operator=(Scene&& other) = delete;
+
+		void rootInit();
+		void rootUpdate();
+		void rootLateUpdate();
+		void rootEnd();
+		void rootOnImGui();
+		void rootFrameCleanup();
 
 	protected:
 		explicit Scene(std::string name);
@@ -29,20 +36,11 @@ namespace rift2d
 		virtual void end() {}
 		virtual void onImGui() {}
 	private:
-		friend class SceneManager;
-
 		std::string m_name;
-		std::vector <std::unique_ptr<GameObject>> m_rootGameObjects{};
+		std::vector<std::unique_ptr<RiftActor>> m_rootActors{};
 		bool m_isInitialized{ false };
 		static unsigned int m_idCounter; 
-		void processGameObjectRemovals();
-
-		void rootInit();
-		void rootUpdate() ;
-		void rootLateUpdate() ;
-		void rootEnd() ;
-		void rootOnImGui() ;
-		void rootFrameCleanup();
+		void processRiftActorRemovals();
 
 	};
 
