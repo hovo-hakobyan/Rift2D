@@ -1,6 +1,7 @@
 #pragma once
 #include "BaseComponent.h"
 #include <memory>
+#include <glm/vec2.hpp>
 
 namespace rift2d
 {
@@ -9,11 +10,11 @@ namespace rift2d
 	class SpriteComponent final : public BaseComponent, public IRenderable
 	{
 	public:
-		virtual void update() override;
 		virtual void render() const override;
 
-		void setTexture(const std::string& filename);
-		void setTexture(std::shared_ptr<Texture2D> texture);
+		void setTexture(const std::string& filename, const glm::vec2& offset = {0.f,0.f});
+		void setTexture(Texture2D* texture, const glm::vec2& offset = { 0.f,0.f });
+		void shouldRender(bool shouldRender) { m_shouldRender = shouldRender; }
 
 		SpriteComponent(GameObject* owner);
 		virtual ~SpriteComponent() override = default;
@@ -22,7 +23,9 @@ namespace rift2d
 		SpriteComponent& operator=(const SpriteComponent& other) = delete;
 		SpriteComponent& operator=(SpriteComponent&& other) = delete;
 	private:
-		std::shared_ptr<Texture2D> m_texture{};
+		Texture2D* m_texture{};
+		glm::vec2 m_offest{};
+		bool m_shouldRender{true};
 	};
 		
 }

@@ -4,8 +4,6 @@
 #include "TextComponent.h"
 #include <format>
 #include "ResourceManager.h"
-#include "Scene.h"
-#include "SceneManager.h"
 
 rift2d::FPSComponent::FPSComponent(GameObject* owner) :
 	BaseComponent(owner)

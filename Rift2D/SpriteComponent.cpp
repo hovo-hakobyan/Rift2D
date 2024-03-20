@@ -9,34 +9,30 @@ rift2d::SpriteComponent::SpriteComponent(GameObject* owner) :
 {
 }
 
-
-void rift2d::SpriteComponent::update()
-{
-
-}
-
 void rift2d::SpriteComponent::render() const
 {
+	if (!m_shouldRender) return;
 	if (m_texture)
 	{
 		auto owner = getOwner();
 		if (owner)
 		{
-			auto& pos = owner->getTransform()->getWorldPosition();
-			Renderer::GetInstance().renderTexture(*m_texture, pos.x, pos.y);
+			glm::vec3 pos = owner->getTransform()->getWorldPosition();
+			Renderer::GetInstance().renderTexture(*m_texture, pos.x + m_offest.x, pos.y + m_offest.y);
 		}
 
 	}
 }
 
-void rift2d::SpriteComponent::setTexture(const std::string& filename)
+void rift2d::SpriteComponent::setTexture(const std::string& filename, const glm::vec2& offset)
 {
 	m_texture = ResourceManager::GetInstance().loadTexture(filename);
+	m_offest = offset;
 }
 
-void rift2d::SpriteComponent::setTexture(std::shared_ptr<Texture2D> texture)
+void rift2d::SpriteComponent::setTexture(Texture2D* texture, const glm::vec2& offset)
 {
 	m_texture = texture;
+	m_offest = offset;
 }
-
 

@@ -5,11 +5,12 @@
 #include "Font.h"
 #include "Texture2D.h"
 #include "GameObject.h"
+#include "ResourceManager.h"
 #include "SpriteComponent.h"
 
 
-rift2d::TextComponent::TextComponent(GameObject* owner, const std::string& text, std::shared_ptr<Font> font)
-	: BaseComponent(owner), m_needsUpdate(true), m_text(text), m_font(std::move(font)), m_pSpriteComponent(nullptr)
+rift2d::TextComponent::TextComponent(GameObject* owner, const std::string& text, Font* pFont)
+	: BaseComponent(owner), m_needsUpdate(true), m_text(text), m_font(pFont), m_pSpriteComponent(nullptr)
 { }
 
 
@@ -33,22 +34,12 @@ void rift2d::TextComponent::update()
 {
 	if (m_needsUpdate and m_pSpriteComponent)
 	{
-		const SDL_Color color = { 255,255,255,255 }; // only white text is supported now
-		const auto surf = TTF_RenderText_Blended(m_font->getFont(), m_text.c_str(), color);
-		if (surf == nullptr) 
+		if(auto texture = ResourceManager::GetInstance().createFontTexture(m_font,  SDL_Color{ 255,255,255,255 }, m_text))
 		{
-			throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
+			m_fontTexture = std::move(texture);
+			m_pSpriteComponent->setTexture(m_fontTexture.get());
 		}
-		auto texture = SDL_CreateTextureFromSurface(Renderer::GetInstance().getSDLRenderer(), surf);
-		if (texture == nullptr) 
-		{
-			throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());
-		}
-		SDL_FreeSurface(surf);
-		
-		auto texture2d = std::make_shared<Texture2D>(texture);
-		m_pSpriteComponent->setTexture(texture2d);
-		
+
 		m_needsUpdate = false;
 	}
 }

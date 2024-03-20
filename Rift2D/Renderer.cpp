@@ -100,6 +100,14 @@ void rift2d::Renderer::renderTexture(const Texture2D& texture, const float x, co
 
 SDL_Renderer* rift2d::Renderer::getSDLRenderer() const { return m_renderer; }
 
+glm::vec2 rift2d::Renderer::getWindowSize() const
+{
+	int width = 0;
+	int height = 0;
+	SDL_GetWindowSize(m_window, &width, &height);
+	return glm::vec2{ width,height };
+}
+
 void rift2d::Renderer::registerComponent(IRenderable* component)
 {
 	m_renderables.push_back(component);

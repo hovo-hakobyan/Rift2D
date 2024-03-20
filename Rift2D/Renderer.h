@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL.h>
+#include <glm/vec2.hpp>
 #include "Singleton.h"
 #include "vector"
 #include "memory"
@@ -29,6 +30,7 @@ namespace rift2d
 
 		const SDL_Color& getBackgroundColor() const { return m_clearColor; }
 		void setBackgroundColor(const SDL_Color& color) { m_clearColor = color; }
+		glm::vec2 getWindowSize() const;
 
 		void registerComponent(IRenderable* component);
 		void unregisterComponent(IRenderable* component);

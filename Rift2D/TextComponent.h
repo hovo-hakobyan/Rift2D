@@ -1,12 +1,11 @@
 #pragma once
 #include <memory>
-#include "Transform.h"
 #include "BaseComponent.h"
+#include "Texture2D.h"
 
 namespace rift2d
 {
 	class Font;
-	class Texture2D;
 	class GameObject;
 	class SpriteComponent;
 	class TextComponent final : public BaseComponent, public IComponentWatcher
@@ -18,7 +17,7 @@ namespace rift2d
 
 		void setText(const std::string& text);
 
-		TextComponent(GameObject* owner, const std::string& text, std::shared_ptr<Font> font);
+		TextComponent(GameObject* owner, const std::string& text, Font* pFont);
 		virtual ~TextComponent() override = default;
 		TextComponent(const TextComponent& other) = delete;
 		TextComponent(TextComponent&& other) = delete;
@@ -29,7 +28,8 @@ namespace rift2d
 	private:
 		bool m_needsUpdate;
 		std::string m_text;
-		std::shared_ptr<Font> m_font;
+		Font* m_font;
 		SpriteComponent* m_pSpriteComponent;
+		std::unique_ptr<Texture2D> m_fontTexture{};
 	};
 }
