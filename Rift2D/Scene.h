@@ -1,13 +1,29 @@
 #pragma once
-#include "SceneManager.h"
 #include "GameObject.h"
+#include "Prefab.h"
 
 namespace rift2d
 {
+	template<typename T>
+	concept IsPrefab = std::is_base_of_v<Prefab, T>;
+
 	class Scene
 	{
 	public:
-		GameObject* add(std::unique_ptr<GameObject> object);
+		GameObject* addGameObject(std::unique_ptr<GameObject> object);
+
+		template<IsPrefab DerivedPrefab>
+		GameObject* addGameObjectFromPrefab()
+		{
+			auto go = std::make_unique<GameObject>(this);
+			auto rawPtr = go.get();
+			addGameObject(std::move(go));
+			auto pfab = std::make_unique<DerivedPrefab>();
+			pfab->setup(rawPtr, this);
+			return rawPtr;
+
+		}
+
 		void remove(GameObject* object);
 		void removeAll();
 		std::unique_ptr<GameObject> releaseGameObject(GameObject* go);

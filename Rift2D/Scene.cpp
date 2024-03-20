@@ -10,7 +10,7 @@ Scene::Scene(std::string name) : m_name(std::move(name)) {}
 
 Scene::~Scene() = default;
 
-GameObject* Scene::add(std::unique_ptr<GameObject> object)
+GameObject* Scene::addGameObject(std::unique_ptr<GameObject> object)
 {
 	if (!object)
 	{

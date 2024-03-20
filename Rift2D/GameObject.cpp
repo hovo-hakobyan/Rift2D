@@ -211,7 +211,7 @@ void rift2d::GameObject::setParent(GameObject* pParent, bool keepWorldPosition)
 	else
 	{
 		//transfer back to scene
-		if (child) m_pScene->add(std::move(child));
+		if (child) m_pScene->addGameObject(std::move(child));
 	}
 }
 

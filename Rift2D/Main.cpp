@@ -6,9 +6,8 @@
 #include <vld.h>
 #endif
 #endif
-
+#include "SceneManager.h"
 #include "Rift2DEngine.h"
-#include "Scene.h"
 #include "ResourceManager.h"
 #include <filesystem>
 #include "MenuScene.h"

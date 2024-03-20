@@ -63,8 +63,10 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Rift2D/Event.h
   Rift2D/MenuScene.cpp
   Rift2D/MenuScene.h
-  Rift2D/RiftActor.cpp
-  Rift2D/RiftActor.h
+  Rift2D/Prefab.cpp
+  Rift2D/Prefab.h
+  Rift2D/DiggerPrefab.cpp
+  Rift2D/DiggerPrefab.h
 )
 
 

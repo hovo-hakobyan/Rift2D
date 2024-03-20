@@ -25,4 +25,5 @@ namespace rift2d
         virtual ~ICommand() = default;
         virtual void execute() = 0;
     };
+
 }
