@@ -65,8 +65,6 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Rift2D/MenuScene.h
   Rift2D/RiftActor.cpp
   Rift2D/RiftActor.h
-  Rift2D/Digger.cpp
-  Rift2D/Digger.h
 )
 
 

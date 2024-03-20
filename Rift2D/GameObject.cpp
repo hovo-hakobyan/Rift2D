@@ -1,14 +1,16 @@
 #include "GameObject.h"
 #include "ResourceManager.h"
 #include "Renderer.h"
-#include "RiftActor.h"
+#include "BaseComponent.h"
+#include "Scene.h"
 #include  <ranges>
 
+#include "InputManager.h"
 
 bool rift2d::GameObject::m_gameStarted{ false };
 
-rift2d::GameObject::GameObject(RiftActor* pOwner):
-	m_pOwningActor{pOwner}
+rift2d::GameObject::GameObject(Scene* pOwner):
+	m_pScene{pOwner}
 {
 	m_transform = addComponent<Transform>();
 
@@ -202,14 +204,14 @@ void rift2d::GameObject::setParent(GameObject* pParent, bool keepWorldPosition)
 		//We had no previous parent
 		if(!child)
 		{
-			child = m_pOwningActor->releaseGameObject(this);
+			child = m_pScene->releaseGameObject(this);
 		}
 		m_pParent->m_children.push_back(std::move(child));
 	}
 	else
 	{
-		//transfer back to the owner
-		if (child) m_pOwningActor->registerGameObject(std::move(child));
+		//transfer back to scene
+		if (child) m_pScene->add(std::move(child));
 	}
 }
 

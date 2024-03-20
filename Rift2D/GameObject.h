@@ -2,12 +2,13 @@
 #include "Transform.h"
 #include "Interfaces.h"
 #include "Renderer.h"
+#include "BaseComponent.h"
 
 namespace rift2d
 {
 
 	class Texture2D;
-	class RiftActor;
+	class Scene;
 	class GameObject final
 	{
 		Transform* m_transform;
@@ -21,7 +22,7 @@ namespace rift2d
 		GameObject* m_pParent{};
 		bool m_isMarkedForDestruction{false};
 
-		RiftActor* m_pOwningActor;
+		Scene* m_pScene;
 
 		bool isValidParent(GameObject* pNewParent) const;
 
@@ -35,7 +36,7 @@ namespace rift2d
 		Transform* getTransform() { return m_transform; }
 		const Transform* getTransform() const { return m_transform; }
 
-		GameObject(RiftActor* pOwner);
+		GameObject(Scene* pOwner);
 		~GameObject();
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
