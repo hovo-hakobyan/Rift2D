@@ -7,22 +7,37 @@ namespace rift2d
 	class Subject final
 	{
 		public:
-
 		using CallbackFunction = std::function<void(Args...)>;
+		using Observer = std::pair<unsigned int, CallbackFunction>;
+		using ObserverId = unsigned int;
 
-		void subscribe(CallbackFunction function)
+		ObserverId subscribe(CallbackFunction function)
 		{
-			m_observers.push_back(function);
+			ObserverId id = nextId++;
+			m_observers.push_back({id,function});
+			return id;
+		}
+
+		void unsubscribe(ObserverId id)
+		{
+			auto it = std::remove_if(m_observers.begin(), m_observers.end(),
+				[id](const Observer& observer)
+				{
+					return observer.first == id;
+				});
+
+			m_observers.erase(it, m_observers.end());
 		}
 
 		void notify(Args... args)
 		{
-			for (auto& observer : m_observers) observer(std::forward<Args>(args)...);
+			for (auto& observer : m_observers) observer.second(std::forward<Args>(args)...);
 			
 		}
 
 	private:
-		std::vector<CallbackFunction> m_observers;
+		std::vector<Observer> m_observers;
+		ObserverId nextId{ 0 };
 	};
 
 

@@ -31,7 +31,7 @@ void rift2d::HealthDisplayComponent::init()
 			}
 		}
 
-		m_pHealth->onHealthChanged([this](int newHealth)
+		m_observerId = m_pHealth->healthChangedEvent()->subscribe([this](int newHealth)
 			{
 				this->updateLivesDisplay(newHealth);
 			});
@@ -49,7 +49,7 @@ void rift2d::HealthDisplayComponent::onComponentRemoved(BaseComponent* component
 
 void rift2d::HealthDisplayComponent::updateLivesDisplay(int currentLives)
 {
-	if (!m_pHealth) return; 
+	if (!m_pHealth) return;
 
 	auto setRender = [](SpriteComponent* component, bool shouldRend)
 		{

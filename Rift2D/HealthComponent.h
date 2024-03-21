@@ -1,6 +1,4 @@
 #pragma once
-#include <vector>
-
 #include "BaseComponent.h"
 #include "Subject.h"
 
@@ -26,7 +24,7 @@ namespace  rift2d
 		int getMaxHealth() const { return m_maxHealth; }
 		int getCurrentHealth() const { return m_currentHealth; }
 
-		void onHealthChanged(const std::function<void(int)>& callback) const;
+		Subject<int>* healthChangedEvent() const { return m_pHealthChanged.get(); }
 
 		void init() override;
 

@@ -35,8 +35,3 @@ void rift2d::HealthComponent::modify(int amount)
 
 	m_pHealthChanged->notify(m_currentHealth);
 }
-
-void rift2d::HealthComponent::onHealthChanged(const std::function<void(int)>& callback) const
-{
-	m_pHealthChanged->subscribe(callback);
-}

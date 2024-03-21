@@ -27,6 +27,7 @@ namespace rift2d
 	private:
 		std::vector<SpriteComponent*> m_pSpriteComponents{};
 		HealthComponent* m_pHealth;
+		unsigned int m_observerId{};
 
 		void updateLivesDisplay(int currentLives);
 	};
