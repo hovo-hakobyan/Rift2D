@@ -69,6 +69,8 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Rift2D/DiggerPrefab.h
   Rift2D/HealthComponent.cpp
   Rift2D/HealthComponent.h
+  Rift2D/HealthDisplayComponent.cpp
+  Rift2D/HealthDisplayComponent.h
 )
 
 

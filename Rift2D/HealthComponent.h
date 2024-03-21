@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "BaseComponent.h"
+#include "Subject.h"
 
 namespace rift2d
 {
@@ -13,7 +14,7 @@ namespace  rift2d
 	class HealthComponent : public BaseComponent
 	{
 	public:
-		HealthComponent(GameObject* owner,int maxHealth, bool shouldRender);
+		HealthComponent(GameObject* owner,int maxHealth);
 		virtual ~HealthComponent() override = default;
 		HealthComponent(const HealthComponent& other) = delete;
 		HealthComponent(HealthComponent&& other) = delete;
@@ -22,6 +23,10 @@ namespace  rift2d
 
 		void modify(int amount);
 		bool isDead() const { return m_isDead; }
+		int getMaxHealth() const { return m_maxHealth; }
+		int getCurrentHealth() const { return m_currentHealth; }
+
+		void onHealthChanged(const std::function<void(int)>& callback) const;
 
 		void init() override;
 
@@ -29,10 +34,8 @@ namespace  rift2d
 		int m_maxHealth{};
 		int m_currentHealth{};
 		bool m_isDead{};
-		std::vector<SpriteComponent*> m_pSpriteComponents{};
-		bool m_shouldRender{};
 
-		void updateRendering();
+		std::unique_ptr<Subject<int>> m_pHealthChanged;
 	};
 
 

@@ -1,6 +1,7 @@
 #include "DiggerPrefab.h"
 #include "GameObject.h"
 #include "HealthComponent.h"
+#include "HealthDisplayComponent.h"
 #include "InputManager.h"
 #include "MoveCommand.h"
 #include "Scene.h"
@@ -33,7 +34,8 @@ void rift2d::DiggerPrefab::setup(GameObject* rootObj, Scene* pScene)
 	gameObject = std::make_unique<rift2d::GameObject>(pScene);
 	auto windowSize = Renderer::GetInstance().getWindowSize();
 	gameObject->getTransform()->setLocalPosition(windowSize.x - 100, 10, 1);
-	gameObject->addComponent<rift2d::HealthComponent>(3,true);
+	auto healthComp = gameObject->addComponent<rift2d::HealthComponent>(3);
+	gameObject->addComponent<rift2d::HealthDisplayComponent>(healthComp);
 
 	//add to scenegraph
 	player = pScene->addGameObject(std::move(gameObject));
