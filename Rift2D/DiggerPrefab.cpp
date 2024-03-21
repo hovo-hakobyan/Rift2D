@@ -4,6 +4,7 @@
 #include "InputManager.h"
 #include "MoveCommand.h"
 #include "Scene.h"
+#include "ShootCommand.h"
 #include "SpriteComponent.h"
 
 
@@ -20,13 +21,13 @@ void rift2d::DiggerPrefab::setup(GameObject* rootObj, Scene* pScene)
 	//move
 	gameObject->getTransform()->setLocalPosition(30.f, 150.f, 1.f);
 
-	//Bind to input
-	rift2d::InputManager::GetInstance().bindAxis2D(rift2d::GamepadAxis2D::DPad, 0,
-		std::make_unique<rift2d::MoveCommand>(gameObject.get(), 300.f));
-
 	//add to scenegraph
 	auto player = pScene->addGameObject(std::move(gameObject));
 	player->setParent(rootObj, true);
+
+	//Bind movement to input
+	rift2d::InputManager::GetInstance().bindAxis2D(rift2d::GamepadAxis2D::DPad, 0,
+		std::make_unique<rift2d::MoveCommand>(player, 300.f));
 
 	//add health component
 	gameObject = std::make_unique<rift2d::GameObject>(pScene);
@@ -36,5 +37,9 @@ void rift2d::DiggerPrefab::setup(GameObject* rootObj, Scene* pScene)
 
 	//add to scenegraph
 	player = pScene->addGameObject(std::move(gameObject));
-	player->setParent(rootObj, true);
+	player->setParent(rootObj,true);
+
+	//bind shooting to input
+	rift2d::InputManager::GetInstance().bindAction(rift2d::GamepadKey::X, 0, InputEvent::Down,
+		std::make_unique<rift2d::ShootCommand>(rootObj));
 }

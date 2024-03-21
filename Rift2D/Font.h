@@ -11,6 +11,7 @@ namespace rift2d
 	{
 	public:
 		_TTF_Font* getFont() const;
+		unsigned int getFontSize() const;
 		explicit Font(const std::string& fullPath, unsigned int size);
 		~Font();
 
@@ -20,5 +21,6 @@ namespace rift2d
 		Font & operator= (const Font &&) = delete;
 	private:
 		_TTF_Font* m_font;
+		unsigned int m_fontSize{};
 	};
 }

@@ -59,14 +59,18 @@ std::unique_ptr<rift2d::Texture2D> rift2d::ResourceManager::createFontTexture(Fo
 rift2d::Font* rift2d::ResourceManager::loadFont(const std::string& file, unsigned int size) const
 {
 	//If the texture is already loaded, don't load
-	auto it = m_fontCache.find(file);
-	if (it != m_fontCache.end()) return it->second.get();
+	auto key = std::make_pair(file, size);
+	auto it = m_fontCache.find(key);
+	if (it != m_fontCache.end())
+	{
+		return it->second.get();
+	}
 
 	const auto fullPath = m_dataPath/file;
 
 	auto font = std::make_unique<Font>(fullPath.string(), size);
 	const auto rawPtr = font.get();
-	m_fontCache[file] = std::move(font);
+	m_fontCache[key] = std::move(font);
 	return rawPtr;
 
 }

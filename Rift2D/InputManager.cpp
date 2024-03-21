@@ -67,50 +67,20 @@ void rift2d::InputManager::unbindCommand(ICommand* command)
 {
 	if (!command) return;
 
-	/*switch (command->getBindingType())
+	auto removeCommand = [command](auto& bindings)
 	{
-	case ICommand::BindingType::GamepadAction:
-	{
-		auto it = std::remove_if(m_gamepadActionBindings.begin(), m_gamepadActionBindings.end(), [command](auto& binding)
+		auto it = std::remove_if(bindings.begin(), bindings.end(),
+			[command](const auto& binding)
 			{
 				return binding.command.get() == command;
 			});
+		bindings.erase(it, bindings.end());
+		};
 
-		m_gamepadActionBindings.erase(it, m_gamepadActionBindings.end());
-		break;
-	}
-	case ICommand::BindingType::KeyboardAction:
-	{
-		auto it = std::remove_if(m_keyboardActionBindings.begin(), m_keyboardActionBindings.end(), [command](auto& binding)
-			{
-				return binding.command.get() == command;
-			});
-
-		m_keyboardActionBindings.erase(it, m_keyboardActionBindings.end());
-		break;
-	}
-	case ICommand::BindingType::GamepadAxis:
-		{
-		auto it = std::remove_if(m_gamepadAxis2DBindings.begin(), m_gamepadAxis2DBindings.end(), [command](auto& binding)
-			{
-				return binding.command.get() == command;
-			});
-
-		m_gamepadAxis2DBindings.erase(it, m_gamepadAxis2DBindings.end());
-		break;
-		}
-	case ICommand::BindingType::KeyboardAxis:
-		{
-		auto it = std::remove_if(m_keyboardAxis2DBindings.begin(), m_keyboardAxis2DBindings.end(), [command](auto& binding)
-			{
-				return binding.command.get() == command;
-			});
-
-		m_keyboardAxis2DBindings.erase(it, m_keyboardAxis2DBindings.end());
-		break;
-		}
-		
-	}*/
+	removeCommand(m_gamepadActionBindings);
+	removeCommand(m_gamepadAxis2DBindings);
+	removeCommand(m_keyboardAxis2DBindings);
+	removeCommand(m_keyboardActionBindings);
 }
 
 

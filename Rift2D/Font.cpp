@@ -2,11 +2,17 @@
 #include <SDL_ttf.h>
 #include "Font.h"
 
-TTF_Font* rift2d::Font::getFont() const {
+TTF_Font* rift2d::Font::getFont() const
+{
 	return m_font;
 }
 
-rift2d::Font::Font(const std::string& fullPath, unsigned int size) : m_font(nullptr)
+unsigned rift2d::Font::getFontSize() const
+{
+	return m_fontSize;
+}
+
+rift2d::Font::Font(const std::string& fullPath, unsigned int size) : m_font(nullptr), m_fontSize(size)
 {
 	m_font = TTF_OpenFont(fullPath.c_str(), size);
 	if (m_font == nullptr) 

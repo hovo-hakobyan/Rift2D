@@ -98,12 +98,23 @@ namespace rift2d
 		{
 			static_assert(std::is_base_of<BaseComponent, ComponentType>::value, "ComponentType must derive from BaseComponent");
 
+			// First, try to find the component in the current GameObject
 			for (const auto& comp : m_components)
 			{
 				auto castedComp = dynamic_cast<ComponentType*>(comp.get());
 				if (castedComp)
 				{
 					return castedComp;
+				}
+			}
+
+			// If not found, recursively search in the children GameObjects
+			for (const auto& child : m_children)
+			{
+				ComponentType* comp = child->getComponent<ComponentType>();
+				if (comp)
+				{
+					return comp;
 				}
 			}
 			
