@@ -3,7 +3,6 @@
 #include "EnemyPrefab.h"
 #include "FPSComponent.h"
 #include "InputManager.h"
-#include "MoveCommand.h"
 #include "ResourceManager.h"
 #include "SpriteComponent.h"
 #include "TextComponent.h"

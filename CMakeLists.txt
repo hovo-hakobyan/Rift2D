@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.26)
 project(Rift2D)
 
+option(STEAMWORKS "Use steamworks SDK" TRUE)
+
 if(EMSCRIPTEN)
   message("Using Emscripten!")
 endif()
@@ -126,6 +128,24 @@ if (WIN32)
   endif()
   endif()
 
+  #imgui + implot
+  add_library(imgui OBJECT
+  3rdParty/imgui/imgui.cpp
+  3rdParty/imgui/imgui_draw.cpp
+  3rdParty/imgui/imgui_widgets.cpp
+  3rdParty/imgui/imgui_tables.cpp
+  3rdParty/imgui/backends/imgui_impl_opengl3.cpp
+  3rdParty/imgui/backends/imgui_impl_sdl2.cpp
+  3rdParty/imgui/backends/imgui_impl_sdlrenderer2.cpp
+
+  3rdParty/implot/implot.cpp
+  3rdParty/implot/implot_items.cpp
+  )
+  
+  target_include_directories(imgui PRIVATE 3rdParty/imgui 3rdParty/implot)
+  target_link_libraries(${TARGET_NAME} PRIVATE imgui)
+
+
   # add SDL2_image
   FetchContent_Declare(
     SDL2_image
@@ -146,6 +166,7 @@ if (WIN32)
   endif()
   endif()
 
+  
   # add SDL2_ttf
   FetchContent_Declare(
     SDL2_ttf
@@ -176,28 +197,26 @@ if (WIN32)
     endif()
   endif()
 
-# Include the ImGui library
-add_subdirectory(3rdParty/imgui)
-add_subdirectory(3rdParty/implot)
-
   # set all include directories
   target_include_directories(${TARGET_NAME} PRIVATE
     ${VLD_INCLUDE_DIR}
     ${SDL2_INCLUDE_DIR} 
     ${SDL2_IMAGE_INCLUDE_DIR} 
     ${SDL2_TTF_INCLUDE_DIR}
-    ${ImGuiIncludeDir}
-    ${ImPlotIncludeDir}
 )
-  
+
+  target_include_directories(imgui PRIVATE
+    ${SDL2_INCLUDE_DIR} 
+    ${SDL2_IMAGE_INCLUDE_DIR} 
+    ${SDL2_TTF_INCLUDE_DIR}
+)
+
   # set libraries to link with
   target_link_libraries(${TARGET_NAME} PUBLIC
     ${SDL2_LIBRARIES} 
     ${SDL2_IMAGE_LIBRARIES} 
     ${SDL2_TTF_LIBRARIES} 
     ${VLD_LIBRARY}
-    ImGui
-    ImPlot
     xinput
   )
 
@@ -232,19 +251,13 @@ elseif(NOT EMSCRIPTEN)
   set(SDL2TTF_INSTALL OFF)
   FetchContent_MakeAvailable(SDL2_ttf)
 
-# Include the ImGui library
-add_subdirectory(3rdParty/imgui)
-add_subdirectory(3rdParty/implot)
-
   target_include_directories("${TARGET_NAME}" PUBLIC 
     ${sdl2_SOURCE_DIR}/include
     ${sdl2_image_SOURCE_DIR}/include
     ${sdl2_ttf_SOURCE_DIR}
-    ${ImGuiIncludeDir}
-    ${ImPlotIncludeDir}
   )
   target_link_libraries("${TARGET_NAME}" PUBLIC 
-  ImGui ImPlot SDL2::SDL2main SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf 
+  SDL2::SDL2main SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf 
   )
 endif()
 
@@ -252,6 +265,8 @@ target_include_directories(${TARGET_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/Rift2D/
   ${glm_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/Data/
+  3rdParty/imgui
+  3rdParty/implot
 )
 
 # compile at max warning level + treat warnings as errors
