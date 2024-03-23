@@ -3,6 +3,8 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+3rdPart/steamworks/
+
 # User-specific files
 *.rsuser
 *.suo
