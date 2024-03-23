@@ -24,16 +24,17 @@ namespace  rift2d
 		int getMaxHealth() const { return m_maxHealth; }
 		int getCurrentHealth() const { return m_currentHealth; }
 
-		Subject<int>* healthChangedEvent() const { return m_pHealthChanged.get(); }
+		Subject<int>* healthChangedEvent() const { return m_pOnHealthChanged.get(); }
 
 		void init() override;
+		void end() override;
 
 	private:
 		int m_maxHealth{};
 		int m_currentHealth{};
 		bool m_isDead{};
 
-		std::unique_ptr<Subject<int>> m_pHealthChanged;
+		std::unique_ptr<Subject<int>> m_pOnHealthChanged;
 	};
 
 

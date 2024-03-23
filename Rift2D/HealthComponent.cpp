@@ -7,7 +7,7 @@
 #include "SpriteComponent.h"
 
 rift2d::HealthComponent::HealthComponent(GameObject* owner, int maxHealth):
-BaseComponent(owner),m_maxHealth(maxHealth),m_currentHealth(maxHealth),m_pHealthChanged(std::make_unique<Subject<int>>())
+BaseComponent(owner),m_maxHealth(maxHealth),m_currentHealth(maxHealth),m_pOnHealthChanged(std::make_unique<Subject<int>>())
 {
 }
 
@@ -16,6 +16,11 @@ BaseComponent(owner),m_maxHealth(maxHealth),m_currentHealth(maxHealth),m_pHealth
 void rift2d::HealthComponent::init()
 {
 	BaseComponent::init();
+}
+
+void rift2d::HealthComponent::end()
+{
+	m_pOnHealthChanged->clearSubscribers();
 }
 
 void rift2d::HealthComponent::modify(int amount)
@@ -28,10 +33,7 @@ void rift2d::HealthComponent::modify(int amount)
 		m_isDead = true;
 		m_currentHealth = 0;
 	}
-	if(m_currentHealth > m_maxHealth)
-	{
-		m_currentHealth = m_maxHealth;
-	}
+	m_currentHealth = std::min(m_currentHealth, m_maxHealth);
 
-	m_pHealthChanged->notify(m_currentHealth);
+	m_pOnHealthChanged->notify(m_currentHealth);
 }

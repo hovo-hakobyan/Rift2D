@@ -8,8 +8,9 @@ namespace rift2d
 	{
 		public:
 		using CallbackFunction = std::function<void(Args...)>;
-		using Observer = std::pair<unsigned int, CallbackFunction>;
 		using ObserverId = unsigned int;
+		using Observer = std::pair<ObserverId, CallbackFunction>;
+		
 
 		ObserverId subscribe(CallbackFunction function)
 		{
@@ -33,6 +34,12 @@ namespace rift2d
 		{
 			for (auto& observer : m_observers) observer.second(std::forward<Args>(args)...);
 			
+		}
+
+		void clearSubscribers()
+		{
+			m_observers.clear();
+			nextId = 0;
 		}
 
 	private:

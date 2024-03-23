@@ -41,13 +41,13 @@ void rift2d::MenuScene::init()
 
 	// Main character text
 	gameObject = std::make_unique<rift2d::GameObject>(this);
-	gameObject->addComponent<rift2d::TextComponent>("Use the D-Pad to move Tom, X to inflict damage", font);
+	gameObject->addComponent<rift2d::TextComponent>("Use the D-Pad to move Tom, X to inflict damage, A to collect pallets", font);
 	gameObject->getTransform()->setLocalPosition(10.f, 50.f, 1.f);
 	addGameObject(std::move(gameObject));
 
 	// Enemy text
 	gameObject = std::make_unique<rift2d::GameObject>(this);
-	gameObject->addComponent<rift2d::TextComponent>("Use WASD to move the other Tom, C to inflict damage", font);
+	gameObject->addComponent<rift2d::TextComponent>("Use WASD to move the other Tom, C to inflict damage, X to collect pallets", font);
 	gameObject->getTransform()->setLocalPosition(10.f, 70.f, 1.f);
 	addGameObject(std::move(gameObject));
 }

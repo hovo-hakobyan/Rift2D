@@ -22,6 +22,7 @@ namespace rift2d
 		HealthDisplayComponent& operator=(HealthDisplayComponent&& other) = delete;
 
 		void init() override;
+		void end() override;
 
 		virtual void onComponentRemoved(BaseComponent* component) override;
 	private:

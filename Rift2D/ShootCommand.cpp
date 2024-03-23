@@ -1,6 +1,4 @@
 #include "ShootCommand.h"
-#include <iostream>
-
 #include "GameObject.h"
 #include "HealthComponent.h"
 

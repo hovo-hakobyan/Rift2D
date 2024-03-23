@@ -6,6 +6,9 @@
 #include "MoveCommand.h"
 #include "SpriteComponent.h"
 #include "Scene.h"
+#include "ScoreCommand.h"
+#include "ScoreComponent.h"
+#include "ScoreDisplayComponent.h"
 #include "ShootCommand.h"
 
 void rift2d::EnemyPrefab::setup(GameObject* rootObj, Scene* pScene)
@@ -25,7 +28,7 @@ void rift2d::EnemyPrefab::setup(GameObject* rootObj, Scene* pScene)
 	gameObject->getTransform()->setLocalPosition(30.f, 180.f, 1.f);
 
 	//add to scenegraph
-	auto enemy =pScene->addGameObject(std::move(gameObject));
+	auto enemy = pScene->addGameObject(std::move(gameObject));
 	enemy->setParent(rootObj, false);
 
 	//add health component
@@ -37,8 +40,22 @@ void rift2d::EnemyPrefab::setup(GameObject* rootObj, Scene* pScene)
 
 	//add to scenegraph
 	enemy = pScene->addGameObject(std::move(gameObject));
-	enemy->setParent(rootObj,true);
+	enemy->setParent(rootObj, true);
 
 	//bind shooting to input
-	rift2d::InputManager::GetInstance().bindAction(SDLK_c,InputEvent::Down,std::make_unique<ShootCommand>(rootObj));
+	rift2d::InputManager::GetInstance().bindAction(SDLK_c, InputEvent::Down, std::make_unique<ShootCommand>(rootObj));
+
+	//add score
+	auto scoreObj = std::make_unique<rift2d::GameObject>(pScene);
+	scoreObj->getTransform()->setLocalPosition(10.f, 200.f, 1.f);
+	auto scoreComp = scoreObj->addComponent<ScoreComponent>();
+	scoreObj->addComponent<rift2d::ScoreDisplayComponent>(scoreComp);
+
+	//add to scenegraph
+	const auto score = pScene->addGameObject(std::move(scoreObj));
+	score->setParent(rootObj, true);
+
+	//add TEMP score collecting with input
+	rift2d::InputManager::GetInstance().bindAction(SDLK_x, InputEvent::Down, std::make_unique<ScoreCommand>(rootObj));
+
 }

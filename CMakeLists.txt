@@ -73,6 +73,12 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Rift2D/HealthDisplayComponent.h
   Rift2D/EnemyPrefab.cpp
   Rift2D/EnemyPrefab.h
+  Rift2D/ScoreComponent.cpp
+  Rift2D/ScoreComponent.h
+  Rift2D/ScoreDisplayComponent.cpp
+  Rift2D/ScoreDisplayComponent.h
+  Rift2D/ScoreCommand.cpp
+  Rift2D/ScoreCommand.h
 )
 
 

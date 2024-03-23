@@ -39,6 +39,12 @@ void rift2d::HealthDisplayComponent::init()
 	
 }
 
+void rift2d::HealthDisplayComponent::end()
+{
+	if(m_pHealth) m_pHealth->healthChangedEvent()->unsubscribe(m_observerId);
+	
+}
+
 void rift2d::HealthDisplayComponent::onComponentRemoved(BaseComponent* component)
 {
 	if (component == static_cast<BaseComponent*>(m_pHealth))
