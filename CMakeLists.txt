@@ -84,6 +84,65 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 )
 
 
+#imgui + implot
+add_library(imgui OBJECT
+3rdParty/imgui/imgui.cpp
+3rdParty/imgui/imgui_draw.cpp
+3rdParty/imgui/imgui_widgets.cpp
+3rdParty/imgui/imgui_tables.cpp
+3rdParty/imgui/backends/imgui_impl_opengl3.cpp
+3rdParty/imgui/backends/imgui_impl_sdl2.cpp
+3rdParty/imgui/backends/imgui_impl_sdlrenderer2.cpp
+
+3rdParty/implot/implot.cpp
+3rdParty/implot/implot_items.cpp
+)
+
+target_include_directories(imgui PRIVATE 3rdParty/imgui 3rdParty/implot)
+target_link_libraries(${TARGET_NAME} PRIVATE imgui)
+
+# Steamworks
+if(STEAMWORKS)
+  if(NOT EXISTS "${CMAKE_SOURCE_DIR}/3rdParty/steamworks")
+    message(FATAL_ERROR "Steamworks directory not found")
+  else()
+    file(GLOB STEAMWORKS_FILES "${CMAKE_SOURCE_DIR}/3rdParty/steamworks/*")
+      if(NOT STEAMWORKS_FILES)
+        message(FATAL_ERROR "Steamworks dir is empty")
+      endif()
+  endif()
+
+  set(STEAMWORKS_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/3rdParty/steamworks/public/steam)
+  set(STEAMWORKS_LIB_DIR ${CMAKE_SOURCE_DIR}/3rdParty/steamworks/redistributable_bin)
+
+  if(WIN32)
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+      set(STEAMWORKS_LIB ${STEAMWORKS_LIB_DIR}/win64/steam_api64.lib)
+      add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+          COMMAND ${CMAKE_COMMAND} -E copy
+                 ${STEAMWORKS_LIB_DIR}/win64/steam_api64.dll
+                 $<TARGET_FILE_DIR:${TARGET_NAME}> )
+   else()
+      set(STEAMWORKS_LIB ${STEAMWORKS_LIB_DIR}/steam_api.lib)
+     add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+                ${STEAMWORKS_LIB_DIR}/steam_api.dll
+                $<TARGET_FILE_DIR:${TARGET_NAME}>)
+   endif()
+
+   target_include_directories(${TARGET_NAME} PRIVATE ${STEAMWORKS_INCLUDE_DIR})
+   target_link_libraries(${TARGET_NAME} PRIVATE ${STEAMWORKS_LIB})
+
+
+    add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+     COMMAND ${CMAKE_COMMAND} -E echo 480 > "$<TARGET_FILE_DIR:${TARGET_NAME}>/steam_appid.txt"
+     COMMENT "Creating steam_appid.txt"
+  )
+
+
+ 
+  endif()
+endif()
 
 
 # enable c++20 features
@@ -128,22 +187,7 @@ if (WIN32)
   endif()
   endif()
 
-  #imgui + implot
-  add_library(imgui OBJECT
-  3rdParty/imgui/imgui.cpp
-  3rdParty/imgui/imgui_draw.cpp
-  3rdParty/imgui/imgui_widgets.cpp
-  3rdParty/imgui/imgui_tables.cpp
-  3rdParty/imgui/backends/imgui_impl_opengl3.cpp
-  3rdParty/imgui/backends/imgui_impl_sdl2.cpp
-  3rdParty/imgui/backends/imgui_impl_sdlrenderer2.cpp
-
-  3rdParty/implot/implot.cpp
-  3rdParty/implot/implot_items.cpp
-  )
   
-  target_include_directories(imgui PRIVATE 3rdParty/imgui 3rdParty/implot)
-  target_link_libraries(${TARGET_NAME} PRIVATE imgui)
 
 
   # add SDL2_image
