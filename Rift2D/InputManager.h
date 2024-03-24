@@ -4,39 +4,12 @@
 #include "Gamepad.h"
 #include "Singleton.h"
 #include <SDL.h>
-#include <Windows.h>
-#include <Xinput.h>
 
 namespace rift2d
 {
 	enum class InputEvent
 	{
 		Down, Up, Pressed
-	};
-
-	enum class GamepadKey : unsigned int
-	{
-		DPad_Up = XINPUT_GAMEPAD_DPAD_UP,
-		DPad_Down = XINPUT_GAMEPAD_DPAD_DOWN,
-		DPad_Left = XINPUT_GAMEPAD_DPAD_LEFT,
-		DPad_Right = XINPUT_GAMEPAD_DPAD_RIGHT,
-		Start = XINPUT_GAMEPAD_START,
-		Back = XINPUT_GAMEPAD_BACK,
-		LThumb = XINPUT_GAMEPAD_LEFT_THUMB,
-		RThumb = XINPUT_GAMEPAD_RIGHT_THUMB,
-		LShoulder = XINPUT_GAMEPAD_LEFT_SHOULDER,
-		RShoulder = XINPUT_GAMEPAD_RIGHT_SHOULDER,
-		A = XINPUT_GAMEPAD_A,
-		B = XINPUT_GAMEPAD_B,
-		X = XINPUT_GAMEPAD_X,
-		Y = XINPUT_GAMEPAD_Y,
-	};
-
-	enum class GamepadAxis2D
-	{
-		LThumbStick,
-		RThumbStick,
-		DPad
 	};
 
 	class InputManager final : public Singleton<InputManager>

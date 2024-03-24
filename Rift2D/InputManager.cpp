@@ -6,8 +6,8 @@
 
 void rift2d::InputManager::init()
 {
-	m_gamepads.reserve(XUSER_MAX_COUNT);
-	for (DWORD i = 0; i < XUSER_MAX_COUNT; ++i) 
+	m_gamepads.reserve(Gamepad::getMaxUsers());
+	for (int i = 0; i < Gamepad::getMaxUsers(); ++i)
 	{
 		m_gamepads.push_back(std::make_unique<Gamepad>(i));
 	}

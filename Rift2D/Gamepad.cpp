@@ -1,6 +1,7 @@
 #include "Gamepad.h"
 #include <SDL_syswm.h>
 #include "InputManager.h"
+#include "Xinput.h"
 
 class rift2d::Gamepad::Impl
 {
@@ -132,6 +133,11 @@ bool rift2d::Gamepad::isUp(unsigned button) const
 bool rift2d::Gamepad::isStateChanged() const
 {
     return m_pimpl->isStateChanged();
+}
+
+int rift2d::Gamepad::getMaxUsers()
+{
+    return XUSER_MAX_COUNT;
 }
 
 glm::vec2 rift2d::Gamepad::getThumbL2D() const
