@@ -23,7 +23,7 @@ namespace fs = std::filesystem;
 void load()
 {
 	rift2d::SceneManager::GetInstance().addScene(std::make_unique<rift2d::MenuScene>());
-
+	
 }
 
 int main(int, char*[])

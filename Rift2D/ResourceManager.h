@@ -22,8 +22,6 @@ namespace std
 
 namespace rift2d
 {
-	
-
 	class ResourceManager final : public Singleton<ResourceManager>
 	{
 	public:

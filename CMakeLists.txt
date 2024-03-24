@@ -81,6 +81,10 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Rift2D/ScoreDisplayComponent.h
   Rift2D/ScoreCommand.cpp
   Rift2D/ScoreCommand.h
+  Rift2D/SteamAchievements.cpp
+  Rift2D/SteamAchievements.h
+  Rift2D/AchievementSystem.cpp
+  Rift2D/AchievementSystem.h
 )
 
 
