@@ -12,10 +12,7 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include "Rift2DEngine.h"
-
-#include <steam_api_common.h>
 #include <glm/glm.hpp>
-
 #include "InputManager.h"
 #include "SceneManager.h"
 #include "TimeManager.h"
@@ -110,6 +107,8 @@ void rift2d::Rift2DEngine::run(const std::function<void()>& load)
 	load();
 #ifndef __EMSCRIPTEN__
 
+	
+
 	SceneManager::GetInstance().init();
 	InputManager::GetInstance().init();
 	auto& timeManager = TimeManager::GetInstance();
@@ -132,7 +131,6 @@ void rift2d::Rift2DEngine::run(const std::function<void()>& load)
 		SceneManager::GetInstance().update();
 		SceneManager::GetInstance().lateUpdate();
 		SceneManager::GetInstance().frameCleanup();
-		SteamAPI_RunCallbacks();
 		Renderer::GetInstance().render();
 		
 	}

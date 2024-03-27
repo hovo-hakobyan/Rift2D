@@ -3,6 +3,7 @@
 
 namespace rift2d
 {
+	class Scene;
 	class MenuScene : public Scene
 	{
 	public:

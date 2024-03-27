@@ -228,7 +228,6 @@ bool rift2d::InputManager::processSDL()
 				}
 			}
 		}
-
 		ImGui_ImplSDL2_ProcessEvent(&e);
 	}
 

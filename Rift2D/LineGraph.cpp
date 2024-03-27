@@ -1,6 +1,6 @@
 #include "LineGraph.h"
 
-#include "../3rdParty/implot/implot.h"
+#include "implot.h"
 
 rift2d::LineGraph::LineGraph(GameObject* owner,std::string name):
 BaseComponent(owner), m_name(std::move(name))

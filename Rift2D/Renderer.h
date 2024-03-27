@@ -3,7 +3,6 @@
 #include <glm/vec2.hpp>
 #include "Singleton.h"
 #include "vector"
-#include "memory"
 
 namespace rift2d
 {

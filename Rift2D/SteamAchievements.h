@@ -1,5 +1,4 @@
 #pragma once
-#include <steam_api_common.h>
 #include <vector>
 #include "Subject.h"
 
