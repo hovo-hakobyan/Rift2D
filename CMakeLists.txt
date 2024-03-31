@@ -41,9 +41,29 @@ set_source_files_properties("${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
                            PROPERTIES COMPILE_FLAGS "/wd4701")
 endif()
 
-file(GLOB ENGINE_SOURCES "Rift2D/*.cpp" "Rift2D/*.h")
-add_library(Engine STATIC ${ENGINE_SOURCES} ${IMGUI_SOURCES})
+# Define engine files
+file(GLOB ENGINE_CORE_SOURCES "Rift2D/Core/*.cpp" "Rift2D/Core/*.h")
+file(GLOB ENGINE_COMPPONENT_SOURCES "Rift2D/Components/*.cpp" "Rift2D/Components/*.h" )
+file(GLOB ENGINE_GRAPHICS_SOURCES "Rift2D/Graphics/*.cpp" "Rift2D/Graphics/*.h" )
+file(GLOB ENGINE_INPUT_SOURCES "Rift2D/Input/*.cpp" "Rift2D/Input/*.h" )
+file(GLOB ENGINE_WORLD_SOURCES "Rift2D/World/*.cpp" "Rift2D/World/*.h" )
 
+
+# Create filters
+source_group("Core" FILES ${ENGINE_CORE_SOURCES})
+source_group("Components" FILES ${ENGINE_COMPPONENT_SOURCES})
+source_group("Graphics" FILES ${ENGINE_GRAPHICS_SOURCES})
+source_group("Input" FILES ${ENGINE_INPUT_SOURCES})
+source_group("World" FILES ${ENGINE_WORLD_SOURCES})
+
+# Add all sources to Engine library
+add_library(Engine STATIC 
+${ENGINE_CORE_SOURCES}
+${ENGINE_COMPPONENT_SOURCES}
+${ENGINE_GRAPHICS_SOURCES}
+${ENGINE_INPUT_SOURCES}
+${ENGINE_WORLD_SOURCES}
+${IMGUI_SOURCES})
 
 # enable c++20 features
 target_compile_features(Engine PUBLIC cxx_std_20)
@@ -75,6 +95,11 @@ ${imgui_SOURCE_DIR}
 ${imgui_SOURCE_DIR}/backends
 ${implot_SOURCE_DIR}
 ${glm_SOURCE_DIR}
+${CMAKE_SOURCE_DIR}/Rift2D/Core
+${CMAKE_SOURCE_DIR}/Rift2D/Components
+${CMAKE_SOURCE_DIR}/Rift2D/Graphics
+${CMAKE_SOURCE_DIR}/Rift2D/Input
+${CMAKE_SOURCE_DIR}/Rift2D/World
 )
 
 # add SDL2
@@ -151,7 +176,7 @@ if (WIN32)
   endif()
 
   # set all include directories for the engine
-  target_include_directories(Engine PRIVATE
+  target_include_directories(Engine PUBLIC
     ${VLD_INCLUDE_DIR}
     ${SDL2_INCLUDE_DIR} 
     ${SDL2_IMAGE_INCLUDE_DIR} 
@@ -159,7 +184,7 @@ if (WIN32)
 )
 
   # set libraries to link with
-  target_link_libraries(Engine PRIVATE
+  target_link_libraries(Engine PUBLIC
     ${SDL2_LIBRARIES} 
     ${SDL2_IMAGE_LIBRARIES} 
     ${SDL2_TTF_LIBRARIES} 
@@ -192,15 +217,38 @@ endif()
 
 ## Game
 
-# Create the executable
-file(GLOB GAME_SOURCES "Digger/*.cpp" "Digger/*.h")
-add_executable(Digger ${GAME_SOURCES})
+# Define game files
+file(GLOB GAME_COMMANDS_SOURCES "Digger/Commands/*.cpp" "Digger/Commands/*.h")
+file(GLOB GAME_COMPONENTS_SOURCES "Digger/Components/*.cpp" "Digger/Components/*.h")
+file(GLOB GAME_DIGGER_SOURCES "Digger/Digger/*.cpp" "Digger/Digger/*.h")
+file(GLOB GAME_MISC_SOURCES "Digger/Misc/*.cpp" "Digger/Misc/*.h")
+file(GLOB GAME_PREFABS_SOURCES "Digger/Prefabs/*.cpp" "Digger/Prefabs/*.h")
+file(GLOB GAME_SCENES_SOURCES "Digger/Scenes/*.cpp" "Digger/Scenes/*.h")
 
-# Link against Engine, ImGui and GLM. Tells the linker where to find the libraries
-target_link_libraries(Digger  PRIVATE Engine)
+# Create filtesr
+source_group("Commands" FILES ${GAME_COMMANDS_SOURCES})
+source_group("Components" FILES ${GAME_COMPONENTS_SOURCES})
+source_group("Digger" FILES ${GAME_DIGGER_SOURCES})
+source_group("Misc" FILES ${GAME_MISC_SOURCES})
+source_group("Prefabs" FILES ${GAME_PREFABS_SOURCES})
+source_group("Scenes" FILES ${GAME_SCENES_SOURCES})
+
+# Create executable
+add_executable(Digger
+ ${GAME_COMMANDS_SOURCES}
+ ${GAME_COMPONENTS_SOURCES}
+ ${GAME_DIGGER_SOURCES}
+ ${GAME_MISC_SOURCES}
+ ${GAME_PREFABS_SOURCES}
+ ${GAME_SCENES_SOURCES}
+ )
+
+# Link against Engine. Tells the linker where to find the libraries
+target_link_libraries(Digger PRIVATE Engine)
 # to find include files
 target_include_directories(Digger PRIVATE 
 ${CMAKE_SOURCE_DIR}/Rift2D/
+${CMAKE_SOURCE_DIR}/Digger/
 ${imgui_SOURCE_DIR}
 ${imgui_SOURCE_DIR}/backends
 ${glm_SOURCE_DIR}
