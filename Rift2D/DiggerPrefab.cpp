@@ -4,12 +4,14 @@
 #include "HealthDisplayComponent.h"
 #include "InputManager.h"
 #include "MoveCommand.h"
+#include "Renderer.h"
 #include "Scene.h"
 #include "ScoreCommand.h"
 #include "ScoreComponent.h"
 #include "ScoreDisplayComponent.h"
 #include "ShootCommand.h"
 #include "SpriteComponent.h"
+#include "Transform.h"
 
 
 void rift2d::DiggerPrefab::setup(GameObject* rootObj, Scene* pScene)

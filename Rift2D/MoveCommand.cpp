@@ -1,6 +1,7 @@
 #include "MoveCommand.h"
 #include "GameObject.h"
 #include "TimeManager.h"
+#include "Transform.h"
 
 rift2d::MoveCommand::MoveCommand(GameObject* obj, float speed):
 m_pGameObj(obj),m_speed(speed)

@@ -1,9 +1,10 @@
 #pragma once
 #include "BaseComponent.h"
-#include "LineGraph.h"
+
 
 namespace rift2d
 {
+	class LineGraph;
 	class TrashTheCache final : public BaseComponent, public IComponentWatcher
 	{
 	public:

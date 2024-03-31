@@ -1,8 +1,12 @@
 
 #include "InputManager.h"
 #include <iostream>
+#include <SDL_events.h>
 #include "GameObject.h"
 #include "backends/imgui_impl_sdl2.h"
+
+rift2d::InputManager::~InputManager() = default;
+
 
 void rift2d::InputManager::init()
 {

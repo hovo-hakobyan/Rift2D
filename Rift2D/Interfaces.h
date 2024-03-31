@@ -18,7 +18,6 @@ namespace rift2d
         virtual ~IComponentWatcher() = default;
     };
 
-    class GameObject;
     class ICommand
     {
     public:

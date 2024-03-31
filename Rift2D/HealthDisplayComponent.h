@@ -1,16 +1,11 @@
 #pragma once
 #include <vector>
-
 #include "BaseComponent.h"
 
 namespace rift2d
 {
 	class SpriteComponent;
 	class HealthComponent;
-}
-
-namespace rift2d
-{
 	class HealthDisplayComponent : public BaseComponent, public IComponentWatcher
 	{
 	public:

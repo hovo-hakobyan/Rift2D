@@ -4,7 +4,7 @@
 #include <chrono>
 #include <imgui.h>
 #include <numeric>
-
+#include "LineGraph.h"
 #include "GameObject.h"
 
 rift2d::TrashTheCache::TrashTheCache(GameObject* owner):

@@ -4,12 +4,14 @@
 #include "HealthDisplayComponent.h"
 #include "InputManager.h"
 #include "MoveCommand.h"
+#include "Renderer.h"
 #include "SpriteComponent.h"
 #include "Scene.h"
 #include "ScoreCommand.h"
 #include "ScoreComponent.h"
 #include "ScoreDisplayComponent.h"
 #include "ShootCommand.h"
+#include "Transform.h"
 
 void rift2d::EnemyPrefab::setup(GameObject* rootObj, Scene* pScene)
 {

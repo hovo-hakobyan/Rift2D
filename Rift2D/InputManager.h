@@ -1,9 +1,10 @@
 #pragma once
 #include <vector>
-#include "Axis2DCommand.h"
 #include "Gamepad.h"
 #include "Singleton.h"
-#include <SDL.h>
+#include <SDL_keycode.h>
+#include <SDL_scancode.h>
+#include "Axis2DCommand.h"
 
 namespace rift2d
 {
@@ -12,9 +13,11 @@ namespace rift2d
 		Down, Up, Pressed
 	};
 
+
 	class InputManager final : public Singleton<InputManager>
 	{
 	public:
+		~InputManager() override;
 		void init();
 		bool processInput();
 		ICommand* bindAction(GamepadKey key, unsigned int gamepadId,InputEvent event, std::unique_ptr<ICommand> command);

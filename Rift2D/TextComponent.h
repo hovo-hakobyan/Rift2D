@@ -1,10 +1,11 @@
 #pragma once
 #include <memory>
 #include "BaseComponent.h"
-#include "Texture2D.h"
+
 
 namespace rift2d
 {
+	class Texture2D;
 	class Font;
 	class GameObject;
 	class SpriteComponent;
@@ -18,7 +19,7 @@ namespace rift2d
 		void setText(const std::string& text);
 
 		TextComponent(GameObject* owner, const std::string& text, Font* pFont);
-		virtual ~TextComponent() override = default;
+		virtual ~TextComponent() override;
 		TextComponent(const TextComponent& other) = delete;
 		TextComponent(TextComponent&& other) = delete;
 		TextComponent& operator=(const TextComponent& other) = delete;

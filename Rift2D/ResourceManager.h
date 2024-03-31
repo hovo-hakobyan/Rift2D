@@ -5,6 +5,7 @@
 #include "Singleton.h"
 #include "Texture2D.h"
 #include "Font.h"
+#include "SDL.h"
 
 namespace std
 {

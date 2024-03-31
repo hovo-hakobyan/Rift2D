@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include "GameObject.h"
 #include "Prefab.h"
 

@@ -4,8 +4,8 @@
 #include "BaseComponent.h"
 #include "Scene.h"
 #include  <ranges>
-
-#include "InputManager.h"
+#include "Transform.h"
+#include "BaseComponent.h"
 
 bool rift2d::GameObject::m_gameStarted{ false };
 
@@ -237,6 +237,11 @@ bool rift2d::GameObject::isValidParent(GameObject* pNewParent) const
 			return child.get() == pNewParent or child->isValidParent(pNewParent);
 		});
 
+}
+
+void rift2d::GameObject::registerRenderableComponent(IRenderable* component)
+{
+	Renderer::GetInstance().registerComponent(component);
 }
 
 void rift2d::GameObject::processComponentCache()

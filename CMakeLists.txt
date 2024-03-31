@@ -1,19 +1,6 @@
 cmake_minimum_required(VERSION 3.26)
 project(Rift2D)
 
-file(GLOB ENGINE_SOURCES "Rift2D/*.cpp" "Rift2D/*.h")
-add_library(Engine ${ENGINE_SOURCES})
-
-
-# enable c++20 features
-target_compile_features(Engine PUBLIC cxx_std_20)
-
-# compile at max warning level + treat warnings as errors
-target_compile_options(Engine PRIVATE
-  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
-  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
-)
-
 include(FetchContent)
 
 # add imgui
@@ -26,6 +13,46 @@ FetchContent_Declare(
 
 # do the actual dowloading, if necessary
 FetchContent_MakeAvailable(imgui)
+
+# add implot
+FetchContent_Declare(
+  implot
+  GIT_REPOSITORY https://github.com/epezent/implot.git
+  GIT_TAG v0.16
+)
+
+FetchContent_MakeAvailable(implot)
+
+set(IMGUI_SOURCES
+  ${imgui_SOURCE_DIR}/imgui.cpp
+  ${imgui_SOURCE_DIR}/imgui_draw.cpp
+  ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+  ${imgui_SOURCE_DIR}/imgui_tables.cpp
+  ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl2.cpp
+  ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer2.cpp
+  ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
+
+  ${implot_SOURCE_DIR}/implot.cpp
+  ${implot_SOURCE_DIR}/implot_items.cpp
+)
+
+if (WIN32)
+set_source_files_properties("${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp"
+                           PROPERTIES COMPILE_FLAGS "/wd4701")
+endif()
+
+file(GLOB ENGINE_SOURCES "Rift2D/*.cpp" "Rift2D/*.h")
+add_library(Engine STATIC ${ENGINE_SOURCES} ${IMGUI_SOURCES})
+
+
+# enable c++20 features
+target_compile_features(Engine PUBLIC cxx_std_20)
+
+# compile at max warning level + treat warnings as errors
+target_compile_options(Engine PRIVATE
+  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
+)
 
 # add glm
 FetchContent_Declare(
@@ -40,14 +67,6 @@ if(NOT glm_POPULATED)
   FetchContent_Populate(glm)
 endif()
 
-# add implot
-FetchContent_Declare(
-  implot
-  GIT_REPOSITORY https://github.com/epezent/implot.git
-  GIT_TAG v0.16
-)
-
-FetchContent_MakeAvailable(implot)
 
 #PRIVATE: used only by this target, other targets that link against the engine won't have access
 #INTERFACE: only for targets that link against this target, engine has no use
@@ -145,6 +164,7 @@ if (WIN32)
     ${SDL2_IMAGE_LIBRARIES} 
     ${SDL2_TTF_LIBRARIES} 
     ${VLD_LIBRARY}
+    xinput
   )
 endif()
 
@@ -177,7 +197,7 @@ file(GLOB GAME_SOURCES "Digger/*.cpp" "Digger/*.h")
 add_executable(Digger ${GAME_SOURCES})
 
 # Link against Engine, ImGui and GLM. Tells the linker where to find the libraries
-target_link_libraries(Digger PRIVATE Engine ${IMGUI_LIBRARIES})
+target_link_libraries(Digger  PRIVATE Engine)
 # to find include files
 target_include_directories(Digger PRIVATE 
 ${CMAKE_SOURCE_DIR}/Rift2D/

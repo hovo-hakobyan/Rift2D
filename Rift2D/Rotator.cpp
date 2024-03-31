@@ -1,8 +1,6 @@
 #include "Rotator.h"
-
-#include <iostream>
 #include <glm/trigonometric.hpp>
-
+#include "Transform.h"
 #include "GameObject.h"
 #include "TimeManager.h"
 

@@ -2,10 +2,10 @@
 #include "DiggerPrefab.h"
 #include "EnemyPrefab.h"
 #include "FPSComponent.h"
-#include "InputManager.h"
 #include "ResourceManager.h"
 #include "SpriteComponent.h"
 #include "TextComponent.h"
+#include "Transform.h"
 
 rift2d::MenuScene::MenuScene():
 Scene("MainMenuScene")

@@ -2,6 +2,7 @@
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include "GameObject.h"
+#include "Transform.h"
 
 
 rift2d::SpriteComponent::SpriteComponent(GameObject* owner) :

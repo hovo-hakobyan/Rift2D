@@ -1,6 +1,5 @@
 #pragma once
 #include "BaseComponent.h"
-#include <memory>
 #include <glm/vec2.hpp>
 
 namespace rift2d

@@ -1,14 +1,15 @@
 #pragma once
-#include "Transform.h"
+#include <memory>
+#include <vector>
 #include "Interfaces.h"
-#include "Renderer.h"
-#include "BaseComponent.h"
 
 namespace rift2d
 {
 
 	class Texture2D;
 	class Scene;
+	class Transform;
+	class BaseComponent;
 	class GameObject final
 	{
 		Transform* m_transform;
@@ -25,6 +26,7 @@ namespace rift2d
 		Scene* m_pScene;
 
 		bool isValidParent(GameObject* pNewParent) const;
+		void registerRenderableComponent(IRenderable* component);
 
 	public:
 		void init() const;
@@ -76,7 +78,7 @@ namespace rift2d
 			if constexpr (std::is_base_of<IRenderable, Component>::value)
 			{
 				auto renderableComponent = static_cast<IRenderable*>(rawPtr);
-				Renderer::GetInstance().registerComponent(renderableComponent);
+				registerRenderableComponent(renderableComponent);
 			}
 
 			m_componentsCache.push_back(std::move(component));
@@ -101,8 +103,7 @@ namespace rift2d
 			// First, try to find the component in the current GameObject
 			for (const auto& comp : m_components)
 			{
-				auto castedComp = dynamic_cast<ComponentType*>(comp.get());
-				if (castedComp)
+				if (auto castedComp = dynamic_cast<ComponentType*>(comp.get()))
 				{
 					return castedComp;
 				}
@@ -111,8 +112,7 @@ namespace rift2d
 			// If not found, recursively search in the children GameObjects
 			for (const auto& child : m_children)
 			{
-				ComponentType* comp = child->getComponent<ComponentType>();
-				if (comp)
+				if (ComponentType* comp = child->getComponent<ComponentType>())
 				{
 					return comp;
 				}

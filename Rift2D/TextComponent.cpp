@@ -1,9 +1,4 @@
-#include <stdexcept>
-#include <SDL_ttf.h>
 #include "TextComponent.h"
-#include "Renderer.h"
-#include "Font.h"
-#include "Texture2D.h"
 #include "GameObject.h"
 #include "ResourceManager.h"
 #include "SpriteComponent.h"
@@ -13,6 +8,7 @@ rift2d::TextComponent::TextComponent(GameObject* owner, const std::string& text,
 	: BaseComponent(owner), m_needsUpdate(true), m_text(text), m_font(pFont), m_pSpriteComponent(nullptr)
 { }
 
+rift2d::TextComponent::~TextComponent() = default;
 
 
 
