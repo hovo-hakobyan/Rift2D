@@ -45,7 +45,7 @@ void digger::EnemyPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSce
 	enemy->setParent(rootObj, true);
 
 	//bind shooting to input
-	rift2d::InputManager::GetInstance().bindAction(SDLK_c, rift2d::InputEvent::Down, std::make_unique<ShootCommand>(rootObj));
+	rift2d::InputManager::GetInstance().bindAction(SDL_SCANCODE_C, rift2d::InputEvent::Down, std::make_unique<ShootCommand>(rootObj));
 
 	//add score
 	auto scoreObj = std::make_unique<rift2d::GameObject>(pScene);
@@ -58,6 +58,6 @@ void digger::EnemyPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSce
 	score->setParent(rootObj, true);
 
 	//add TEMP score collecting with input
-	rift2d::InputManager::GetInstance().bindAction(SDLK_x, rift2d::InputEvent::Down, std::make_unique<ScoreCommand>(rootObj));
+	rift2d::InputManager::GetInstance().bindAction(SDL_SCANCODE_X, rift2d::InputEvent::Down, std::make_unique<ScoreCommand>(rootObj));
 
 }

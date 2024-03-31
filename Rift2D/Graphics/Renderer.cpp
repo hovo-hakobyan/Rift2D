@@ -83,7 +83,7 @@ void rift2d::Renderer::renderTexture(const Texture2D& texture, const float x, co
 	dst.x = static_cast<int>(x);
 	dst.y = static_cast<int>(y);
 	SDL_QueryTexture(texture.getSdlTexture(), nullptr, nullptr, &dst.w, &dst.h);
-	SDL_RenderCopy(getSDLRenderer(), texture.getSdlTexture(), nullptr, &dst);
+	SDL_RenderCopy(m_renderer, texture.getSdlTexture(), nullptr, &dst);
 }
 
 void rift2d::Renderer::renderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height) const
@@ -93,7 +93,7 @@ void rift2d::Renderer::renderTexture(const Texture2D& texture, const float x, co
 	dst.y = static_cast<int>(y);
 	dst.w = static_cast<int>(width);
 	dst.h = static_cast<int>(height);
-	SDL_RenderCopy(getSDLRenderer(), texture.getSdlTexture(), nullptr, &dst);
+	SDL_RenderCopy(m_renderer, texture.getSdlTexture(), nullptr, &dst);
 }
 
 SDL_Renderer* rift2d::Renderer::getSDLRenderer() const { return m_renderer; }

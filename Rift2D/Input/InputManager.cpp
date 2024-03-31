@@ -45,7 +45,7 @@ rift2d::ICommand* rift2d::InputManager::bindAction(GamepadKey key, unsigned int 
 	return rawPtr;
 }
 
-rift2d::ICommand* rift2d::InputManager::bindAction(SDL_KeyCode keyboardKey, InputEvent event, std::unique_ptr<ICommand> command)
+rift2d::ICommand* rift2d::InputManager::bindAction(SDL_Scancode keyboardKey, InputEvent event, std::unique_ptr<ICommand> command)
 {
 	auto rawPtr = command.get();
 	m_keyboardActionBindings.push_back({ keyboardKey,event,std::move(command) });
@@ -215,7 +215,7 @@ bool rift2d::InputManager::processSDL()
 			{
 				for (auto& keyboardActionBinding : m_keyboardActionBindings)
 				{
-					if (keyboardActionBinding.event == InputEvent::Down && e.key.keysym.sym == keyboardActionBinding.key)
+					if (keyboardActionBinding.event == InputEvent::Down && e.key.keysym.scancode == keyboardActionBinding.key)
 						keyboardActionBinding.shouldExecute = true;
 				}
 			}
@@ -227,7 +227,7 @@ bool rift2d::InputManager::processSDL()
 			{
 				for (auto& keyboardActionBinding : m_keyboardActionBindings)
 				{
-					if (keyboardActionBinding.event == InputEvent::Up && e.key.keysym.sym == keyboardActionBinding.key)
+					if (keyboardActionBinding.event == InputEvent::Up && e.key.keysym.scancode == keyboardActionBinding.key)
 						keyboardActionBinding.shouldExecute = true;
 				}
 			}
