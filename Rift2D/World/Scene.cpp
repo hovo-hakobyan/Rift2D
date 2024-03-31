@@ -24,6 +24,14 @@ GameObject* Scene::addGameObject(std::unique_ptr<GameObject> object)
 	return rawPtr;
 }
 
+GameObject* Scene::createGameObject()
+{
+	auto go = std::make_unique<GameObject>(this);
+	auto rawPtr = go.get();
+	m_rootGameObjects.push_back(std::move(go));
+	return rawPtr;
+}
+
 void Scene::remove(GameObject* object)
 {
 	if (!object)

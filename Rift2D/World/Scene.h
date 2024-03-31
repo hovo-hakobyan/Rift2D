@@ -12,6 +12,7 @@ namespace rift2d
 	{
 	public:
 		GameObject* addGameObject(std::unique_ptr<GameObject> object);
+		GameObject* createGameObject();
 
 		template<IsPrefab DerivedPrefab>
 		GameObject* addGameObjectFromPrefab()
