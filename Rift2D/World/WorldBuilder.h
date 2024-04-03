@@ -5,7 +5,6 @@
 #include "BaseComponent.h"
 #include "Color.h"
 
-
 namespace rift2d
 {
 	struct TileInfo
@@ -16,40 +15,44 @@ namespace rift2d
 
 	struct TileData
 	{
-		std::string name;
-		RiftColor color = RiftColor::Black;
+		uint8_t prefabId = -1;
+		RiftColor color = RiftColor::Brown;
+		std::string prefabName;
 	};
+
 
 	class WorldBuilder final : public BaseComponent
 	{
 	public:
-		WorldBuilder(GameObject* owner, const TileInfo& info);
+		WorldBuilder(GameObject* owner, const TileInfo& info,const std::string& mapName);
 		~WorldBuilder()override;
 		WorldBuilder(const WorldBuilder& other) = delete;
 		WorldBuilder(WorldBuilder&& other) = delete;
 		WorldBuilder& operator=(const WorldBuilder& other) = delete;
 		WorldBuilder& operator=(WorldBuilder&& other) = delete;
 
+		void setTileInfo(const TileInfo& info);
 		void addTileData(const TileData& data);
+		static void buildLevel(const std::string& lvlName);
 
 		virtual void init() override;
 		virtual void onImGui() override;
+
 	private:
-		struct Tile
-		{
-			uint8_t index = 0;
-			RiftColor color = RiftColor::Brown;
-		};
 
 		TileInfo m_TileInfo{};
-		std::vector<TileData> m_tileData{};
-		std::vector<Tile> m_tiles{};
+		std::vector<TileData> m_availableTileData{};
+		std::vector<TileData> m_tiles{};
 
-		RiftColor m_currentBrushColor{};
+		TileData m_currentTileData{};
 		bool m_isBrushSelected{};
 
-		int m_nrRows{};
-		int m_nrCols{};
+		uint8_t m_nrRows{};
+		uint8_t m_nrCols{};
+
+		std::string m_mapName{};
+
+		void saveLevelToFile(const std::string& name) const;
 	};
 
 
