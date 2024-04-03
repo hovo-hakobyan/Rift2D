@@ -15,7 +15,7 @@ namespace rift2d
 
 	struct TileData
 	{
-		uint8_t prefabId = -1;
+		uint8_t prefabId = 0;
 		RiftColor color = RiftColor::Brown;
 		std::string prefabName;
 	};
