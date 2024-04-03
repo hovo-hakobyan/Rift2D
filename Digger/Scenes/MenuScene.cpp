@@ -7,6 +7,7 @@
 #include "TextComponent.h"
 #include "Transform.h"
 #include "GameObject.h"
+#include "Misc/TrashTheCache.h"
 
 digger::MenuScene::MenuScene():
 Scene("MainMenuScene")
@@ -18,15 +19,10 @@ void digger::MenuScene::init()
 	//Resources
 	auto font = rift2d::ResourceManager::GetInstance().loadFont("Lingua.otf", 16);
 
-	//Background
-	auto gameObject = std::make_unique<rift2d::GameObject>(this);
-	auto spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
-	spriteComponent->setTexture("background.tga");
-	addGameObject(std::move(gameObject));
 
 	//Logo
-	gameObject = std::make_unique<rift2d::GameObject>(this);
-	spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
+	auto gameObject = std::make_unique<rift2d::GameObject>(this);
+	auto spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
 	spriteComponent->setTexture("logo.tga");
 	gameObject->getTransform()->setLocalPosition(216.f, 180.f, 1.f);
 	addGameObject(std::move(gameObject));
@@ -50,4 +46,5 @@ void digger::MenuScene::init()
 	gameObject->addComponent<rift2d::TextComponent>("Use WASD to move the other Tom, C to inflict damage, X to collect pallets", font);
 	gameObject->getTransform()->setLocalPosition(10.f, 70.f, 1.f);
 	addGameObject(std::move(gameObject));
+
 }

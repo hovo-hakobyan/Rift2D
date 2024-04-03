@@ -20,7 +20,7 @@ void digger::EnemyPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSce
 	//create visuals
 	auto gameObject = pScene->createGameObject();
 	const auto spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
-	spriteComponent->setTexture("Tom.jpg");
+	spriteComponent->setTexture("money-bag.png");
 
 	//bind input
 	rift2d::InputManager::GetInstance().bindAxis2D(SDL_SCANCODE_D, SDL_SCANCODE_S, SDL_SCANCODE_A, SDL_SCANCODE_W,

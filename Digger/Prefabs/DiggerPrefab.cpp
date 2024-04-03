@@ -22,7 +22,7 @@ void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSc
 
 	//add sprite component for rendering 
 	const auto spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
-	spriteComponent->setTexture("Tom.jpg");
+	spriteComponent->setTexture("digger.png");
 
 	//move
 	gameObject->getTransform()->setLocalPosition(30.f, 150.f, 1.f);
