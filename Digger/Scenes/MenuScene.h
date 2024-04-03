@@ -3,7 +3,6 @@
 
 namespace digger
 {
-	class Scene;
 	class MenuScene : public rift2d::Scene
 	{
 	public:

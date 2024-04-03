@@ -7,7 +7,6 @@
 #include "TextComponent.h"
 #include "Transform.h"
 #include "GameObject.h"
-#include "Misc/TrashTheCache.h"
 
 digger::MenuScene::MenuScene():
 Scene("MainMenuScene")
