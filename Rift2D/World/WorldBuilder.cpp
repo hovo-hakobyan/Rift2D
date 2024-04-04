@@ -4,11 +4,13 @@
 #include <fstream>
 #include "Renderer.h"
 #include <filesystem>
+#include <regex>
 
 #include "Exception.h"
 
-rift2d::WorldBuilder::WorldBuilder(GameObject* owner, const TileInfo& info,const std::string& mapName):
-BaseComponent(owner),m_TileInfo(info),m_mapName(mapName)
+int rift2d::WorldBuilder::m_saveMapHighestIdx = -1;
+rift2d::WorldBuilder::WorldBuilder(GameObject* owner, const TileInfo& info):
+BaseComponent(owner),m_TileInfo(info)
 {
 
 }
@@ -80,7 +82,7 @@ void rift2d::WorldBuilder::onImGui()
 	{
 		try
 		{
-			saveLevelToFile(m_mapName); 
+			saveLevelToFile(); 
 		}
 		catch (const RiftException& e)
 		{
@@ -97,7 +99,7 @@ void rift2d::WorldBuilder::onImGui()
 	//if level is saved show feedback
 	if (ImGui::BeginPopup("Save Notification"))
 	{
-		ImGui::Text("Level saved successfully!");
+		ImGui::Text(std::format("Level {} saved successfully!",m_saveMapHighestIdx).c_str());
 		if (ImGui::Button("OK"))
 		{
 			ImGui::CloseCurrentPopup();
@@ -155,10 +157,11 @@ void rift2d::WorldBuilder::onImGui()
 	ImGui::End();
 }
 
-void rift2d::WorldBuilder::saveLevelToFile(const std::string& name) const
+void rift2d::WorldBuilder::saveLevelToFile() const
 {
-	const std::filesystem::path directoryPath = "Levels";
-	bool dirCreated = std::filesystem::create_directories(directoryPath);
+	const std::filesystem::path directoryPath = "../Levels";
+	const std::string name = getNextLevelName();
+	const bool dirCreated = std::filesystem::create_directories(directoryPath);
 	if (!dirCreated && !std::filesystem::exists(directoryPath))
 	{
 		THROW_RIFT_EXCEPTION("Cannot save level " + name + " because Directory doesn't exist", RiftExceptionType::Error);
@@ -190,9 +193,32 @@ void rift2d::WorldBuilder::saveLevelToFile(const std::string& name) const
 	
 }
 
+std::string rift2d::WorldBuilder::getNextLevelName() const
+{
+	if (m_saveMapHighestIdx != -1) return "level" + std::to_string(++m_saveMapHighestIdx);
+
+	int maxLevelNum = -1;
+	const std::regex levelRegex("level(\\d+)\\.riftmap");
+
+	for (const auto& entry : std::filesystem::directory_iterator("../Levels"))
+	{
+		std::smatch matches;
+		std::string filename = entry.path().filename().string();
+		if (std::regex_match(filename, matches, levelRegex) && matches.size() == 2)
+		{
+			int levelNum = std::stoi(matches[1].str());
+			maxLevelNum = std::max(maxLevelNum, levelNum);
+		}
+	}
+
+	m_saveMapHighestIdx = maxLevelNum +1;
+	// Create the next level name by incrementing the highest found level number
+	return "level" + std::to_string(m_saveMapHighestIdx);
+}
+
 void rift2d::WorldBuilder::buildLevel(const std::string& lvlName)
 {
-	std::ifstream inFile("Levels/" + lvlName + ".riftmap", std::ios::binary);
+	std::ifstream inFile("../Levels/" + lvlName + ".riftmap", std::ios::binary);
 	if(!inFile)
 	{
 		THROW_RIFT_EXCEPTION("Cannot open " + lvlName + ".riftmap. It doesn't exist", RiftExceptionType::Error);

@@ -24,7 +24,7 @@ namespace rift2d
 	class WorldBuilder final : public BaseComponent
 	{
 	public:
-		WorldBuilder(GameObject* owner, const TileInfo& info,const std::string& mapName);
+		WorldBuilder(GameObject* owner, const TileInfo& info);
 		~WorldBuilder()override;
 		WorldBuilder(const WorldBuilder& other) = delete;
 		WorldBuilder(WorldBuilder&& other) = delete;
@@ -51,8 +51,10 @@ namespace rift2d
 		uint8_t m_nrCols{};
 
 		std::string m_mapName{};
+		static int m_saveMapHighestIdx;
 
-		void saveLevelToFile(const std::string& name) const;
+		void saveLevelToFile() const;
+		std::string getNextLevelName() const;
 	};
 
 
