@@ -24,12 +24,9 @@ void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSc
 	const auto spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
 	spriteComponent->setTexture("digger.png");
 
-	//move
-	gameObject->getTransform()->setLocalPosition(30.f, 150.f, 1.f);
-
 	//add to scenegraph
 	auto player = pScene->addGameObject(std::move(gameObject));
-	player->setParent(rootObj, true);
+	player->setParent(rootObj, false);
 
 	//Bind movement to input
 	rift2d::InputManager::GetInstance().bindAxis2D(rift2d::GamepadAxis2D::DPad, 0,

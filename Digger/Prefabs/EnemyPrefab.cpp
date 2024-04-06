@@ -26,8 +26,6 @@ void digger::EnemyPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSce
 	rift2d::InputManager::GetInstance().bindAxis2D(SDL_SCANCODE_D, SDL_SCANCODE_S, SDL_SCANCODE_A, SDL_SCANCODE_W,
 		std::make_unique<MoveCommand>(gameObject, 150.f));
 
-	//move
-	gameObject->getTransform()->setLocalPosition(30.f, 180.f, 1.f);
 
 	gameObject->setParent(rootObj, false);
 

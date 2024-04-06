@@ -6,8 +6,8 @@ namespace fs = std::filesystem;
 
 void load()
 {
-	//rift2d::SceneManager::GetInstance().addScene(std::make_unique<digger::MenuScene>());
-	rift2d::SceneManager::GetInstance().addScene(std::make_unique<digger::WorldBuilderScene>());
+	rift2d::SceneManager::GetInstance().addScene(std::make_unique<digger::MenuScene>());
+	//rift2d::SceneManager::GetInstance().addScene(std::make_unique<digger::WorldBuilderScene>());
 }
 
 

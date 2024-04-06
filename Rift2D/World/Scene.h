@@ -15,10 +15,10 @@ namespace rift2d
 		GameObject* createGameObject();
 
 		template<IsPrefab DerivedPrefab>
-		GameObject* addGameObjectFromPrefab()
+		GameObject* addGameObjectFromPrefab(const glm::vec3& loc = {0,0,1})
 		{
 			auto go = std::make_unique<GameObject>(this);
-			go->getTransform()->setLocalPosition(0, 0, 1);
+			go->getTransform()->setLocalPosition(loc);
 			auto rawPtr = go.get();
 			addGameObject(std::move(go));
 			auto pfab = std::make_unique<DerivedPrefab>();

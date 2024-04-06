@@ -107,7 +107,6 @@ void rift2d::Rift2DEngine::run(const std::function<void()>& load)
 	load();
 #ifndef __EMSCRIPTEN__
 
-	
 
 	SceneManager::GetInstance().init();
 	InputManager::GetInstance().init();

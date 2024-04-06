@@ -7,8 +7,10 @@
 #include <regex>
 
 #include "Exception.h"
+#include "SceneManager.h"
 
 int rift2d::WorldBuilder::m_saveMapHighestIdx = -1;
+
 rift2d::WorldBuilder::WorldBuilder(GameObject* owner, const TileInfo& info):
 BaseComponent(owner),m_TileInfo(info)
 {
@@ -28,7 +30,7 @@ void rift2d::WorldBuilder::addTileData(const TileData& data)
 	//If the current tile data does not exist
 	if(std::ranges::none_of(m_availableTileData,[data](const TileData& d)
 	{
-		return data.prefabId == d.prefabId;
+		return data.prefabRegistryId == d.prefabRegistryId;
 	}))
 	{
 		m_availableTileData.push_back(data);
@@ -73,7 +75,7 @@ void rift2d::WorldBuilder::onImGui()
 		{
 			m_currentTileData.color = tileData.color;
 			m_isBrushSelected = true;
-			m_currentTileData.prefabId = tileData.prefabId;
+			m_currentTileData.prefabRegistryId = tileData.prefabRegistryId;
 		}
 		ImGui::SameLine();
 	}
@@ -140,7 +142,7 @@ void rift2d::WorldBuilder::onImGui()
 				if(m_isBrushSelected)
 				{
 					tile.color = m_currentTileData.color;
-					tile.prefabId = m_currentTileData.prefabId;
+					tile.prefabRegistryId = m_currentTileData.prefabRegistryId;
 				}
 			}
 
@@ -175,18 +177,37 @@ void rift2d::WorldBuilder::saveLevelToFile() const
 		THROW_RIFT_EXCEPTION("Cannot open " + name + ".riftmap to save the level", RiftExceptionType::Error);
 	}
 
-	//write rows and cols
-	outFile.write(reinterpret_cast<const char*>(&m_nrRows), sizeof(m_nrRows));
-	outFile.write(reinterpret_cast<const char*>(&m_nrCols), sizeof(m_nrCols));
+	//Write number of tiles to .riftmap
+	const uint16_t nrTiles{ static_cast<uint16_t>(m_nrCols * m_nrRows) };
+	outFile.write(reinterpret_cast<const char*>(&nrTiles), sizeof(nrTiles));
 
-	//write tile data
-	for (const auto& tile : m_tiles)
+	glm::vec2 tilePos{ 0.f,0.f};
+	for (int row = 0; row <m_nrRows; ++row)
 	{
-		outFile.write(reinterpret_cast<const char*>(&tile.prefabId), sizeof(tile.prefabId));
-	}
-	if(!outFile)
-	{
-		THROW_RIFT_EXCEPTION("Cannot save " + name + ".riftmap, writing failed", RiftExceptionType::Error);
+		for (int col = 0; col < m_nrCols; ++col)
+		{
+			const int tileIdx{ row * m_nrCols + col };
+			if (tileIdx >= static_cast<int>(m_tiles.size()))
+				THROW_RIFT_EXCEPTION("Tile data inside .riftmap is corrupt. Less tiles than rows * cols", RiftExceptionType::Error);
+
+			auto& tile = m_tiles[tileIdx];
+
+			//Write current tile prefab id
+			outFile.write(reinterpret_cast<const char*>(&tile.prefabRegistryId), sizeof(tile.prefabRegistryId));
+
+			//write current tile position
+			outFile.write(reinterpret_cast<const char*>(&tilePos),sizeof(tilePos));
+
+			if (!outFile)
+			{
+				THROW_RIFT_EXCEPTION("Cannot save " + name + ".riftmap, writing failed", RiftExceptionType::Error);
+			}
+
+			tilePos.x += static_cast<float>(m_TileInfo.width);
+
+		}
+		tilePos.y += static_cast<float>(m_TileInfo.height);
+		tilePos.x = 0.f;
 	}
 
 	outFile.close();
@@ -216,30 +237,50 @@ std::string rift2d::WorldBuilder::getNextLevelName() const
 	return "level" + std::to_string(m_saveMapHighestIdx);
 }
 
-void rift2d::WorldBuilder::buildLevel(const std::string& lvlName)
+std::vector<rift2d::WorldInfo> rift2d::WorldBuilder::readWorldData(const std::string& lvlName)
 {
+
 	std::ifstream inFile("../Levels/" + lvlName + ".riftmap", std::ios::binary);
-	if(!inFile)
+	if (!inFile)
 	{
 		THROW_RIFT_EXCEPTION("Cannot open " + lvlName + ".riftmap. It doesn't exist", RiftExceptionType::Error);
 	}
 
-	uint8_t rows, cols;
-	inFile.read(reinterpret_cast<char*>(&rows), sizeof(rows));
-	inFile.read(reinterpret_cast<char*>(&cols), sizeof(cols));
+	//read number of tiles
+	uint16_t nrTiles{};
+	inFile.read(reinterpret_cast<char*>(&nrTiles), sizeof(nrTiles));
 
-	std::vector<TileData> tiles;
-	tiles.resize(rows * cols);
-	for (auto& tile : tiles)
+	std::vector<WorldInfo> worldInfo;
+	worldInfo.resize(nrTiles);
+
+	for (auto& info : worldInfo)
 	{
-		inFile.read(reinterpret_cast<char*>(&tile.prefabId), sizeof(tile.prefabId));
+		inFile.read(reinterpret_cast<char*>(&info.prefabRegistryId), sizeof(info.prefabRegistryId));
+		inFile.read(reinterpret_cast<char*>(&info.spawnLocation), sizeof(info.spawnLocation));
 	}
 
-	if(!inFile)
+	if (!inFile)
 	{
 		THROW_RIFT_EXCEPTION("Cannot read data inside " + lvlName + ".riftmap.", RiftExceptionType::Error);
 	}
 
 	inFile.close();
+	return worldInfo;
+
+}
+
+void rift2d::WorldBuilder::buildLevel(const std::string& lvlName)
+{
+	const auto worldInfo = readWorldData(lvlName);
+	if (worldInfo.empty()) return;
+
+	const auto pScene = SceneManager::GetInstance().getActiveScene();
+	auto& prefabRegistry = WorldBuilderPrefabRegistry::GetInstance();
+
+	for (const auto & info : worldInfo)
+	{
+		prefabRegistry.createPrefab(glm::vec3{ info.spawnLocation.x,info.spawnLocation.y,1.f }, info.prefabRegistryId, pScene);
+	}
+
 	
 }
