@@ -5,7 +5,7 @@
 #include "Renderer.h"
 #include <filesystem>
 #include <regex>
-
+#include "Scene.h"
 #include "Exception.h"
 #include "SceneManager.h"
 

@@ -6,6 +6,7 @@ namespace digger
 	class Scene;
 	class DirtPrefab : public rift2d::Prefab
 	{
+	public:
 		DirtPrefab() = default;
 		~DirtPrefab() override = default;
 		DirtPrefab(const DirtPrefab& other) = delete;

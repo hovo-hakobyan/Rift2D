@@ -3,13 +3,15 @@
 #include <functional>
 #include <string>
 #include <vector>
-#include "BaseComponent.h"
 #include "Color.h"
-#include "Scene.h"
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include "BaseComponent.h"
 #include "Singleton.h"
 
 namespace rift2d
 {
+	class Scene;
 	class WorldBuilderPrefabRegistry : public Singleton<WorldBuilderPrefabRegistry>
 	{
 	public:
@@ -47,7 +49,7 @@ namespace rift2d
 	struct LayerInfo
 	{
 		uint8_t prefabRegistryId = 0;
-		RiftColor color = RiftColor::Brown;
+		RiftColor color = RiftColor::Gray;
 		std::string prefabName;
 	};
 

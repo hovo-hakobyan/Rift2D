@@ -26,5 +26,6 @@ namespace rift2d
 		const static RiftColor Pink;
 		const static RiftColor Black;
 		const static RiftColor Brown;
+		const static RiftColor Gray;
 	};
 }

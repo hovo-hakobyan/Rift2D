@@ -9,6 +9,9 @@
 #include "Transform.h"
 #include "GameObject.h"
 #include "WorldBuilder.h"
+#include "Prefabs/DirtPrefab.h"
+#include "Prefabs/EmeraldPrefab.h"
+#include "Prefabs/MoneyPrefab.h"
 
 digger::MenuScene::MenuScene():
 Scene("MainMenuScene")
@@ -58,12 +61,17 @@ void digger::MenuScene::init()
 
 	prefabRegistry.registerPrefabCreator(1, [](const glm::vec3& loc, Scene* pScene)
 		{
-			return pScene->addGameObjectFromPrefab<DiggerPrefab>(loc);
+			return pScene->addGameObjectFromPrefab<DirtPrefab>(loc);
 		});
 
 	prefabRegistry.registerPrefabCreator(2, [](const glm::vec3& loc, Scene* pScene)
 		{
-			return pScene->addGameObjectFromPrefab<EnemyPrefab>(loc);
+			return pScene->addGameObjectFromPrefab<MoneyPrefab>(loc);
+		});
+
+	prefabRegistry.registerPrefabCreator(3, [](const glm::vec3& loc, Scene* pScene)
+		{
+			return pScene->addGameObjectFromPrefab<EmeraldPrefab>(loc);
 		});
 
 	try

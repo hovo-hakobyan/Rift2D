@@ -14,4 +14,5 @@ namespace rift2d
     const RiftColor RiftColor::Pink{ 255, 192, 203 };
     const RiftColor RiftColor::Black{ 0, 0, 0 };
     const RiftColor RiftColor::Brown{ 139,69,19 };
+    const RiftColor RiftColor::Gray{ 56, 62, 71 };
 }
