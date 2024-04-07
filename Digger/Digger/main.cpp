@@ -1,13 +1,18 @@
 #include <Rift2DEngine.h>
 #include "Scenes/MenuScene.h"
 #include "SceneManager.h"
+#include "Scenes/GameScene.h"
 #include "Scenes/WorldBuilderScene.h"
 namespace fs = std::filesystem;
 
 void load()
 {
-	//rift2d::SceneManager::GetInstance().addScene(std::make_unique<digger::MenuScene>());
-	rift2d::SceneManager::GetInstance().addScene(std::make_unique<digger::WorldBuilderScene>());
+	auto& sceneManager = rift2d::SceneManager::GetInstance();
+
+	sceneManager.addScene(std::make_unique<digger::MenuScene>());
+	sceneManager.addScene(std::make_unique<digger::WorldBuilderScene>());
+	sceneManager.addScene(std::make_unique<digger::GameScene>());
+
 }
 
 

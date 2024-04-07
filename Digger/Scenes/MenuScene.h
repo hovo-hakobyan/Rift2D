@@ -16,6 +16,7 @@ namespace digger
 	protected:
 
 		virtual void init() override;
+		virtual void onImGui() override;
 	};
 
 

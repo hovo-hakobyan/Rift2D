@@ -16,5 +16,10 @@ namespace rift2d
 		Rift2DEngine(Rift2DEngine&& other) = delete;
 		Rift2DEngine& operator=(const Rift2DEngine& other) = delete;
 		Rift2DEngine& operator=(Rift2DEngine&& other) = delete;
+
+		static void quitGame() { m_shouldQuit = true; }
+
+	private:
+		static bool m_shouldQuit;
 	};
 }

@@ -20,6 +20,7 @@
 #include "ResourceManager.h"
 
 SDL_Window* g_window{};
+bool rift2d::Rift2DEngine::m_shouldQuit = false;
 
 void LogSDLVersion(const std::string& message, const SDL_version& v)
 {
@@ -113,19 +114,18 @@ void rift2d::Rift2DEngine::run(const std::function<void()>& load)
 	auto& timeManager = TimeManager::GetInstance();
 	using namespace std::chrono;
 
-	bool doContinue = true;
 	auto lastTime = high_resolution_clock::now();
 	timeManager.m_deltaTime = 1.0f / 144.f;
 	const float minDeltaTime = 0.001f;
 
-	while (doContinue)
+	while (!m_shouldQuit)
 	{
 		const auto currentTime = high_resolution_clock::now();
 		const float deltaTime = duration<float>(currentTime - lastTime).count();
 		timeManager.m_deltaTime = glm::max(deltaTime, minDeltaTime);
 		lastTime = currentTime;
 
-		doContinue = InputManager::GetInstance().processInput();
+		m_shouldQuit = !InputManager::GetInstance().processInput();
 
 		SceneManager::GetInstance().update();
 		SceneManager::GetInstance().lateUpdate();

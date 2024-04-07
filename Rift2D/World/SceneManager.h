@@ -1,6 +1,8 @@
 #pragma once
-#include <vector>
 #include <memory>
+#include <string>
+#include <unordered_map>
+
 #include "Singleton.h"
 
 namespace rift2d
@@ -11,21 +13,21 @@ namespace rift2d
 	public:
 		Scene* addScene(std::unique_ptr<Scene> scene);
 		~SceneManager() override;
-		void init() const;
+		void init();
 		void update() const;
 		void lateUpdate() const;
 		void end() const;
 		void onImGui() const;
 		void frameCleanup();
 
-		Scene* getActiveScene() const { return m_scenes[m_activeSceneIdx].get(); }
-		void setActiveScene(int sceneIdx);
+		Scene* getActiveScene() const;
+		void setActiveScene(const std::string& sceneName, bool destroyCurrentScene = true);
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager();
-		std::vector<std::unique_ptr<Scene>> m_scenes;
-		int m_activeSceneIdx{-1};
-		int m_newSceneIdx{};
-		bool m_shouldSwapScene{};
+		std::unordered_map<std::string, std::unique_ptr<Scene>> m_scenes;
+		std::unique_ptr<Scene> m_pActiveScene;
+		std::unique_ptr<Scene> m_pNextScene;
+		bool m_destroyCurrentScene;
 	};
 }

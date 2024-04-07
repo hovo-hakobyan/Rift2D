@@ -32,6 +32,7 @@ namespace rift2d
 		std::unique_ptr<GameObject> releaseGameObject(GameObject* go);
 
 		bool isInitialized() const { return m_isInitialized; }
+		std::string getName() const { return m_name; }
 
 		virtual ~Scene();
 		Scene(const Scene& other) = delete;
