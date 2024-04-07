@@ -44,23 +44,28 @@ namespace rift2d
 		uint16_t height;
 	};
 
-	struct TileData
+	struct LayerInfo
 	{
 		uint8_t prefabRegistryId = 0;
 		RiftColor color = RiftColor::Brown;
 		std::string prefabName;
 	};
 
-	struct WorldInfo
+	struct TileLayerData
 	{
-		uint8_t prefabRegistryId;
+		std::vector<LayerInfo> layerInfoVec;
+	};
+
+	struct TileSaveData
+	{
+		std::vector<uint8_t>prefabRegistryIds;
 		glm::vec2 spawnLocation;
 	};
 
 	class WorldBuilder final : public BaseComponent
 	{
 	public:
-		WorldBuilder(GameObject* owner, const TileInfo& info);
+		WorldBuilder(GameObject* owner, const TileInfo& info, uint8_t nrLayers);
 		~WorldBuilder()override;
 		WorldBuilder(const WorldBuilder& other) = delete;
 		WorldBuilder(WorldBuilder&& other) = delete;
@@ -68,7 +73,7 @@ namespace rift2d
 		WorldBuilder& operator=(WorldBuilder&& other) = delete;
 
 		void setTileInfo(const TileInfo& info);
-		void addTileData(const TileData& data);
+		void addLayerInfo(const LayerInfo& info);
 		static void buildLevel(const std::string& lvlName);
 
 		virtual void init() override;
@@ -77,22 +82,23 @@ namespace rift2d
 	private:
 
 		TileInfo m_TileInfo{};
-		std::vector<TileData> m_availableTileData{};
-		std::vector<TileData> m_tiles{};
+		std::vector<LayerInfo> m_layerInfo{};
+		std::vector<TileLayerData> m_tileLayerData{};
 
-		TileData m_currentTileData{};
+		LayerInfo m_currentLayerInfo{};
 		bool m_isBrushSelected{};
 
 		uint16_t m_nrRows{};
 		uint16_t m_nrCols{};
-
-		std::string m_mapName{};
+		uint8_t m_nrLayers{};
+		int m_currentLayerNr{0};
+		std::vector<char> m_layerEditStates{}; //(special bool vector optimization, hence vector of char as an alternative) https://stackoverflow.com/questions/46115669/why-does-stdvectorbool-have-no-data
 		static int m_saveMapHighestIdx;
 
-		void saveLevelToFile() const;
+		void saveLevelToFile();
+		void writeTileData(std::ofstream& outFile, int tileIdx, const glm::vec2& tilePos);
 		std::string getNextLevelName() const;
-
-		static std::vector<WorldInfo> readWorldData(const std::string& lvlName);
+		static std::vector<TileSaveData> readSaveData(const std::string& lvlName);
 	};
 
 

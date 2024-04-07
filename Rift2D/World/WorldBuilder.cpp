@@ -11,8 +11,8 @@
 
 int rift2d::WorldBuilder::m_saveMapHighestIdx = -1;
 
-rift2d::WorldBuilder::WorldBuilder(GameObject* owner, const TileInfo& info):
-BaseComponent(owner),m_TileInfo(info)
+rift2d::WorldBuilder::WorldBuilder(GameObject* owner, const TileInfo& info, uint8_t nrLayers):
+BaseComponent(owner),m_TileInfo(info),m_nrLayers(nrLayers)
 {
 
 }
@@ -25,29 +25,37 @@ void rift2d::WorldBuilder::setTileInfo(const TileInfo& info)
 	m_TileInfo = info;
 }
 
-void rift2d::WorldBuilder::addTileData(const TileData& data)
+void rift2d::WorldBuilder::addLayerInfo(const LayerInfo& info)
 {
-	//If the current tile data does not exist
-	if(std::ranges::none_of(m_availableTileData,[data](const TileData& d)
+	//If the current layer info does not exist (to avoid duplicates)
+	if (std::ranges::none_of(m_layerInfo, [info](const LayerInfo& d)
+		{
+			return info.prefabRegistryId == d.prefabRegistryId;
+		}))
 	{
-		return data.prefabRegistryId == d.prefabRegistryId;
-	}))
-	{
-		m_availableTileData.push_back(data);
+		m_layerInfo.push_back(info);
 	}
 }
-
 
 
 void rift2d::WorldBuilder::init()
 {
 	BaseComponent::init();
+	if (m_nrLayers <= 0) THROW_RIFT_EXCEPTION("Number of layers in worldbuilder must be greater than 0", RiftExceptionType::Error);
 
 	const auto windowSize = Renderer::GetInstance().getWindowSize();
-	m_nrCols =static_cast<uint8_t>( windowSize.x / m_TileInfo.width);
-	m_nrRows = static_cast<uint8_t>(windowSize.y / m_TileInfo.height);
+	m_nrCols =static_cast<uint16_t>( static_cast<uint16_t>(windowSize.x) / m_TileInfo.width);
+	m_nrRows = static_cast<uint16_t>(static_cast<uint16_t>(windowSize.y) / m_TileInfo.height);
 
-	m_tiles.resize(m_nrCols * m_nrRows);
+	m_tileLayerData.resize(m_nrLayers);
+	for (auto& element : m_tileLayerData)
+	{
+		element.layerInfoVec.resize(static_cast<size_t>(m_nrCols * m_nrRows));
+	}
+
+	//first layer should be available for editing
+	m_layerEditStates.resize(m_nrLayers, 0);
+	m_layerEditStates[0] = 1;
 }
 
 void rift2d::WorldBuilder::onImGui()
@@ -69,13 +77,13 @@ void rift2d::WorldBuilder::onImGui()
 
 	//Show the available tile options that can be selected
 	ImGui::Begin("World Builder",nullptr,window_flags);
-	for(const auto& tileData : m_availableTileData)
+	for(const auto& info : m_layerInfo)
 	{
-		if(ImGui::Button(tileData.prefabName.c_str()))
+		if(ImGui::Button(info.prefabName.c_str()))
 		{
-			m_currentTileData.color = tileData.color;
+			m_currentLayerInfo.color = info.color;
+			m_currentLayerInfo.prefabRegistryId = info.prefabRegistryId;
 			m_isBrushSelected = true;
-			m_currentTileData.prefabRegistryId = tileData.prefabRegistryId;
 		}
 		ImGui::SameLine();
 	}
@@ -108,7 +116,11 @@ void rift2d::WorldBuilder::onImGui()
 		}
 		ImGui::EndPopup();
 	}
-	
+
+	//Slider for layers
+	ImGui::PushItemWidth(100);
+	ImGui::SliderInt("Layer", &m_currentLayerNr, 0, m_nrLayers - 1, "Layer %d");
+	ImGui::PopItemWidth();
 
 	ImGui::NewLine();
 	//Visualize selected tile type using it's color
@@ -117,12 +129,15 @@ void rift2d::WorldBuilder::onImGui()
 		ImVec2 mousePos = ImGui::GetMousePos();
 		ImDrawList* drawList = ImGui::GetForegroundDrawList();
 
-		ImVec4 imColor = ImVec4(m_currentTileData.color.r / 255.0f, m_currentTileData.color.g / 255.0f, m_currentTileData.color.b / 255.0f, m_currentTileData.color.a / 255.0f);
+		ImVec4 imColor = ImVec4(static_cast<float>(m_currentLayerInfo.color.r) / 255.0f, static_cast<float>(m_currentLayerInfo.color.g) / 255.0f, 
+			static_cast<float>(m_currentLayerInfo.color.b) / 255.0f,static_cast<float>( m_currentLayerInfo.color.a) / 255.0f);
 		drawList->AddCircleFilled(mousePos, 10.f, ImColor(imColor), 12);
 	}
 
 	ImVec2 originalSpacing = ImGui::GetStyle().ItemSpacing;
 	ImGui::GetStyle().ItemSpacing = ImVec2(0, 0);
+
+	auto& layer = m_tileLayerData[m_currentLayerNr];
 	//Draw the grid
 	for(int row = 0; row < m_nrRows; ++row)
 	{
@@ -131,8 +146,8 @@ void rift2d::WorldBuilder::onImGui()
 			int id = row * m_nrCols + col;
 			ImGui::PushID(id);
 
-			auto& tile = m_tiles[id];
-			ImVec4 tileColor = ImVec4(tile.color.r / 255.f, tile.color.g / 255.f, tile.color.b / 255.f, tile.color.a / 255.f);
+			auto& tile = layer.layerInfoVec[id];
+			ImVec4 tileColor = ImVec4(static_cast<float>(tile.color.r )/ 255.f, static_cast<float>(tile.color.g) / 255.f, static_cast<float>(tile.color.b) / 255.f, static_cast<float>(tile.color.a) / 255.f);
 
 			//temporary color change
 			ImGui::PushStyleColor(ImGuiCol_Button, tileColor);
@@ -141,8 +156,8 @@ void rift2d::WorldBuilder::onImGui()
 			{
 				if(m_isBrushSelected)
 				{
-					tile.color = m_currentTileData.color;
-					tile.prefabRegistryId = m_currentTileData.prefabRegistryId;
+					tile.color = m_currentLayerInfo.color;
+					tile.prefabRegistryId = m_currentLayerInfo.prefabRegistryId;
 				}
 			}
 
@@ -159,7 +174,7 @@ void rift2d::WorldBuilder::onImGui()
 	ImGui::End();
 }
 
-void rift2d::WorldBuilder::saveLevelToFile() const
+void rift2d::WorldBuilder::saveLevelToFile()
 {
 	const std::filesystem::path directoryPath = "../Levels";
 	const std::string name = getNextLevelName();
@@ -181,22 +196,17 @@ void rift2d::WorldBuilder::saveLevelToFile() const
 	const uint16_t nrTiles{ static_cast<uint16_t>(m_nrCols * m_nrRows) };
 	outFile.write(reinterpret_cast<const char*>(&nrTiles), sizeof(nrTiles));
 
+	//write number of layers to .riftmap
+	outFile.write(reinterpret_cast<const char*>(&m_nrLayers), sizeof(m_nrLayers));
+
 	glm::vec2 tilePos{ 0.f,0.f};
+
 	for (int row = 0; row <m_nrRows; ++row)
 	{
 		for (int col = 0; col < m_nrCols; ++col)
 		{
 			const int tileIdx{ row * m_nrCols + col };
-			if (tileIdx >= static_cast<int>(m_tiles.size()))
-				THROW_RIFT_EXCEPTION("Tile data inside .riftmap is corrupt. Less tiles than rows * cols", RiftExceptionType::Error);
-
-			auto& tile = m_tiles[tileIdx];
-
-			//Write current tile prefab id
-			outFile.write(reinterpret_cast<const char*>(&tile.prefabRegistryId), sizeof(tile.prefabRegistryId));
-
-			//write current tile position
-			outFile.write(reinterpret_cast<const char*>(&tilePos),sizeof(tilePos));
+			writeTileData(outFile, tileIdx, tilePos);
 
 			if (!outFile)
 			{
@@ -212,6 +222,58 @@ void rift2d::WorldBuilder::saveLevelToFile() const
 
 	outFile.close();
 	
+}
+
+std::vector<rift2d::TileSaveData> rift2d::WorldBuilder::readSaveData(const std::string& lvlName)
+{
+
+	std::ifstream inFile("../Levels/" + lvlName + ".riftmap", std::ios::binary);
+	if (!inFile)
+	{
+		THROW_RIFT_EXCEPTION("Cannot open " + lvlName + ".riftmap. It doesn't exist", RiftExceptionType::Error);
+	}
+
+	//read number of tiles
+	uint16_t nrTiles{};
+	inFile.read(reinterpret_cast<char*>(&nrTiles), sizeof(nrTiles));
+
+	uint8_t nrLayers{};
+	//read number of layers
+	inFile.read(reinterpret_cast<char*>(&nrLayers), sizeof(nrLayers));
+
+	std::vector<TileSaveData> tileSaveData;
+	tileSaveData.resize(nrTiles);
+
+	for (auto& saveData : tileSaveData)
+	{
+		saveData.prefabRegistryIds.resize(nrLayers);
+		for(int layerIdx = 0; layerIdx < static_cast<int>(nrLayers); ++layerIdx)
+		{
+			inFile.read(reinterpret_cast<char*>(&saveData.prefabRegistryIds[layerIdx]), sizeof(saveData.prefabRegistryIds[layerIdx]));
+		}
+
+		inFile.read(reinterpret_cast<char*>(&saveData.spawnLocation), sizeof(saveData.spawnLocation));
+	}
+
+	if (!inFile)
+	{
+		THROW_RIFT_EXCEPTION("Cannot read data inside " + lvlName + ".riftmap.", RiftExceptionType::Error);
+	}
+
+	inFile.close();
+	return tileSaveData;
+
+}
+
+void rift2d::WorldBuilder::writeTileData(std::ofstream& outFile,int tileIdx, const glm::vec2& tilePos)
+{
+	for (const auto& layer : m_tileLayerData)
+	{
+		auto& tile = layer.layerInfoVec[tileIdx];
+		outFile.write(reinterpret_cast<const char*>(&tile.prefabRegistryId), sizeof(tile.prefabRegistryId));
+	}
+	// Write the tile position once per tile, after all its layers have been written
+	outFile.write(reinterpret_cast<const char*>(&tilePos), sizeof(tilePos));
 }
 
 std::string rift2d::WorldBuilder::getNextLevelName() const
@@ -237,49 +299,23 @@ std::string rift2d::WorldBuilder::getNextLevelName() const
 	return "level" + std::to_string(m_saveMapHighestIdx);
 }
 
-std::vector<rift2d::WorldInfo> rift2d::WorldBuilder::readWorldData(const std::string& lvlName)
-{
 
-	std::ifstream inFile("../Levels/" + lvlName + ".riftmap", std::ios::binary);
-	if (!inFile)
-	{
-		THROW_RIFT_EXCEPTION("Cannot open " + lvlName + ".riftmap. It doesn't exist", RiftExceptionType::Error);
-	}
-
-	//read number of tiles
-	uint16_t nrTiles{};
-	inFile.read(reinterpret_cast<char*>(&nrTiles), sizeof(nrTiles));
-
-	std::vector<WorldInfo> worldInfo;
-	worldInfo.resize(nrTiles);
-
-	for (auto& info : worldInfo)
-	{
-		inFile.read(reinterpret_cast<char*>(&info.prefabRegistryId), sizeof(info.prefabRegistryId));
-		inFile.read(reinterpret_cast<char*>(&info.spawnLocation), sizeof(info.spawnLocation));
-	}
-
-	if (!inFile)
-	{
-		THROW_RIFT_EXCEPTION("Cannot read data inside " + lvlName + ".riftmap.", RiftExceptionType::Error);
-	}
-
-	inFile.close();
-	return worldInfo;
-
-}
 
 void rift2d::WorldBuilder::buildLevel(const std::string& lvlName)
 {
-	const auto worldInfo = readWorldData(lvlName);
-	if (worldInfo.empty()) return;
+	const auto tileSaveDatas = readSaveData(lvlName);
+	if (tileSaveDatas.empty()) return;
 
 	const auto pScene = SceneManager::GetInstance().getActiveScene();
 	auto& prefabRegistry = WorldBuilderPrefabRegistry::GetInstance();
 
-	for (const auto & info : worldInfo)
+	for (const auto & info : tileSaveDatas)
 	{
-		prefabRegistry.createPrefab(glm::vec3{ info.spawnLocation.x,info.spawnLocation.y,1.f }, info.prefabRegistryId, pScene);
+		for (const auto data : info.prefabRegistryIds)
+		{
+			prefabRegistry.createPrefab(glm::vec3{ info.spawnLocation.x,info.spawnLocation.y,1.f }, data, pScene);
+		}
+		
 	}
 
 	
