@@ -9,14 +9,14 @@ rift2d::SceneManager::~SceneManager() = default;
 
 rift2d::Scene* rift2d::SceneManager::addScene(std::unique_ptr<Scene> scene)
 {
+	Scene* rawPtr{ scene.get() };
 	auto name = scene->getName();
 	const auto inserted = m_scenes.emplace(name, std::move(scene));
 	if (!inserted.second)
 	{
 		THROW_RIFT_EXCEPTION("Scene with name" + name + "already exists", RiftExceptionType::Error);
 	}
-
-	return inserted.first->second.get();
+	return rawPtr;
 
 }
 
@@ -27,8 +27,16 @@ void rift2d::SceneManager::setActiveScene(const std::string& sceneName, bool des
 		THROW_RIFT_EXCEPTION("Scene with name " + sceneName + " doesn't exist", RiftExceptionType::Error);
 	}
 
-	m_pNextScene = std::move(m_scenes[sceneName]);
-	m_scenes.erase(m_pNextScene->getName());
+	if (!m_pActiveScene)
+	{
+		m_pActiveScene = std::move(m_scenes[sceneName]);
+	}
+	else
+	{
+		m_pNextScene = std::move(m_scenes[sceneName]);
+	}
+
+	m_scenes.erase(sceneName);
 	m_destroyCurrentScene = destroyCurrentScene;
 }
 
@@ -79,6 +87,7 @@ void rift2d::SceneManager::frameCleanup()
 	{
 		if(!m_destroyCurrentScene)
 		{
+			m_pActiveScene->disableScene();
 			m_scenes[m_pActiveScene->getName()] = std::move(m_pActiveScene);
 		}
 		else
@@ -93,6 +102,7 @@ void rift2d::SceneManager::frameCleanup()
 		{
 			m_pActiveScene->rootInit();
 		}
+		m_pActiveScene->enableScene();
 	}
 
 }

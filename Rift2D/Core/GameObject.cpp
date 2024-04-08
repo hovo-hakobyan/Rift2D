@@ -5,7 +5,7 @@
 #include "Scene.h"
 #include  <ranges>
 #include "Transform.h"
-#include "BaseComponent.h"
+
 
 bool rift2d::GameObject::m_gameStarted{ false };
 
@@ -18,7 +18,7 @@ rift2d::GameObject::GameObject(Scene* pOwner):
 
 rift2d::GameObject::~GameObject() = default;
 
-void rift2d::GameObject::init() const
+void rift2d::GameObject::init()
 {
 
 	for (auto& comp : m_components)
@@ -32,11 +32,12 @@ void rift2d::GameObject::init() const
 	}
 
 	m_gameStarted = true;
+	m_isInitialized = true;
 }
 
 void rift2d::GameObject::update() 
 {
-	processComponentCache();
+	if (m_isDisabled) return;
 
 	for (const auto& comp : m_components) 
 	{
@@ -53,6 +54,7 @@ void rift2d::GameObject::update()
 
 void rift2d::GameObject::lateUpdate() const
 {
+	if (m_isDisabled) return;
 	for (auto& comp : m_components)
 	{
 		comp->lateUpdate();
@@ -89,6 +91,7 @@ void rift2d::GameObject::end()
 		child->end();
 	}
 	m_children.clear();
+	
 }
 
 void rift2d::GameObject::onImGui() const
@@ -105,6 +108,13 @@ void rift2d::GameObject::onImGui() const
 
 }
 
+
+void rift2d::GameObject::frameCleanup()
+{
+	processGameObjectRemovals();
+	processComponentCache();
+	processComponentRemovals();
+}
 
 void rift2d::GameObject::processComponentRemovals()
 {
@@ -226,6 +236,34 @@ void rift2d::GameObject::markForDestroy()
 	}
 }
 
+void rift2d::GameObject::disable()
+{
+	for(const auto& comp : m_components)
+	{
+		comp->disable();
+	}
+	for (const auto& child : m_children)
+	{
+		child->disable();
+	}
+
+	m_isDisabled = true;
+}
+
+void rift2d::GameObject::enable()
+{
+	for (const auto& comp : m_components)
+	{
+		comp->enable();
+	}
+
+	for (const auto& child : m_children)
+	{
+		child->enable();
+	}
+	m_isDisabled = false;
+}
+
 
 bool rift2d::GameObject::isValidParent(GameObject* pNewParent) const
 {
@@ -248,11 +286,27 @@ void rift2d::GameObject::processComponentCache()
 {
 	if(!m_componentsCache.empty())
 	{
+		for (auto& comp : m_componentsCache)
+		{
+			//if renderable, register
+			IRenderable* renderableComp = dynamic_cast<IRenderable*>(comp.get());
+			if (renderableComp)
+			{
+				registerRenderableComponent(renderableComp);
+			}
+		}
+
 		std::ranges::move(m_componentsCache, std::back_inserter(m_components));
 		m_componentsCache.clear();
-		if (m_gameStarted)
+
+		for (const auto& element : m_children)
 		{
-			for(const auto& comp : m_components)
+			element->processComponentCache();
+		}
+
+		for (auto& comp : m_components)
+		{
+			if(m_gameStarted)
 			{
 				if (!comp->isInitialized()) comp->init();
 			}

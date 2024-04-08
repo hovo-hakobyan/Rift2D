@@ -1,12 +1,14 @@
 #include "MenuScene.h"
 #include <imgui.h>
-#include "ResourceManager.h"
+
+#include "GameScene.h"
 #include "Rift2DEngine.h"
 #include "SceneManager.h"
 #include "SpriteComponent.h"
+#include "WorldBuilderScene.h"
 
 digger::MenuScene::MenuScene():
-Scene("#MenuScene")
+Scene("MenuScene")
 {
 }
 
@@ -34,6 +36,7 @@ void digger::MenuScene::onImGui()
 
     if (ImGui::Button("WorldBuilder"))
     {
+        rift2d::SceneManager::GetInstance().addScene(std::make_unique<WorldBuilderScene>());
         rift2d::SceneManager::GetInstance().setActiveScene("WorldBuilderScene");
     }
 
@@ -41,6 +44,7 @@ void digger::MenuScene::onImGui()
 
     if (ImGui::Button("Play"))
     {
+        rift2d::SceneManager::GetInstance().addScene(std::make_unique<GameScene>());
         rift2d::SceneManager::GetInstance().setActiveScene("GameScene");
     }
 

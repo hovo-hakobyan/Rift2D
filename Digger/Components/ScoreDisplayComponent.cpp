@@ -43,6 +43,7 @@ void digger::ScoreDisplayComponent::init()
 
 void digger::ScoreDisplayComponent::end()
 {
+	BaseComponent::end();
 	m_pScoreComponent->onScoreChangeEvent()->unsubscribe(m_observerID);
 }
 

@@ -76,6 +76,11 @@ void rift2d::Renderer::destroy()
 	}
 }
 
+void rift2d::Renderer::reset()
+{
+	m_renderables.clear();
+}
+
 void rift2d::Renderer::renderTexture(const Texture2D& texture, const float x, const float y) const
 {
 	SDL_Rect dst{};

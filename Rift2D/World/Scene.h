@@ -33,6 +33,8 @@ namespace rift2d
 
 		bool isInitialized() const { return m_isInitialized; }
 		std::string getName() const { return m_name; }
+		void disableScene();
+		void enableScene();
 
 		virtual ~Scene();
 		Scene(const Scene& other) = delete;
@@ -53,9 +55,10 @@ namespace rift2d
 
 		std::string m_name;
 		std::vector <std::unique_ptr<GameObject>> m_rootGameObjects{};
+		std::vector<std::unique_ptr<GameObject>> m_rootObjectCache{};
 		bool m_isInitialized{ false };
 		static unsigned int m_idCounter; 
-		void processGameObjectRemovals();
+		void processGameObjectCache();
 
 		void rootInit();
 		void rootUpdate() ;

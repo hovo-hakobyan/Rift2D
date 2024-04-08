@@ -17,6 +17,7 @@ void digger::HealthComponent::init()
 
 void digger::HealthComponent::end()
 {
+	BaseComponent::end();
 	m_pOnHealthChanged->clearSubscribers();
 }
 

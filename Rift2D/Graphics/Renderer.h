@@ -22,6 +22,7 @@ namespace rift2d
 		void init(SDL_Window* window);
 		void render() const;
 		void destroy();
+		void reset();
 
 		void renderTexture(const Texture2D& texture, float x, float y) const;
 		void renderTexture(const Texture2D& texture, float x, float y, float width, float height) const;

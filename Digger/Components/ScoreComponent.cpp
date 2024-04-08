@@ -12,6 +12,7 @@ void digger::ScoreComponent::init()
 
 void digger::ScoreComponent::end()
 {
+	BaseComponent::end();
 	m_pOnScoreChange->clearSubscribers();
 }
 

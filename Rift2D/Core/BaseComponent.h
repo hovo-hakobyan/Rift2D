@@ -39,12 +39,15 @@ namespace rift2d
 		virtual void init() { m_isInitialized = true; }
 		virtual void update() {}
 		virtual void lateUpdate() {}
-		virtual void end() {}
+		virtual void end() { m_isInitialized = false; }
 		virtual void onImGui(){}
 
 		void markForRemoval() { m_isMarkedForRemoval = true; }
 		bool isMarkedForRemoval() const { return m_isMarkedForRemoval; }
 		bool isInitialized() const { return m_isInitialized; }
+		bool isDisabled() const { return m_isDisabled; }
+		void disable() { m_isDisabled = true; }
+		void enable() { m_isDisabled = false; }
 
 		void registerWatcher(IComponentWatcher* watcher) { m_watchers.push_back(watcher); }
 		void unregisterWatcher(IComponentWatcher* watcher) { m_watchers.remove(watcher); }
@@ -66,6 +69,7 @@ namespace rift2d
 		GameObject* getOwner() const { return m_pOwner; }
 	private:
 		bool m_isMarkedForRemoval{};
+		bool m_isDisabled{};
 		GameObject* m_pOwner;
 		std::list<IComponentWatcher*> m_watchers;
 		bool m_isInitialized{ false };

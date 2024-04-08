@@ -22,14 +22,20 @@ namespace rift2d
 		std::vector<std::unique_ptr<GameObject>> m_children{};
 		GameObject* m_pParent{};
 		bool m_isMarkedForDestruction{false};
+		bool m_isInitialized{ false };
+		bool m_isDisabled{ false };
 
 		Scene* m_pScene;
 
 		bool isValidParent(GameObject* pNewParent) const;
 		void registerRenderableComponent(IRenderable* component);
 
+		void processComponentRemovals();
+		void processGameObjectRemovals();
+		void processComponentCache();
+
 	public:
-		void init() const;
+		void init();
 		void update();
 		void lateUpdate() const;
 		void end();
@@ -45,17 +51,20 @@ namespace rift2d
 		GameObject& operator=(const GameObject& other) = delete;
 		GameObject& operator=(GameObject&& other) = delete;
 
-		void processComponentRemovals();
-		void processGameObjectRemovals();
-		void processComponentCache();
+
+		void frameCleanup();
+		
 
 		void setParent(GameObject* pParent, bool keepWorldPosition);
 		
-		GameObject* getParent() const { return m_pParent; };
+		GameObject* getParent() const { return m_pParent; }
 		const std::vector<std::unique_ptr<GameObject>>& getChildren() const { return m_children; }
 
 		void markForDestroy();
 		bool isMarkedForDestruction()const { return m_isMarkedForDestruction; }
+		bool isInitialized() const { return m_isInitialized; }
+		void disable();
+		void enable();
 
 		/// <summary>
 	/// Adds a component to the GameObject.
@@ -74,12 +83,6 @@ namespace rift2d
 
 			auto component = std::make_unique<Component>(this, std::forward<Args>(args)...);
 			auto rawPtr = component.get();
-
-			if constexpr (std::is_base_of<IRenderable, Component>::value)
-			{
-				auto renderableComponent = static_cast<IRenderable*>(rawPtr);
-				registerRenderableComponent(renderableComponent);
-			}
 
 			m_componentsCache.push_back(std::move(component));
 			return rawPtr;

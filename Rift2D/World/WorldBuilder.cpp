@@ -37,6 +37,12 @@ void rift2d::WorldBuilder::addLayerInfo(const LayerInfo& info)
 	}
 }
 
+void rift2d::WorldBuilder::setWorldPadding(float left, float top)
+{
+	m_worldPadding.x = left;
+	m_worldPadding.y = top;
+}
+
 
 void rift2d::WorldBuilder::init()
 {
@@ -199,7 +205,7 @@ void rift2d::WorldBuilder::saveLevelToFile()
 	//write number of layers to .riftmap
 	outFile.write(reinterpret_cast<const char*>(&m_nrLayers), sizeof(m_nrLayers));
 
-	glm::vec2 tilePos{ 0.f,0.f};
+	glm::vec2 tilePos{ m_worldPadding};
 
 	for (int row = 0; row <m_nrRows; ++row)
 	{

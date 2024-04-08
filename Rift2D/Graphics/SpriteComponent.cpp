@@ -12,6 +12,7 @@ rift2d::SpriteComponent::SpriteComponent(GameObject* owner) :
 
 void rift2d::SpriteComponent::render() const
 {
+	if (isDisabled()) return;
 	if (!m_shouldRender) return;
 	if (m_texture)
 	{

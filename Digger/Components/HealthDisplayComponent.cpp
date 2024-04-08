@@ -41,6 +41,7 @@ void digger::HealthDisplayComponent::init()
 
 void digger::HealthDisplayComponent::end()
 {
+	BaseComponent::end();
 	if(m_pHealth) m_pHealth->healthChangedEvent()->unsubscribe(m_observerId);
 	
 }

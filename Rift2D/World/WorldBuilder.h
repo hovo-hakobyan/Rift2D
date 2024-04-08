@@ -6,6 +6,7 @@
 #include "Color.h"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
+
 #include "BaseComponent.h"
 #include "Singleton.h"
 
@@ -76,6 +77,7 @@ namespace rift2d
 
 		void setTileInfo(const TileInfo& info);
 		void addLayerInfo(const LayerInfo& info);
+		void setWorldPadding(float left, float top);
 		static void buildLevel(const std::string& lvlName);
 
 		virtual void init() override;
@@ -96,6 +98,7 @@ namespace rift2d
 		int m_currentLayerNr{0};
 		std::vector<char> m_layerEditStates{}; //(special bool vector optimization, hence vector of char as an alternative) https://stackoverflow.com/questions/46115669/why-does-stdvectorbool-have-no-data
 		static int m_saveMapHighestIdx;
+		glm::vec2 m_worldPadding{};
 
 		void saveLevelToFile();
 		void writeTileData(std::ofstream& outFile, int tileIdx, const glm::vec2& tilePos);

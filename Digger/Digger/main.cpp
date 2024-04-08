@@ -1,6 +1,9 @@
 #include <Rift2DEngine.h>
+
+#include "InputManager.h"
 #include "Scenes/MenuScene.h"
 #include "SceneManager.h"
+#include "Commands/ToMainMenuCommand.h"
 #include "Scenes/GameScene.h"
 #include "Scenes/WorldBuilderScene.h"
 namespace fs = std::filesystem;
@@ -8,11 +11,9 @@ namespace fs = std::filesystem;
 void load()
 {
 	auto& sceneManager = rift2d::SceneManager::GetInstance();
-
 	sceneManager.addScene(std::make_unique<digger::MenuScene>());
-	sceneManager.addScene(std::make_unique<digger::WorldBuilderScene>());
-	sceneManager.addScene(std::make_unique<digger::GameScene>());
 
+	rift2d::InputManager::GetInstance().bindAction(SDL_SCANCODE_ESCAPE, rift2d::InputEvent::Down, std::make_unique<digger::ToMainMenuCommand>());
 }
 
 

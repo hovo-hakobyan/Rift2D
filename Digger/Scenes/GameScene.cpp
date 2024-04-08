@@ -4,6 +4,7 @@
 #include "Prefabs/DirtPrefab.h"
 #include "Prefabs/EmeraldPrefab.h"
 #include "Prefabs/MoneyPrefab.h"
+#include "FPSComponent.h"
 
 digger::GameScene::GameScene():
 Scene("GameScene")
@@ -19,6 +20,7 @@ void digger::GameScene::init()
 		{
 			return nullptr;
 		});
+
 
 	prefabRegistry.registerPrefabCreator(1, [](const glm::vec3& loc, Scene* pScene)
 		{
@@ -44,4 +46,9 @@ void digger::GameScene::init()
 		e.logToFile();
 		throw;
 	}
+
+	auto gameObject = std::make_unique<rift2d::GameObject>(this);
+	gameObject->addComponent<rift2d::FPSComponent>();
+	addGameObject(std::move(gameObject));
+
 }

@@ -93,6 +93,7 @@ void digger::TrashTheCache::onImGui()
 
 void digger::TrashTheCache::end()
 {
+	BaseComponent::end();
 	if(m_pLineGraph)
 	{
 		m_pLineGraph->unregisterWatcher(this);

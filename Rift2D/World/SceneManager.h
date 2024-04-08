@@ -21,7 +21,7 @@ namespace rift2d
 		void frameCleanup();
 
 		Scene* getActiveScene() const;
-		void setActiveScene(const std::string& sceneName, bool destroyCurrentScene = true);
+		void setActiveScene(const std::string& sceneName, bool destroyCurrentScene = false);
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager();

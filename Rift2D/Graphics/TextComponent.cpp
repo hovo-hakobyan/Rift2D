@@ -42,6 +42,7 @@ void rift2d::TextComponent::update()
 
 void rift2d::TextComponent::end()
 {
+	BaseComponent::end();
 	if (m_pSpriteComponent)
 	{
 		m_pSpriteComponent->unregisterWatcher(this);

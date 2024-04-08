@@ -50,6 +50,7 @@ void rift2d::FPSComponent::update()
 
 void rift2d::FPSComponent::end()
 {
+	BaseComponent::end();
 	if (m_pText)
 	{
 		m_pText->unregisterWatcher(this);

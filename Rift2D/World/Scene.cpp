@@ -2,11 +2,29 @@
 #include <algorithm>
 #include <ranges>
 
+#include "Exception.h"
+
 using namespace rift2d;
 
 unsigned int Scene::m_idCounter = 0;
 
 Scene::Scene(std::string name) : m_name(std::move(name)) {}
+
+void Scene::disableScene()
+{
+	for (const auto& element : m_rootGameObjects)
+	{
+		element->disable();
+	}
+}
+
+void Scene::enableScene()
+{
+	for (const auto& element : m_rootGameObjects)
+	{
+		element->enable();
+	}
+}
 
 Scene::~Scene() = default;
 
@@ -20,7 +38,7 @@ GameObject* Scene::addGameObject(std::unique_ptr<GameObject> object)
 	auto obj = std::move(object);
 	const auto rawPtr = obj.get();
 
-	m_rootGameObjects.push_back(std::move(obj));
+	m_rootObjectCache.push_back(std::move(obj));
 	return rawPtr;
 }
 
@@ -28,7 +46,7 @@ GameObject* Scene::createGameObject()
 {
 	auto go = std::make_unique<GameObject>(this);
 	auto rawPtr = go.get();
-	m_rootGameObjects.push_back(std::move(go));
+	m_rootObjectCache.push_back(std::move(go));
 	return rawPtr;
 }
 
@@ -46,6 +64,7 @@ void Scene::removeAll()
 {
 	rootEnd();
 	m_rootGameObjects.clear();
+	m_rootObjectCache.clear();
 }
 
 std::unique_ptr<GameObject> Scene::releaseGameObject(GameObject* go)
@@ -60,6 +79,22 @@ std::unique_ptr<GameObject> Scene::releaseGameObject(GameObject* go)
 		child = std::move(*it);
 		m_rootGameObjects.erase(it);
 	}
+	else
+	{
+		//look into cache
+		auto cacheIt = std::find_if(m_rootObjectCache.begin(), m_rootObjectCache.end(), [go](const auto& cachego)
+			{
+				return cachego.get() == go;
+			});
+
+		if(cacheIt != m_rootObjectCache.end())
+		{
+			child = std::move(*cacheIt);
+			m_rootObjectCache.erase(cacheIt);
+		}
+	}
+
+	if (!child) THROW_RIFT_EXCEPTION("Game object is not owned by the scene, so it cannot be released", RiftExceptionType::Error);
 
 	return child;
 }
@@ -118,37 +153,29 @@ void Scene::rootOnImGui()
 
 void Scene::rootFrameCleanup() 
 {
-	//remove dead game objects
-	processGameObjectRemovals();
+	//add cached game objects
+	processGameObjectCache();
 
 	for (const auto& object : m_rootGameObjects)
 	{
-		object->processComponentRemovals();
+		object->frameCleanup();
 	}
 
-	
 }
 
-void Scene::processGameObjectRemovals()
+
+
+void Scene::processGameObjectCache()
 {
-	// Filter elements that are marked for destruction and call end
-	//Invokes IsMarkedForDestruction for each child and if true, invokes end();
-	for (const auto& child : m_rootGameObjects | std::views::filter(&GameObject::isMarkedForDestruction))
+	if (m_rootObjectCache.empty()) return;
+
+	for (const auto& rootObjectCache : m_rootObjectCache)
 	{
-		child->end();
+		rootObjectCache->init();
 	}
 
-	m_rootGameObjects.erase(std::remove_if(m_rootGameObjects.begin(), m_rootGameObjects.end(),
-		[](const std::unique_ptr<GameObject>& child) { return child->isMarkedForDestruction(); }),
-		m_rootGameObjects.end());
-
-	//filter elements that are not marked for destruction
-	//Cannot bind function pointer because return is inverted
-	for (const auto& child : m_rootGameObjects)
-	{
-		child->processGameObjectRemovals();
-	}
-
+	std::ranges::move(m_rootObjectCache, std::back_inserter(m_rootGameObjects));
+	m_rootObjectCache.clear();
 }
 
 
