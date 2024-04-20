@@ -11,7 +11,7 @@ namespace rift2d
 
 	enum class RiftExceptionType
 	{
-		Error, Warning
+		Error
 	};
 
 	class RiftException final
@@ -65,8 +65,6 @@ namespace rift2d
 			{
 			case RiftExceptionType::Error:
 				return "ERROR";
-			case RiftExceptionType::Warning:
-				return "WARNING";
 			}
 
 			return "N/A";

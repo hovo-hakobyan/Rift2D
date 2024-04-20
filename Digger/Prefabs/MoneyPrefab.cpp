@@ -1,5 +1,4 @@
 #include "MoneyPrefab.h"
-
 #include "Scene.h"
 #include "SpriteComponent.h"
 

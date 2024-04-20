@@ -36,9 +36,39 @@ set(IMGUI_SOURCES
   ${implot_SOURCE_DIR}/implot_items.cpp
 )
 
+# add box2d
+FetchContent_Declare(
+  box2d
+  GIT_REPOSITORY https://github.com/erincatto/box2d.git
+  GIT_TAG v2.4.1
+)
+
+
+FetchContent_GetProperties(box2d)
+if(NOT box2d_POPULATED)
+  FetchContent_Populate(box2d)
+endif()
+
+# Include all Box2D .cpp files
+file(GLOB_RECURSE BOX2D_SOURCES "${box2d_SOURCE_DIR}/src/*.cpp")
+
+# Add Box2D's include and src directories for header file resolution
+include_directories(
+  ${box2d_SOURCE_DIR}/include
+  ${box2d_SOURCE_DIR}/src
+)
+
+
+# ignore the compiler warinings for external libs
 if (WIN32)
 set_source_files_properties("${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp"
-                           PROPERTIES COMPILE_FLAGS "/wd4701")
+                          PROPERTIES COMPILE_FLAGS "/wd4701")
+# Disabling warning C4189 for specific Box2D files
+set_source_files_properties("${box2d_SOURCE_DIR}/src/dynamics/b2_distance_joint.cpp"
+                          PROPERTIES COMPILE_FLAGS "/wd4189")
+set_source_files_properties("${box2d_SOURCE_DIR}/src/dynamics/b2_mouse_joint.cpp"
+                          PROPERTIES COMPILE_FLAGS "/wd4189")
+
 endif()
 
 # Define engine files
@@ -55,6 +85,8 @@ source_group("Components" FILES ${ENGINE_COMPPONENT_SOURCES})
 source_group("Graphics" FILES ${ENGINE_GRAPHICS_SOURCES})
 source_group("Input" FILES ${ENGINE_INPUT_SOURCES})
 source_group("World" FILES ${ENGINE_WORLD_SOURCES})
+source_group("Third-Party\\Imgui" FILES ${IMGUI_SOURCES} )
+source_group("Third-Party\\Box2D" FILES ${BOX2D_SOURCES} )
 
 # Add all sources to Engine library
 add_library(Engine STATIC 
@@ -63,7 +95,13 @@ ${ENGINE_COMPPONENT_SOURCES}
 ${ENGINE_GRAPHICS_SOURCES}
 ${ENGINE_INPUT_SOURCES}
 ${ENGINE_WORLD_SOURCES}
-${IMGUI_SOURCES})
+${IMGUI_SOURCES}
+${BOX2D_SOURCES})
+
+
+
+# Link box2d
+#target_link_libraries(Engine PRIVATE box2d)
 
 # enable c++20 features
 target_compile_features(Engine PUBLIC cxx_std_20)
@@ -94,6 +132,7 @@ target_include_directories(Engine PUBLIC
 ${imgui_SOURCE_DIR}
 ${imgui_SOURCE_DIR}/backends
 ${implot_SOURCE_DIR}
+${box2d_SOURCE_DIR}/include
 ${glm_SOURCE_DIR}
 ${CMAKE_SOURCE_DIR}/Rift2D/Core
 ${CMAKE_SOURCE_DIR}/Rift2D/Components

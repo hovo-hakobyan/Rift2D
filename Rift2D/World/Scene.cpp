@@ -12,6 +12,7 @@ Scene::Scene(std::string name) : m_name(std::move(name)) {}
 
 void Scene::disableScene()
 {
+	
 	for (const auto& element : m_rootGameObjects)
 	{
 		element->disable();
