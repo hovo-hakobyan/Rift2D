@@ -98,8 +98,6 @@ ${ENGINE_WORLD_SOURCES}
 ${IMGUI_SOURCES}
 ${BOX2D_SOURCES})
 
-
-
 # Link box2d
 #target_link_libraries(Engine PRIVATE box2d)
 
@@ -142,7 +140,7 @@ ${CMAKE_SOURCE_DIR}/Rift2D/World
 )
 
 # add SDL2
-if (WIN32)
+if(WIN32)
   FetchContent_Declare(
     SDL2
     URL https://www.libsdl.org/release/SDL2-devel-2.28.5-VC.zip 
@@ -162,6 +160,7 @@ if (WIN32)
     set(SDL2_LIBRARY_DLL "${sdl2_SOURCE_DIR}/lib/x86/SDL2.dll")
   endif()
   endif()
+endif()
 
   # add SDL2_image
   FetchContent_Declare(
@@ -204,6 +203,28 @@ if (WIN32)
   endif()
   endif()
 
+  # add SDL_mixer
+  FetchContent_Declare(
+    SDL2_mixer
+    URL "https://github.com/libsdl-org/SDL_mixer/releases/download/release-2.8.0/SDL2_mixer-devel-2.8.0-VC.zip"
+    DOWNLOAD_NO_PROGRESS ON
+    DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
+  )
+
+  # Check if population has already been performed
+  FetchContent_GetProperties(SDL2_mixer)
+  if(NOT sdl2_mixer_POPULATED)
+    FetchContent_Populate(SDL2_mixer)
+    set(SDL2_MIXER_INCLUDE_DIR ${sdl2_mixer_SOURCE_DIR}/include)
+    if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
+    set(SDL2_MIXER_LIBRARY_DLL "${sdl2_mixer_SOURCE_DIR}/lib/x64/SDL2_mixer.dll")
+    set(SDL2_MIXER_LIBRARIES "${sdl2_mixer_SOURCE_DIR}/lib/x64/SDL2_mixer.lib")
+  else()
+    set(SDL2_MIXER_LIBRARY_DLL "${sdl2_mixer_SOURCE_DIR}/lib/x86/SDL2_mixer.dll")
+    set(SDL2_MIXER_LIBRARIES "${sdl2_mixer_SOURCE_DIR}/lib/x86/SDL2_mixer.lib")
+  endif()
+
+
   set(VLD_DIR "$ENV{ProgramFiles\(x86\)}/Visual Leak Detector")
   IF(EXISTS ${VLD_DIR})
     set(VLD_INCLUDE_DIR "${VLD_DIR}/include")
@@ -220,6 +241,7 @@ if (WIN32)
     ${SDL2_INCLUDE_DIR} 
     ${SDL2_IMAGE_INCLUDE_DIR} 
     ${SDL2_TTF_INCLUDE_DIR}
+    ${SDL2_MIXER_INCLUDE_DIR}
 )
 
   # set libraries to link with
@@ -228,6 +250,7 @@ if (WIN32)
     ${SDL2_IMAGE_LIBRARIES} 
     ${SDL2_TTF_LIBRARIES} 
     ${VLD_LIBRARY}
+    ${SDL2_MIXER_LIBRARIES}
     xinput
   )
 endif()
@@ -244,9 +267,17 @@ if(WIN32)
   add_custom_command(TARGET Engine POST_BUILD
       COMMAND "${CMAKE_COMMAND}" -E copy "${SDL2_TTF_LIBRARY_DLL}" "$<TARGET_FILE_DIR:Engine>"
   )
+
+  add_custom_command(TARGET Engine POST_BUILD
+  COMMAND "${CMAKE_COMMAND}" -E copy "${SDL2_MIXER_LIBRARY_DLL}" "$<TARGET_FILE_DIR:Engine>"
+)
+
+
   add_custom_command(TARGET Engine POST_BUILD
     COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_SOURCE_DIR}/Data" "$<TARGET_FILE_DIR:Engine>/Data"
   )
+
+
 
   set_target_properties(Engine PROPERTIES
         LINK_FLAGS "/SUBSYSTEM:CONSOLE"
@@ -254,7 +285,7 @@ if(WIN32)
   
 endif()
 
-## Game
+# Game
 
 # Define game files
 file(GLOB GAME_COMMANDS_SOURCES "Digger/Commands/*.cpp" "Digger/Commands/*.h")
