@@ -59,4 +59,5 @@ void digger::GameScene::init()
 	auto& ss = rift2d::ServiceLocator::getSoundSystem();
 	ss.addSoundMapping(0, "laser.mp3");
 	ss.addSoundMapping(1, "laser_explode.mp3");
+	ss.addSoundMapping(2, "gold_tick.mp3");
 }

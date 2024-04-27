@@ -20,9 +20,19 @@ void rift2d::SDLSoundSystem::play(const soundId id ,float volume )
 {
 	{
 		std::lock_guard lock(m_queueMutex);
-		m_soundQueue.emplace([this, id, volume] {playSound(id, volume); });
+		if(!m_queuedSounds.contains(id))
+		{
+			m_soundQueue.emplace([this, id, volume] {playSound(id, volume); });
+			m_queuedSounds.insert(id);
+			std::cout << "added sound to the queue\n";
+		}
+		else
+		{
+			std::cout << "Sound already in the queue\n";
+		}
+	
 	}
-	std::cout << "added sound to the queue\n";
+	
 	m_cvShouldProcess.notify_one();
 }
 
@@ -69,18 +79,19 @@ void rift2d::SDLSoundSystem::loadSound(int id)
 	else m_soundCache[id] = MixChunkRAII(sound);
 }
 
-void rift2d::SDLSoundSystem::processSoundQueue()
+[[noreturn]] void rift2d::SDLSoundSystem::processSoundQueue()
 {
 	std::unique_lock lock(m_queueMutex);
 	while (true)
 	{
 		std::cout << "Waiting on cv\n";
-		m_cvShouldProcess.wait(lock, [&] {return !m_soundQueue.empty(); });
+		m_cvShouldProcess.wait(lock, [&] { return !m_soundQueue.empty(); });
 		std::cout << "Start processing queue\n";
-		while(!m_soundQueue.empty())
+		while (!m_soundQueue.empty())
 		{
 			auto task = m_soundQueue.front();
 			m_soundQueue.pop();
+			m_queuedSounds.erase(m_queuedSounds.begin());
 			lock.unlock();
 			task();
 			lock.lock();

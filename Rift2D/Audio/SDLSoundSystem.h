@@ -5,6 +5,8 @@
 #include <queue>
 #include <SDL_mixer.h>
 #include <SDL_syswm.h>
+#include <unordered_set>
+
 #include "Interfaces.h"
 
 namespace rift2d
@@ -43,6 +45,7 @@ namespace rift2d
 		static float min_volume;
 
 		std::queue<std::function<void()>> m_soundQueue;
+		std::unordered_set<int> m_queuedSounds;
 		std::mutex m_queueMutex;
 		std::condition_variable m_cvShouldProcess;
 		std::jthread m_soundThread;
