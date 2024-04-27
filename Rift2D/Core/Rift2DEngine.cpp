@@ -14,10 +14,12 @@
 #include "Rift2DEngine.h"
 #include <glm/glm.hpp>
 #include "InputManager.h"
+#include "Locator.h"
 #include "SceneManager.h"
 #include "TimeManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
+#include "SDLSoundSystem.h"
 
 SDL_Window* g_window{};
 bool rift2d::Rift2DEngine::m_shouldQuit = false;
@@ -41,7 +43,7 @@ void LoopCallback(void* arg)
 	static_cast<rift2d::Rift2DEngine*>(arg)->RunOneFrame();
 }
 #endif
-
+namespace fs = std::filesystem;
 // Why bother with this? Because sometimes students have a different SDL version installed on their pc.
 // That is not a problem unless for some reason the dll's from this project are not copied next to the exe.
 // These entries in the debug output help to identify that issue.
@@ -92,7 +94,21 @@ rift2d::Rift2DEngine::Rift2DEngine(const std::filesystem::path &dataPath)
 	Renderer::GetInstance().init(g_window);
 	ResourceManager::GetInstance().init(dataPath);
 	SDL_GL_SetSwapInterval(1); //Enable VSync
-	
+
+	//Init audo system
+
+	if (SDL_Init(SDL_INIT_AUDIO) != 0)
+	{
+		throw std::runtime_error(std::string("SDL_Init_Audio Error: ") + SDL_GetError());
+	}
+	ServiceLocator::registerSoundSystem(std::make_unique<SDLSoundSystem>());
+
+	fs::path soundLocation = "./Data/sounds";
+	if (!fs::exists(soundLocation))soundLocation = "../Data/sounds/";
+	else soundLocation = "";
+	ServiceLocator::getSoundSystem().setPath(soundLocation.string());
+		
+
 }
 
 rift2d::Rift2DEngine::~Rift2DEngine()

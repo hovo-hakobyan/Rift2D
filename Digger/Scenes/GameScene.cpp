@@ -5,6 +5,8 @@
 #include "Prefabs/EmeraldPrefab.h"
 #include "Prefabs/MoneyPrefab.h"
 #include "FPSComponent.h"
+#include "Locator.h"
+#include "Prefabs/DiggerPrefab.h"
 
 digger::GameScene::GameScene():
 Scene("GameScene")
@@ -51,4 +53,10 @@ void digger::GameScene::init()
 	gameObject->addComponent<rift2d::FPSComponent>();
 	addGameObject(std::move(gameObject));
 
+	addGameObjectFromPrefab<DiggerPrefab>();
+
+	//add sound mappings
+	auto& ss = rift2d::ServiceLocator::getSoundSystem();
+	ss.addSoundMapping(0, "laser.mp3");
+	ss.addSoundMapping(1, "laser_explode.mp3");
 }

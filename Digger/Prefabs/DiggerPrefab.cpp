@@ -44,7 +44,9 @@ void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSc
 	player->setParent(rootObj,true);
 
 	//bind shooting to input
-	rift2d::InputManager::GetInstance().bindAction(rift2d::GamepadKey::X, 0, rift2d::InputEvent::Down,
+	/*rift2d::InputManager::GetInstance().bindAction(rift2d::GamepadKey::X, 0, rift2d::InputEvent::Down,
+		std::make_unique<ShootCommand>(rootObj));*/
+	rift2d::InputManager::GetInstance().bindAction(SDL_SCANCODE_C, rift2d::InputEvent::Down,
 		std::make_unique<ShootCommand>(rootObj));
 
 	//add score
