@@ -60,4 +60,6 @@ void digger::GameScene::init()
 	ss.addSoundMapping(0, "laser.mp3");
 	ss.addSoundMapping(1, "laser_explode.mp3");
 	ss.addSoundMapping(2, "gold_tick.mp3");
+
+	std::cout << "DPad to move\nX to shoot";
 }

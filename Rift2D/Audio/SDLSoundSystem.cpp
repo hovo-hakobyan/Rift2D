@@ -31,13 +31,7 @@ public:
 			{
 				m_soundQueue.emplace([this, id, volume] {playSound(id, volume); });
 				m_queuedSounds.insert(id);
-				std::cout << "added sound to the queue\n";
 			}
-			else
-			{
-				std::cout << "Sound already in the queue\n";
-			}
-
 		}
 
 		m_cvShouldProcess.notify_one();
@@ -93,7 +87,6 @@ private:
 			const int sdlVolume = static_cast<int>(volume * MIX_MAX_VOLUME);
 			Mix_VolumeChunk(it->second.get(), sdlVolume);
 			Mix_PlayChannel(-1, it->second.get(), 0);
-			std::cout << "sound played with the id " << id << '\n';
 		}
 	}
 
@@ -102,7 +95,6 @@ private:
 		const auto soundInfo = m_soundMap.find(id);
 		if (soundInfo == m_soundMap.end())
 		{
-			std::cout << "Sound ID " << id << " not found.\n";
 			return;
 		}
 		const auto fullPath = m_dataPath / soundInfo->second;
@@ -116,9 +108,8 @@ private:
 		std::unique_lock lock(m_queueMutex);
 		while (true)
 		{
-			std::cout << "Waiting on cv\n";
 			m_cvShouldProcess.wait(lock, [&] { return !m_soundQueue.empty(); });
-			std::cout << "Start processing queue\n";
+
 			while (!m_soundQueue.empty())
 			{
 				auto task = m_soundQueue.front();
@@ -128,7 +119,6 @@ private:
 				task();
 				lock.lock();
 			}
-			std::cout << "Done processing queue\n";
 		}
 	}
 };

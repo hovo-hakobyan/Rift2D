@@ -10,8 +10,6 @@
 #include "Transform.h"
 #include "Components/HealthComponent.h"
 #include "Components/HealthDisplayComponent.h"
-#include "Components/ScoreComponent.h"
-#include "Components/ScoreDisplayComponent.h"
 
 
 void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pScene)
@@ -44,23 +42,8 @@ void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSc
 	player->setParent(rootObj,true);
 
 	//bind shooting to input
-	/*rift2d::InputManager::GetInstance().bindAction(rift2d::GamepadKey::X, 0, rift2d::InputEvent::Down,
-		std::make_unique<ShootCommand>(rootObj));*/
-	rift2d::InputManager::GetInstance().bindAction(SDL_SCANCODE_C, rift2d::InputEvent::Down,
+	rift2d::InputManager::GetInstance().bindAction(rift2d::GamepadKey::X, 0, rift2d::InputEvent::Down,
 		std::make_unique<ShootCommand>(rootObj));
 
-	//add score
-	auto scoreObj = std::make_unique<rift2d::GameObject>(pScene);
-	scoreObj->getTransform()->setLocalPosition(10.f, 180.f, 1.f);
-	auto scoreComp = scoreObj->addComponent<ScoreComponent>();
-	scoreObj->addComponent<ScoreDisplayComponent>(scoreComp);
-
-	//add to scenegraph
-	const auto score = pScene->addGameObject(std::move(scoreObj));
-	score->setParent(rootObj, true);
-
-	//add TEMP score collecting with input
-	rift2d::InputManager::GetInstance().bindAction(rift2d::GamepadKey::A, 0, rift2d::InputEvent::Down,
-		std::make_unique<ScoreCommand>(rootObj));
 
 }
