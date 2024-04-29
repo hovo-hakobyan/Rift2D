@@ -111,6 +111,16 @@ void Scene::rootInit()
 	m_isInitialized = true;
 }
 
+void Scene::rootFixedUpdate()
+{
+	fixedUpdate();
+
+	for (const auto& object : m_rootGameObjects)
+	{
+		object->fixedUpdate();
+	}
+}
+
 void Scene::rootUpdate() 
 {
 	update();

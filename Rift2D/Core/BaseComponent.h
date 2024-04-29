@@ -37,6 +37,7 @@ namespace rift2d
 		BaseComponent& operator=(BaseComponent&& other) = delete;
 		
 		virtual void init() { m_isInitialized = true; }
+		virtual void fixedUpdate() {}
 		virtual void update() {}
 		virtual void lateUpdate() {}
 		virtual void end() { m_isInitialized = false; }

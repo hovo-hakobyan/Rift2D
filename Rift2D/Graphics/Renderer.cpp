@@ -100,6 +100,23 @@ void rift2d::Renderer::renderTexture(const Texture2D& texture, const float x, co
 	SDL_RenderCopy(m_renderer, texture.getSdlTexture(), nullptr, &dst);
 }
 
+void rift2d::Renderer::renderBox(const float x, const float y, const float width, const float height,
+	RiftColor color) const
+{
+	Uint8 r, g, b, a;
+	SDL_GetRenderDrawColor(m_renderer, &r, &g, &b, &a);
+	SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
+
+	SDL_Rect rect{};
+	rect.x = static_cast<int>(x);
+	rect.y = static_cast<int>(y);
+	rect.w = static_cast<int>(width);
+	rect.h = static_cast<int>(height);
+
+	SDL_RenderDrawRect(m_renderer, &rect);
+	SDL_SetRenderDrawColor(m_renderer, r, g, b, a);
+}
+
 SDL_Renderer* rift2d::Renderer::getSDLRenderer() const { return m_renderer; }
 
 glm::vec2 rift2d::Renderer::getWindowSize() const

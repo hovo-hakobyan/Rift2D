@@ -15,6 +15,7 @@
 #include <glm/glm.hpp>
 #include "InputManager.h"
 #include "Locator.h"
+#include "Physics.h"
 #include "SceneManager.h"
 #include "TimeManager.h"
 #include "Renderer.h"
@@ -108,11 +109,13 @@ rift2d::Rift2DEngine::Rift2DEngine(const std::filesystem::path &dataPath)
 	else soundLocation = "";
 	ServiceLocator::getSoundSystem().setPath(soundLocation.string());
 		
-
+	//init physics
+	Physics::GetInstance().init();
 }
 
 rift2d::Rift2DEngine::~Rift2DEngine()
 {
+	Physics::GetInstance().destroy();
 	Renderer::GetInstance().destroy();
 	SDL_DestroyWindow(g_window);
 	g_window = nullptr;
@@ -124,15 +127,19 @@ void rift2d::Rift2DEngine::run(const std::function<void()>& load)
 	load();
 #ifndef __EMSCRIPTEN__
 
+	auto& sceneManager = SceneManager::GetInstance();
 
-	SceneManager::GetInstance().init();
+	sceneManager.init();
 	InputManager::GetInstance().init();
 	auto& timeManager = TimeManager::GetInstance();
 	using namespace std::chrono;
 
 	auto lastTime = high_resolution_clock::now();
 	timeManager.m_deltaTime = 1.0f / 144.f;
+	timeManager.m_fixedTime = 1.f / 60.f;
 	const float minDeltaTime = 0.001f;
+
+	float lag = 0.f;
 
 	while (!m_shouldQuit)
 	{
@@ -140,16 +147,24 @@ void rift2d::Rift2DEngine::run(const std::function<void()>& load)
 		const float deltaTime = duration<float>(currentTime - lastTime).count();
 		timeManager.m_deltaTime = glm::max(deltaTime, minDeltaTime);
 		lastTime = currentTime;
+		lag += timeManager.m_deltaTime;
 
 		m_shouldQuit = !InputManager::GetInstance().processInput();
 
-		SceneManager::GetInstance().update();
-		SceneManager::GetInstance().lateUpdate();
-		SceneManager::GetInstance().frameCleanup();
+		while (lag >= timeManager.m_fixedTime)
+		{
+			sceneManager.fixedUpdate();
+			Physics::GetInstance().update();
+			lag -= timeManager.m_fixedTime;
+		}
+
+		sceneManager.update();
+		sceneManager.lateUpdate();
+		sceneManager.frameCleanup();
 		Renderer::GetInstance().render();
 		
 	}
-	SceneManager::GetInstance().end();
+	sceneManager.end();
 		
 #else
 	emscripten_set_main_loop_arg(&LoopCallback, this, 0, true);

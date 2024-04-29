@@ -46,6 +46,7 @@ namespace rift2d
 		explicit Scene(std::string name);
 
 		virtual void init() = 0;
+		virtual void fixedUpdate(){}
 		virtual void update() {}
 		virtual void lateUpdate() {}
 		virtual void end() {}
@@ -61,6 +62,7 @@ namespace rift2d
 		void processGameObjectCache();
 
 		void rootInit();
+		void rootFixedUpdate();
 		void rootUpdate() ;
 		void rootLateUpdate() ;
 		void rootEnd() ;

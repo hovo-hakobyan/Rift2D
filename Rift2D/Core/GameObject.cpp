@@ -52,6 +52,20 @@ void rift2d::GameObject::update()
 	
 }
 
+void rift2d::GameObject::fixedUpdate()
+{
+	if (m_isDisabled) return;
+	for (auto& comp : m_components)
+	{
+		comp->fixedUpdate();
+	}
+
+	for (auto& child : m_children)
+	{
+		child->fixedUpdate();
+	}
+}
+
 void rift2d::GameObject::lateUpdate() const
 {
 	if (m_isDisabled) return;

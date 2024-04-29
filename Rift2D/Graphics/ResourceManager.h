@@ -26,9 +26,12 @@ namespace rift2d
 	class ResourceManager final : public Singleton<ResourceManager>
 	{
 	public:
-		
-
 		~ResourceManager() override;
+		ResourceManager(const ResourceManager& other) = delete;
+		ResourceManager(ResourceManager&& other) noexcept = delete;
+		ResourceManager& operator=(const ResourceManager& other) = delete;
+		ResourceManager& operator=(ResourceManager&& other) noexcept = delete;
+
 		void init(const std::filesystem::path& data);
 		Texture2D* loadTexture(const std::string& file) const;
 		std::unique_ptr<Texture2D> createFontTexture(Font* font, const RiftColor& color, const std::string& text);

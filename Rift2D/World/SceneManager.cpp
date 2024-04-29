@@ -59,6 +59,11 @@ void rift2d::SceneManager::init()
 	m_pActiveScene->rootInit();
 }
 
+void rift2d::SceneManager::fixedUpdate()
+{
+	m_pActiveScene->rootFixedUpdate();
+}
+
 void rift2d::SceneManager::update() const
 {
 	m_pActiveScene->rootUpdate();

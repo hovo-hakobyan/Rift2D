@@ -17,10 +17,12 @@ namespace rift2d
 
 		const glm::vec3& getLocalPosition() const { return m_localPosition; }
 		const glm::vec3& getWorldPosition();
+
 		void setLocalPosition(float x, float y, float z);
 		void setLocalPosition(const glm::vec3& pos);
 		void addLocalOffset(float x, float y);
 
+		void setWorldPosition(float x, float y, float z = 1.f);
 
 		void broadcastDirtyTransform();
 	private:

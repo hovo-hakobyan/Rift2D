@@ -38,6 +38,7 @@ void rift2d::Transform::addLocalOffset(float x, float y)
 
 
 
+
 void rift2d::Transform::broadcastDirtyTransform()
 {
 	m_isDirty = true;
@@ -57,6 +58,8 @@ void rift2d::Transform::broadcastDirtyTransform()
 	}
 }
 
+
+
 void rift2d::Transform::updateWorldTransform()
 {
 	
@@ -73,4 +76,20 @@ void rift2d::Transform::updateWorldTransform()
 		m_worldPosition = parentPos + m_localPosition;
 	}
 	m_isDirty = false;
+}
+void rift2d::Transform::setWorldPosition(float x, float y, float z)
+{
+	const auto& parent = getOwner()->getParent();
+
+	if(!parent)
+	{
+		m_localPosition = glm::vec3{x,y,z};
+	}
+	else
+	{
+		const auto parentPos = getOwner()->getParent()->getTransform()->getWorldPosition();
+		m_localPosition = glm::vec3{ x,y,z } - parentPos;
+	}
+
+	broadcastDirtyTransform();
 }

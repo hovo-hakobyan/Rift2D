@@ -37,6 +37,7 @@ namespace rift2d
 	public:
 		void init();
 		void update();
+		void fixedUpdate();
 		void lateUpdate() const;
 		void end();
 		void onImGui() const;

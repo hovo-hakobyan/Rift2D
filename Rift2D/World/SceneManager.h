@@ -14,6 +14,7 @@ namespace rift2d
 		Scene* addScene(std::unique_ptr<Scene> scene);
 		~SceneManager() override;
 		void init();
+		void fixedUpdate();
 		void update() const;
 		void lateUpdate() const;
 		void end() const;
