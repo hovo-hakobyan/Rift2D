@@ -8,6 +8,7 @@
 #include <windows.h>
 #endif
 
+#include "Settings.h"
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
@@ -83,8 +84,8 @@ rift2d::Rift2DEngine::Rift2DEngine(const std::filesystem::path &dataPath)
 		"Programming 4 assignment - Howhannes Hakobyan 2DAE09",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
-		960,
-		600,
+		settings::g_windowWidth,
+		settings::g_windowHeight,
 		SDL_WINDOW_OPENGL
 	);
 	if (g_window == nullptr) 
@@ -104,10 +105,7 @@ rift2d::Rift2DEngine::Rift2DEngine(const std::filesystem::path &dataPath)
 	}
 	ServiceLocator::registerSoundSystem(std::make_unique<SDLSoundSystem>());
 
-	fs::path soundLocation = "./Data/sounds";
-	if (!fs::exists(soundLocation))soundLocation = "../Data/sounds/";
-	else soundLocation = "";
-	ServiceLocator::getSoundSystem().setPath(soundLocation.string());
+	ServiceLocator::getSoundSystem().setPath(settings::g_soundPath.data());
 		
 	//init physics
 	Physics::GetInstance().init();

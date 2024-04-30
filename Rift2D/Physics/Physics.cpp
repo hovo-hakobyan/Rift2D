@@ -7,7 +7,7 @@ rift2d::Physics::~Physics() = default;
 
 void rift2d::Physics::init()
 {
-	m_physicsWorld = new b2World({0.f,-9.8f});
+	m_physicsWorld = new b2World({0.f,9.8f});
 	m_positionIterations = 2;
 	m_velocityIterations = 6;
 }

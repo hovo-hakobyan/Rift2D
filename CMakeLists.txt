@@ -74,6 +74,7 @@ endif()
 # Define engine files
 file(GLOB ENGINE_AUDIO_SOURCES "Rift2D/Audio/*.cpp" "Rift2D/Audio/*.h")
 file(GLOB ENGINE_CORE_SOURCES "Rift2D/Core/*.cpp" "Rift2D/Core/*.h")
+file(GLOB ENGINE_COMMON_SOURCES "Rift2D/Common/*.cpp" "Rift2D/Common/*.h")
 file(GLOB ENGINE_COMPPONENT_SOURCES "Rift2D/Components/*.cpp" "Rift2D/Components/*.h" )
 file(GLOB ENGINE_GRAPHICS_SOURCES "Rift2D/Graphics/*.cpp" "Rift2D/Graphics/*.h" )
 file(GLOB ENGINE_INPUT_SOURCES "Rift2D/Input/*.cpp" "Rift2D/Input/*.h" )
@@ -85,6 +86,7 @@ file(GLOB ENGINE_WORLD_SOURCES "Rift2D/World/*.cpp" "Rift2D/World/*.h" )
 source_group("Audio" FILES ${ENGINE_AUDIO_SOURCES})
 source_group("Core" FILES ${ENGINE_CORE_SOURCES})
 source_group("Components" FILES ${ENGINE_COMPPONENT_SOURCES})
+source_group("Common" FILES ${ENGINE_COMMON_SOURCES})
 source_group("Graphics" FILES ${ENGINE_GRAPHICS_SOURCES})
 source_group("Input" FILES ${ENGINE_INPUT_SOURCES})
 source_group("Physics" FILES ${ENGINE_PHYSICS_SOURCES})
@@ -97,6 +99,7 @@ add_library(Engine STATIC
 ${ENGINE_AUDIO_SOURCES}
 ${ENGINE_CORE_SOURCES}
 ${ENGINE_COMPPONENT_SOURCES}
+${ENGINE_COMMON_SOURCES}
 ${ENGINE_GRAPHICS_SOURCES}
 ${ENGINE_INPUT_SOURCES}
 ${ENGINE_PHYSICS_SOURCES}
@@ -141,6 +144,7 @@ ${glm_SOURCE_DIR}
 ${CMAKE_SOURCE_DIR}/Rift2D/Audio
 ${CMAKE_SOURCE_DIR}/Rift2D/Core
 ${CMAKE_SOURCE_DIR}/Rift2D/Components
+${CMAKE_SOURCE_DIR}/Rift2D/Common
 ${CMAKE_SOURCE_DIR}/Rift2D/Graphics
 ${CMAKE_SOURCE_DIR}/Rift2D/Input
 ${CMAKE_SOURCE_DIR}/Rift2D/Physics

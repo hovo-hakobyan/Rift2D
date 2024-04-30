@@ -8,6 +8,7 @@
 #include "Exception.h"
 #include "GameObject.h"
 #include "RigidBody2D.h"
+#include "Utils.h"
 
 namespace rift2d
 {
@@ -28,7 +29,9 @@ namespace rift2d
 		}
 
 		b2PolygonShape shape;
-		shape.SetAsBox(m_info.size.x * 0.5f, m_info.size.y * 0.5f,{m_info.center.x,m_info.center.y},0.f);
+
+		const glm::vec2 size = { Utils::pixelToMeters(m_info.size) };
+		shape.SetAsBox(size.x * 0.5f, size.y * 0.5f);
 		
 
 		//Fixture is used to attach a shape to a body for collision detection

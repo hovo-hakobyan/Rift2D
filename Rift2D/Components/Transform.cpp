@@ -93,3 +93,8 @@ void rift2d::Transform::setWorldPosition(float x, float y, float z)
 
 	broadcastDirtyTransform();
 }
+
+void rift2d::Transform::setWorldPosition(const glm::vec2& pos)
+{
+	setWorldPosition(pos.x, pos.y, 1.f);
+}

@@ -15,6 +15,7 @@ void rift2d::DebugBoxComponent::render() const
 	if(const auto owner = getOwner())
 	{
 		auto pos = owner->getTransform()->getWorldPosition();
-		Renderer::GetInstance().renderBox(pos.x, pos.y, m_size.x, m_size.y, m_color);
+		Renderer::GetInstance().renderBox( pos.x, pos.y, m_size.x, m_size.y, m_color);
+		
 	}
 }

@@ -2,6 +2,7 @@
 #include "Singleton.h"
 #include <cstdint>
 class b2World;
+
 namespace rift2d
 {
 	class Physics final : public Singleton<Physics>

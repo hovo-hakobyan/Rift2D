@@ -1,10 +1,9 @@
 #include "RigidBody2D.h"
-
 #include <box2d/b2_world.h>
-
 #include "GameObject.h"
 #include "Physics.h"
 #include "Transform.h"
+#include "Utils.h"
 
 namespace rift2d
 {
@@ -23,8 +22,10 @@ namespace rift2d
 
 		b2BodyDef bodyDef;
 		bodyDef.type = RiftToBox2DBody(m_bodyType);
-		bodyDef.position.Set(pos.x, pos.y);
+		glm::vec2 posMeters = Utils::pixelToMeters(glm::vec2{ pos.x,pos.y });
+		bodyDef.position.Set(posMeters.x,posMeters.y);
 		bodyDef.angle = 0.f;
+		bodyDef.fixedRotation = true;
 
 		m_pBody = pWorld.CreateBody(&bodyDef);
 	}
@@ -33,7 +34,7 @@ namespace rift2d
 	{
 		const auto newPos = m_pBody->GetPosition();
 		const auto transform = getOwner()->getTransform();
-		transform->setWorldPosition(newPos.x, newPos.y);
+		transform->setWorldPosition(Utils::metersToPixels(glm::vec2{newPos.x,newPos.y}));
 	}
 
 	void* RigidBody2D::getBody() const

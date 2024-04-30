@@ -23,6 +23,7 @@ namespace rift2d
 		void addLocalOffset(float x, float y);
 
 		void setWorldPosition(float x, float y, float z = 1.f);
+		void setWorldPosition(const glm::vec2& pos);
 
 		void broadcastDirtyTransform();
 	private:
