@@ -106,14 +106,11 @@ rift2d::Rift2DEngine::Rift2DEngine(const std::filesystem::path &dataPath)
 	ServiceLocator::registerSoundSystem(std::make_unique<SDLSoundSystem>());
 
 	ServiceLocator::getSoundSystem().setPath(settings::g_soundPath.data());
-		
-	//init physics
-	Physics::GetInstance().init();
+
 }
 
 rift2d::Rift2DEngine::~Rift2DEngine()
 {
-	Physics::GetInstance().destroy();
 	Renderer::GetInstance().destroy();
 	SDL_DestroyWindow(g_window);
 	g_window = nullptr;

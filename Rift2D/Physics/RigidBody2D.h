@@ -1,22 +1,28 @@
 #pragma once
-#include <box2d/b2_body.h>
-
+#include <glm/vec2.hpp>
 #include "BaseComponent.h"
 
 namespace rift2d
 {
+	enum class RiftBodyType
+	{
+		Static = 0,
+		Dynamic = 1,
+		Kinematic = 2
+	};
+
+	struct RigidBodyDef
+	{
+		RiftBodyType type;
+		glm::vec2 pos;
+		bool fixedRotation;
+	};
+
 	class RigidBody2D final : public BaseComponent
 	{
 	public:
-		enum class RiftBodyType
-		{
-			Static = 0,
-			Dynamic = 1,
-			Kinematic = 2
-		};
-
-		RigidBody2D(GameObject* owner, RiftBodyType bodyType);
-		virtual ~RigidBody2D() override = default;
+		RigidBody2D(GameObject* owner, RigidBodyDef bodyDef);
+		virtual ~RigidBody2D() override;
 		RigidBody2D(const RigidBody2D& other) = delete;
 		RigidBody2D(RigidBody2D&& other) = delete;
 		RigidBody2D& operator=(const RigidBody2D& other) = delete;
@@ -24,12 +30,12 @@ namespace rift2d
 
 		virtual void init() override;
 		void update() override;
+
 		void* getBody() const;
 	private:
-		RiftBodyType m_bodyType;
-		b2Body* m_pBody;
+		class Impl;
+		std::unique_ptr<Impl> m_pImpl;
 
-		static b2BodyType RiftToBox2DBody(RiftBodyType type);
 	};
 
 

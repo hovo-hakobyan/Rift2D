@@ -1,55 +1,68 @@
 #include "RigidBody2D.h"
-#include <box2d/b2_world.h>
 #include "GameObject.h"
 #include "Physics.h"
 #include "Transform.h"
 #include "Utils.h"
+#include <box2d/b2_body.h>
 
 namespace rift2d
 {
-	RigidBody2D::RigidBody2D(GameObject* owner, RiftBodyType bodyType) :
+	class RigidBody2D::Impl
+	{
+	public:
+		Impl(GameObject* owner, const RigidBodyDef& bodyDef):
+		m_bodyDef(bodyDef),
+		m_pOwner(owner){}
+
+		void init()
+		{
+			const auto transform = m_pOwner->getTransform();
+			const auto pos = transform->getWorldPosition();
+			m_bodyDef.pos = glm::vec2{ pos.x,pos.y };
+
+			m_pBody = static_cast<b2Body*>(Physics::GetInstance().createRigidBody(m_bodyDef));
+		}
+
+		void update()
+		{
+			const auto newPos = m_pBody->GetPosition();
+			const auto transform = m_pOwner->getTransform();
+			transform->setWorldPosition(Utils::metersToPixels(glm::vec2{ newPos.x,newPos.y }));
+		}
+
+		void* getBody() const
+		{
+			return m_pBody;
+		}
+	private:
+		RigidBodyDef m_bodyDef{};
+		b2Body* m_pBody{};
+		GameObject* m_pOwner{};
+	};
+
+
+	RigidBody2D::RigidBody2D(GameObject* owner, RigidBodyDef bodyDef) :
 		BaseComponent(owner),
-		m_bodyType(bodyType)
+		m_pImpl(std::make_unique<Impl>(owner,bodyDef))
 	{}
+
+	RigidBody2D::~RigidBody2D() = default;
 
 	void RigidBody2D::init()
 	{
 		BaseComponent::init();
 
-		auto& pWorld = Physics::GetInstance().getWorld();
-		const auto transform = getOwner()->getTransform();
-		const auto pos = transform->getWorldPosition();
-
-		b2BodyDef bodyDef;
-		bodyDef.type = RiftToBox2DBody(m_bodyType);
-		glm::vec2 posMeters = Utils::pixelToMeters(glm::vec2{ pos.x,pos.y });
-		bodyDef.position.Set(posMeters.x,posMeters.y);
-		bodyDef.angle = 0.f;
-		bodyDef.fixedRotation = true;
-
-		m_pBody = pWorld.CreateBody(&bodyDef);
+		m_pImpl->init();
 	}
 
 	void RigidBody2D::update()
 	{
-		const auto newPos = m_pBody->GetPosition();
-		const auto transform = getOwner()->getTransform();
-		transform->setWorldPosition(Utils::metersToPixels(glm::vec2{newPos.x,newPos.y}));
+		m_pImpl->update();
 	}
 
 	void* RigidBody2D::getBody() const
 	{
-		return m_pBody;
+		return m_pImpl->getBody();
 	}
 
-	b2BodyType RigidBody2D::RiftToBox2DBody(RiftBodyType type)
-	{
-		switch (type)
-		{
-		case RiftBodyType::Static: return b2_staticBody;
-		case RiftBodyType::Dynamic: return b2_dynamicBody;
-		case RiftBodyType::Kinematic:return b2_kinematicBody;
-		}
-		return b2_staticBody;
-	}
 }

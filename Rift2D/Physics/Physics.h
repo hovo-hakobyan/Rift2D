@@ -1,7 +1,7 @@
 #pragma once
 #include "Singleton.h"
-#include <cstdint>
-class b2World;
+#include "RigidBody2D.h"
+#include <memory>
 
 namespace rift2d
 {
@@ -14,18 +14,17 @@ namespace rift2d
 		Physics& operator=(const Physics& other) = delete;
 		Physics& operator=(Physics&& other) noexcept = delete;
 
-		void init();
-		void destroy();
 		void update();
+		void* createRigidBody(const RigidBodyDef& bodyDef) const;
 
-		b2World& getWorld() const { return *m_physicsWorld; }
 	private:
 		friend class Singleton;
-		Physics() = default;
+		Physics();
 
-		b2World* m_physicsWorld;
-		int32_t m_velocityIterations;
-		int32_t m_positionIterations;
+		class Impl;
+		std::unique_ptr<Impl> m_pImpl;
+
+		
 	};
 
 }
