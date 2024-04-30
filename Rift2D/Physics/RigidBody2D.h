@@ -16,6 +16,8 @@ namespace rift2d
 		RiftBodyType type;
 		glm::vec2 pos;
 		bool fixedRotation;
+		float linearDamping = 0.1f;
+
 	};
 
 	class RigidBody2D final : public BaseComponent
@@ -30,6 +32,9 @@ namespace rift2d
 
 		virtual void init() override;
 		void update() override;
+		void setLinearVelocity(const glm::vec2 v) const;
+		void setLinearDamping(float damping) const;
+		void applyLinearImpulse(const glm::vec2 impulse, const glm::vec2 point) const;
 
 		void* getBody() const;
 	private:

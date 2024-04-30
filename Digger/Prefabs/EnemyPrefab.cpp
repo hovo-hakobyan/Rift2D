@@ -22,9 +22,9 @@ void digger::EnemyPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSce
 	const auto spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
 	spriteComponent->setTexture("nobbin.png");
 
-	//bind input
-	rift2d::InputManager::GetInstance().bindAxis2D(SDL_SCANCODE_D, SDL_SCANCODE_S, SDL_SCANCODE_A, SDL_SCANCODE_W,
-		std::make_unique<MoveCommand>(gameObject, 150.f));
+	////bind input
+	//rift2d::InputManager::GetInstance().bindAxis2D(SDL_SCANCODE_D, SDL_SCANCODE_S, SDL_SCANCODE_A, SDL_SCANCODE_W,
+	//	std::make_unique<MoveCommand>(gameObject, 150.f));
 
 
 	gameObject->setParent(rootObj, false);

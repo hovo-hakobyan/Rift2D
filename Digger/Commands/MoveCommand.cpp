@@ -1,16 +1,20 @@
 #include "MoveCommand.h"
+
 #include "GameObject.h"
+#include "RigidBody2D.h"
 #include "TimeManager.h"
 #include "Transform.h"
 
-digger::MoveCommand::MoveCommand(rift2d::GameObject* obj, float speed):
-m_pGameObj(obj),m_speed(speed)
+digger::MoveCommand::MoveCommand(rift2d::RigidBody2D* obj, float speed):
+m_pRigidBody(obj),m_speed(speed)
 {
 }
 
 void digger::MoveCommand::execute()
-{
-	const auto offset = getAxis() * m_speed * rift2d::TimeManager::GetInstance().getDeltaTime();
-	m_pGameObj->getTransform()->addLocalOffset(offset.x, offset.y);
+{	
+	if (!m_pRigidBody) return;
+	auto pos = m_pRigidBody->getOwner()->getTransform()->getWorldPosition();
+	const auto impulse = getAxis() * m_speed * rift2d::TimeManager::GetInstance().getDeltaTime();
+	m_pRigidBody->applyLinearImpulse(impulse, { pos.x,pos.y });
 
 }

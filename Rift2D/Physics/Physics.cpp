@@ -12,7 +12,7 @@ namespace rift2d
 	public:
 
 		Impl()
-		:m_physicsWorld(std::make_unique<b2World>(b2Vec2{0.f,9.8f})),
+		:m_physicsWorld(std::make_unique<b2World>(b2Vec2{0.f,0.f})),
 		m_positionIterations{2},
 		m_velocityIterations{6}
 		{}

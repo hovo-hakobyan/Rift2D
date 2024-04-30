@@ -35,7 +35,9 @@ namespace rift2d
 		BaseComponent(BaseComponent&& other) = delete;
 		BaseComponent& operator=(const BaseComponent& other) = delete;
 		BaseComponent& operator=(BaseComponent&& other) = delete;
-		
+
+		GameObject* getOwner() const { return m_pOwner; }
+
 		virtual void init() { m_isInitialized = true; }
 		virtual void fixedUpdate() {}
 		virtual void update() {}
@@ -67,7 +69,7 @@ namespace rift2d
 		}
 
 	protected:
-		GameObject* getOwner() const { return m_pOwner; }
+		
 	private:
 		bool m_isMarkedForRemoval{};
 		bool m_isDisabled{};
