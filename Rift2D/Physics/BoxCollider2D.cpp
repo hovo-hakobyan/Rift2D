@@ -39,7 +39,6 @@ namespace rift2d
 		fixtureDef.shape = &shape;
 		fixtureDef.density = m_info.density;
 		fixtureDef.restitution = m_info.restitution;
-		fixtureDef.restitutionThreshold = m_info.restitutionThreshold;
 		const auto body = static_cast<b2Body*>(rb->getBody());
 		body->CreateFixture(&fixtureDef);
 

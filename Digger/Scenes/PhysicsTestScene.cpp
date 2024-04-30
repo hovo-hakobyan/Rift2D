@@ -1,14 +1,8 @@
 #include "PhysicsTestScene.h"
 
 #include <format>
-#include <iostream>
-
 #include "BoxCollider2D.h"
-#include "DebugBoxComponent.h"
 #include "RigidBody2D.h"
-#include "Settings.h"
-#include "SpriteComponent.h"
-#include "Utils.h"
 
 digger::PhysicsTestScene::PhysicsTestScene():
 Scene("PhysicsTestScene")
@@ -30,7 +24,6 @@ void digger::PhysicsTestScene::init()
     	1.f,
     	0.3f,
     	1.f,
-    	0.2f,
 		true});
 
     go = createGameObject();
@@ -42,7 +35,6 @@ void digger::PhysicsTestScene::init()
         0.f,
         0.3f,
         0.5f,
-        0.2f,
         true });
 
 }

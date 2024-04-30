@@ -16,7 +16,6 @@ namespace rift2d
 		float density{};
 		float friction{};
 		float restitution{};
-		float restitutionThreshold{};
 		bool debugVisualize{};
 	};
 

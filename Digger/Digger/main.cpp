@@ -9,9 +9,9 @@ namespace fs = std::filesystem;
 void initEngine()
 {
 	auto& sceneManager = rift2d::SceneManager::GetInstance();
-	sceneManager.addScene(std::make_unique<digger::PhysicsTestScene>());
-	//sceneManager.addScene(std::make_unique<digger::MenuScene>());
-	//rift2d::InputManager::GetInstance().bindAction(SDL_SCANCODE_ESCAPE, rift2d::InputEvent::Down, std::make_unique<digger::ToMainMenuCommand>());
+	//sceneManager.addScene(std::make_unique<digger::PhysicsTestScene>());
+	sceneManager.addScene(std::make_unique<digger::MenuScene>());
+	rift2d::InputManager::GetInstance().bindAction(SDL_SCANCODE_ESCAPE, rift2d::InputEvent::Down, std::make_unique<digger::ToMainMenuCommand>());
 }
 
 
