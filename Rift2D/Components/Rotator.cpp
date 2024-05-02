@@ -24,7 +24,7 @@ void rift2d::Rotator::update()
 		if (auto transform = owner->getTransform())
 		{
 			glm::vec2 offset{ m_radius * glm::cos(currentAngleRadians) ,m_radius * glm::sin(currentAngleRadians) };
-			transform->setLocalPosition(offset.x, offset.y,1.0f);
+			transform->setLocalPosition(offset.x, offset.y);
 
 			
 		}

@@ -20,7 +20,8 @@ void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSc
 	if (!rootObj || !pScene) return;
 
 	auto gameObject = std::make_unique<rift2d::GameObject>(pScene);
-	gameObject->getTransform()->setLocalPosition(150.f, 390.f, 1.f);
+	gameObject->getTransform()->setLocalPosition(150.f, 390.f);
+
 	//add sprite component for rendering 
 	const auto spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
 	spriteComponent->setTexture("digger.png");
@@ -50,7 +51,7 @@ void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSc
 	//add health component
 	gameObject = std::make_unique<rift2d::GameObject>(pScene);
 	auto windowSize = rift2d::Renderer::GetInstance().getWindowSize();
-	gameObject->getTransform()->setLocalPosition(windowSize.x - 100, 10, 1);
+	gameObject->getTransform()->setLocalPosition(windowSize.x - 100, 10);
 	auto healthComp = gameObject->addComponent<HealthComponent>(3);
 	gameObject->addComponent<HealthDisplayComponent>(healthComp);
 

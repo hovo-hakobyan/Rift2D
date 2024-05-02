@@ -81,23 +81,34 @@ void rift2d::Renderer::reset()
 	m_renderables.clear();
 }
 
-void rift2d::Renderer::renderTexture(const Texture2D& texture, const float x, const float y) const
+void rift2d::Renderer::renderTexture(const Texture2D& texture, const float x, const float y, float angle) const
 {
 	SDL_Rect dst{};
 	dst.x = static_cast<int>(x);
 	dst.y = static_cast<int>(y);
 	SDL_QueryTexture(texture.getSdlTexture(), nullptr, nullptr, &dst.w, &dst.h);
-	SDL_RenderCopy(m_renderer, texture.getSdlTexture(), nullptr, &dst);
+
+	SDL_Point centerPt;
+	centerPt.x = dst.w / 2;
+	centerPt.y = dst.h / 2;
+
+	// Render with rotation
+	SDL_RenderCopyEx(m_renderer, texture.getSdlTexture(), nullptr, &dst, angle, &centerPt, SDL_FLIP_NONE);
 }
 
-void rift2d::Renderer::renderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height) const
+void rift2d::Renderer::renderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height, float angle) const
 {
 	SDL_Rect dst{};
 	dst.x = static_cast<int>(x);
 	dst.y = static_cast<int>(y);
 	dst.w = static_cast<int>(width);
 	dst.h = static_cast<int>(height);
-	SDL_RenderCopy(m_renderer, texture.getSdlTexture(), nullptr, &dst);
+
+	SDL_Point centerPt;
+	centerPt.x = dst.w / 2;
+	centerPt.y = dst.h / 2;
+
+	SDL_RenderCopyEx(m_renderer, texture.getSdlTexture(), nullptr, &dst,angle,&centerPt,SDL_FLIP_NONE);
 }
 
 void rift2d::Renderer::renderBox(const float x, const float y, const float width, const float height,

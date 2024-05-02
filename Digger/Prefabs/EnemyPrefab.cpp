@@ -32,7 +32,7 @@ void digger::EnemyPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSce
 	//add health component
 	gameObject = pScene->createGameObject();
 	auto windowSize = rift2d::Renderer::GetInstance().getWindowSize();
-	gameObject->getTransform()->setLocalPosition(windowSize.x - 100, 40, 1);
+	gameObject->getTransform()->setLocalPosition(windowSize.x - 100, 40);
 	auto healthComp = gameObject->addComponent<digger::HealthComponent>(3);
 	gameObject->addComponent<digger::HealthDisplayComponent>(healthComp);
 
@@ -44,7 +44,7 @@ void digger::EnemyPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSce
 
 	//add score
 	gameObject = pScene->createGameObject();
-	gameObject->getTransform()->setLocalPosition(10.f, 200.f, 1.f);
+	gameObject->getTransform()->setLocalPosition(10.f, 200.f);
 	auto scoreComp = gameObject->addComponent<ScoreComponent>();
 	gameObject->addComponent<ScoreDisplayComponent>(scoreComp);
 

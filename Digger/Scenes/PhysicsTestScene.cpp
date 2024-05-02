@@ -13,7 +13,7 @@ void digger::PhysicsTestScene::init()
 {
     
     auto go = createGameObject();
-    go->getTransform()->setLocalPosition(50.f, 0.f,1.f);
+    go->getTransform()->setLocalPosition(50.f, 0.f);
 
     rift2d::RigidBodyDef rbDef;
     rbDef.type = rift2d::RiftBodyType::Dynamic;
@@ -27,7 +27,7 @@ void digger::PhysicsTestScene::init()
 		true});
 
     go = createGameObject();
-    go->getTransform()->setLocalPosition(0.f, 400.f, 1.f);
+    go->getTransform()->setLocalPosition(0.f, 400.f);
     rbDef.type = rift2d::RiftBodyType::Static;
     go->addComponent<rift2d::RigidBody2D>(rbDef);
     go->addComponent<rift2d::BoxCollider2D>(rift2d::BoxColliderInfo{ glm::vec2{go->getTransform()->getWorldPosition().x,go->getTransform()->getWorldPosition().y},

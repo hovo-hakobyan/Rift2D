@@ -24,8 +24,8 @@ namespace rift2d
 		void destroy();
 		void reset();
 
-		void renderTexture(const Texture2D& texture, float x, float y) const;
-		void renderTexture(const Texture2D& texture, float x, float y, float width, float height) const;
+		void renderTexture(const Texture2D& texture, float x, float y, float angle = 0.0f) const;
+		void renderTexture(const Texture2D& texture, float x, float y, float width, float height, float angle = 0.0f ) const;
 		void renderBox(const float x, const float y, const float width, const float height, RiftColor color) const;
 
 		SDL_Renderer* getSDLRenderer() const;
