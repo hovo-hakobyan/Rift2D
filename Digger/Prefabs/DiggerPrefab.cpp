@@ -29,14 +29,14 @@ void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSc
 	rift2d::RigidBodyDef rbDef;
 	rbDef.type = rift2d::RiftBodyType::Dynamic;
 	rbDef.fixedRotation = false;
-	rbDef.linearDamping = 5.f;
+	rbDef.linearDamping = 10.f;
 	auto rb = gameObject->addComponent<rift2d::RigidBody2D>(rbDef);
 	const auto pos = rootObj->getTransform()->getWorldPosition();
 	gameObject->addComponent<rift2d::BoxCollider2D>(rift2d::BoxColliderInfo{ glm::vec2{pos.x,pos.y},
 		glm::vec2{64.f,64.f},
 		1.f,
-		1.f,
-		0.1f,
+		0.f,
+		0.f,
 		false });
 
 	//add to scenegraph
@@ -45,7 +45,7 @@ void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSc
 
 	//Bind movement to input
 	rift2d::InputManager::GetInstance().bindAxis2D(SDL_SCANCODE_D, SDL_SCANCODE_S, SDL_SCANCODE_A, SDL_SCANCODE_W,
-		std::make_unique<MoveCommand>(rb, 30.f));
+		std::make_unique<MoveCommand>(rb, 300.f));
 
 	//add health component
 	gameObject = std::make_unique<rift2d::GameObject>(pScene);

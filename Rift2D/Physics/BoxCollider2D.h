@@ -1,6 +1,7 @@
 #pragma once
 #include <glm/vec2.hpp>
 #include "BaseComponent.h"
+#include <cstdint>
 
 namespace rift2d
 {
@@ -9,6 +10,7 @@ namespace rift2d
 
 namespace rift2d
 {
+
 	struct BoxColliderInfo
 	{
 		glm::vec2 center{};
