@@ -21,7 +21,9 @@ void rift2d::SpriteComponent::render() const
 		{
 			glm::vec2 pos = owner->getTransform()->getWorldPosition();
 			auto rot = owner->getTransform()->getWorldRotation(true);
-			Renderer::GetInstance().renderTexture(*m_texture, pos.x + m_offest.x, pos.y + m_offest.y,rot);
+
+			Renderer::GetInstance().renderTexture(*m_texture, pos.x + m_offest.x, pos.y + m_offest.y, rot);
+		
 		}
 
 	}

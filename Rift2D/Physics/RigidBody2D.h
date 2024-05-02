@@ -35,6 +35,7 @@ namespace rift2d
 		void setLinearVelocity(const glm::vec2 v) const;
 		void setLinearDamping(float damping) const;
 		void applyLinearImpulse(const glm::vec2 impulse, const glm::vec2 point) const;
+		void setRotation(const glm::vec2 dir) const;
 
 		void* getBody() const;
 	private:

@@ -1,6 +1,8 @@
 #pragma once
 #include <SDL.h>
 #include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+
 #include "Color.h"
 #include "Singleton.h"
 #include "vector"
@@ -18,6 +20,8 @@ namespace rift2d
 		SDL_Window* m_window{};
 		RiftColor m_clearColor{};
 		std::vector<IRenderable*> m_renderables;
+
+
 	public:
 		void init(SDL_Window* window);
 		void render() const;
@@ -25,7 +29,7 @@ namespace rift2d
 		void reset();
 
 		void renderTexture(const Texture2D& texture, float x, float y, float angle = 0.0f) const;
-		void renderTexture(const Texture2D& texture, float x, float y, float width, float height, float angle = 0.0f ) const;
+		void renderTexture(const Texture2D& texture, float x, float y, float width, float height, float angle = 0.0f) const;
 		void renderBox(const float x, const float y, const float width, const float height, RiftColor color) const;
 
 		SDL_Renderer* getSDLRenderer() const;

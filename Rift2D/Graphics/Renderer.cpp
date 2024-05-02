@@ -2,8 +2,11 @@
 #include <cstring>
 #include "Renderer.h"
 #include <imgui.h>
+#include <iostream>
 #include <backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_sdl2.h>
+#include <glm/detail/func_trigonometric.inl>
+
 #include "SceneManager.h"
 #include "Texture2D.h"
 #include "Interfaces.h"
@@ -22,6 +25,10 @@ int GetOpenGLDriverIndex()
 	}
 	return openglIndex;
 }
+
+
+
+
 
 void rift2d::Renderer::init(SDL_Window* window)
 {
@@ -92,9 +99,17 @@ void rift2d::Renderer::renderTexture(const Texture2D& texture, const float x, co
 	centerPt.x = dst.w / 2;
 	centerPt.y = dst.h / 2;
 
+	SDL_RendererFlip flip{SDL_FLIP_NONE};
+	if ((angle > 135) && (angle <= 225))
+	{
+		// Left
+		flip = SDL_FLIP_VERTICAL;
+	}
+
 	// Render with rotation
-	SDL_RenderCopyEx(m_renderer, texture.getSdlTexture(), nullptr, &dst, angle, &centerPt, SDL_FLIP_NONE);
+	SDL_RenderCopyEx(m_renderer, texture.getSdlTexture(), nullptr, &dst, angle, &centerPt, flip);
 }
+
 
 void rift2d::Renderer::renderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height, float angle) const
 {
@@ -108,7 +123,8 @@ void rift2d::Renderer::renderTexture(const Texture2D& texture, const float x, co
 	centerPt.x = dst.w / 2;
 	centerPt.y = dst.h / 2;
 
-	SDL_RenderCopyEx(m_renderer, texture.getSdlTexture(), nullptr, &dst,angle,&centerPt,SDL_FLIP_NONE);
+
+	SDL_RenderCopyEx(m_renderer, texture.getSdlTexture(), nullptr, &dst,angle,&centerPt, SDL_FLIP_NONE);
 }
 
 void rift2d::Renderer::renderBox(const float x, const float y, const float width, const float height,

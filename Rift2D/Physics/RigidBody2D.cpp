@@ -1,4 +1,7 @@
 #include "RigidBody2D.h"
+
+#include <iostream>
+
 #include "GameObject.h"
 #include "Physics.h"
 #include "Transform.h"
@@ -48,6 +51,12 @@ namespace rift2d
 			m_pBody->SetLinearDamping(damping);
 		}
 
+		void setRotation(glm::vec2 dir) const
+		{
+			float rot = std::atan2(dir.y, dir.x);
+			m_pOwner->getTransform()->setLocalRotation(rot);
+		}
+
 		void* getBody() const
 		{
 			return m_pBody;
@@ -91,6 +100,11 @@ namespace rift2d
 	void RigidBody2D::applyLinearImpulse(const glm::vec2 impulse, const glm::vec2 point) const
 	{
 		m_pImpl->applyLinearImpulse(impulse, point);
+	}
+
+	void RigidBody2D::setRotation(const glm::vec2 dir) const
+	{
+		m_pImpl->setRotation(dir);
 	}
 
 	void* RigidBody2D::getBody() const
