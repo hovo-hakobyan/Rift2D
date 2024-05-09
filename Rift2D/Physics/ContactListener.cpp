@@ -18,8 +18,8 @@ namespace rift2d
 		bodyB->evaluateBeginOverlap(bodyA);
 	}
 
-	void ContactListener::EndContact(b2Contact* /*contact*/)
-	{/*
+	void ContactListener::EndContact(b2Contact* contact)
+	{
 		auto* bodyA = static_cast<RigidBody2D*>(contact->GetFixtureA()->GetBody()->GetUserData());
 		if (!bodyA) return;
 
@@ -27,6 +27,6 @@ namespace rift2d
 		if (!bodyB) return;
 
 		bodyA->evaluateEndOverlap(bodyB);
-		bodyB->evaluateEndOverlap(bodyA);*/
+		bodyB->evaluateEndOverlap(bodyA);
 	}
 }
