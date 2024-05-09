@@ -7,12 +7,14 @@
 #include <regex>
 #include "Scene.h"
 #include "Exception.h"
+#include "LevelGrid.h"
 #include "SceneManager.h"
+#include "Settings.h"
 
 int rift2d::WorldBuilder::m_saveMapHighestIdx = -1;
 
-rift2d::WorldBuilder::WorldBuilder(GameObject* owner, const TileInfo& info, uint8_t nrLayers):
-BaseComponent(owner),m_TileInfo(info),m_nrLayers(nrLayers)
+rift2d::WorldBuilder::WorldBuilder(GameObject* owner, uint8_t nrLayers):
+BaseComponent(owner),m_nrLayers(nrLayers)
 {
 
 }
@@ -20,10 +22,6 @@ BaseComponent(owner),m_TileInfo(info),m_nrLayers(nrLayers)
 rift2d::WorldBuilder::~WorldBuilder() = default;
 
 
-void rift2d::WorldBuilder::setTileInfo(const TileInfo& info)
-{
-	m_TileInfo = info;
-}
 
 void rift2d::WorldBuilder::addLayerInfo(const LayerInfo& info)
 {
@@ -50,8 +48,8 @@ void rift2d::WorldBuilder::init()
 	if (m_nrLayers <= 0) THROW_RIFT_EXCEPTION("Number of layers in worldbuilder must be greater than 0", RiftExceptionType::Error);
 
 	const auto windowSize = Renderer::GetInstance().getWindowSize();
-	m_nrCols =static_cast<uint16_t>( static_cast<uint16_t>(windowSize.x) / m_TileInfo.width);
-	m_nrRows = static_cast<uint16_t>(static_cast<uint16_t>(windowSize.y) / m_TileInfo.height);
+	m_nrCols =static_cast<uint16_t>( static_cast<uint16_t>(windowSize.x) / settings::TILE_WIDTH);
+	m_nrRows = static_cast<uint16_t>(static_cast<uint16_t>(windowSize.y) / settings::TILE_HEIGHT);
 
 	m_tileLayerData.resize(m_nrLayers);
 	for (auto& element : m_tileLayerData)
@@ -158,7 +156,7 @@ void rift2d::WorldBuilder::onImGui()
 			//temporary color change
 			ImGui::PushStyleColor(ImGuiCol_Button, tileColor);
 
-			if (ImGui::Button("###tile", ImVec2(m_TileInfo.width, m_TileInfo.height)))
+			if (ImGui::Button("###tile", ImVec2(settings::TILE_WIDTH, settings::TILE_HEIGHT)))
 			{
 				if(m_isBrushSelected)
 				{
@@ -199,8 +197,8 @@ void rift2d::WorldBuilder::saveLevelToFile()
 	}
 
 	//Write number of tiles to .riftmap
-	const uint16_t nrTiles{ static_cast<uint16_t>(m_nrCols * m_nrRows) };
-	outFile.write(reinterpret_cast<const char*>(&nrTiles), sizeof(nrTiles));
+	outFile.write(reinterpret_cast<const char*>(&m_nrRows), sizeof(m_nrRows));
+	outFile.write(reinterpret_cast<const char*>(&m_nrCols), sizeof(m_nrCols));
 
 	//write number of layers to .riftmap
 	outFile.write(reinterpret_cast<const char*>(&m_nrLayers), sizeof(m_nrLayers));
@@ -219,10 +217,10 @@ void rift2d::WorldBuilder::saveLevelToFile()
 				THROW_RIFT_EXCEPTION("Cannot save " + name + ".riftmap, writing failed", RiftExceptionType::Error);
 			}
 
-			tilePos.x += static_cast<float>(m_TileInfo.width);
+			tilePos.x += static_cast<float>(settings::TILE_WIDTH);
 
 		}
-		tilePos.y += static_cast<float>(m_TileInfo.height);
+		tilePos.y += static_cast<float>(settings::TILE_HEIGHT);
 		tilePos.x = 0.f;
 	}
 
@@ -240,15 +238,20 @@ std::vector<rift2d::TileSaveData> rift2d::WorldBuilder::readSaveData(const std::
 	}
 
 	//read number of tiles
-	uint16_t nrTiles{};
-	inFile.read(reinterpret_cast<char*>(&nrTiles), sizeof(nrTiles));
+	uint16_t nrRows{};
+	inFile.read(reinterpret_cast<char*>(&nrRows), sizeof(nrRows));
+
+	uint16_t nrCols{};
+	inFile.read(reinterpret_cast<char*>(&nrCols), sizeof(nrCols));
+
+	LevelGrid::GetInstance().setup(nrRows, nrCols);
 
 	uint8_t nrLayers{};
 	//read number of layers
 	inFile.read(reinterpret_cast<char*>(&nrLayers), sizeof(nrLayers));
 
 	std::vector<TileSaveData> tileSaveData;
-	tileSaveData.resize(nrTiles);
+	tileSaveData.resize(static_cast<size_t>(nrRows) *static_cast<size_t>(nrCols));
 
 	for (auto& saveData : tileSaveData)
 	{
@@ -315,14 +318,15 @@ void rift2d::WorldBuilder::buildLevel(const std::string& lvlName)
 	const auto pScene = SceneManager::GetInstance().getActiveScene();
 	auto& prefabRegistry = WorldBuilderPrefabRegistry::GetInstance();
 
+	auto& levelGrid = LevelGrid::GetInstance();
 	for (const auto & info : tileSaveDatas)
 	{
 		for (const auto data : info.prefabRegistryIds)
 		{
-			prefabRegistry.createPrefab(glm::vec3{ info.spawnLocation.x,info.spawnLocation.y,1.f }, data, pScene);
+			auto go = prefabRegistry.createPrefab(glm::vec3{ info.spawnLocation.x,info.spawnLocation.y,1.f }, data, pScene);
+			levelGrid.setTile(static_cast<int>(info.spawnLocation.x),static_cast<int>(info.spawnLocation.y),false, go);
 		}
 		
 	}
 
-	
 }

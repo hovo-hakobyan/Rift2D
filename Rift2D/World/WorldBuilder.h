@@ -41,11 +41,6 @@ namespace rift2d
 
 	};
 
-	struct TileInfo
-	{
-		uint16_t width;
-		uint16_t height;
-	};
 
 	struct LayerInfo
 	{
@@ -68,14 +63,13 @@ namespace rift2d
 	class WorldBuilder final : public BaseComponent
 	{
 	public:
-		WorldBuilder(GameObject* owner, const TileInfo& info, uint8_t nrLayers);
+		WorldBuilder(GameObject* owner, uint8_t nrLayers);
 		~WorldBuilder()override;
 		WorldBuilder(const WorldBuilder& other) = delete;
 		WorldBuilder(WorldBuilder&& other) = delete;
 		WorldBuilder& operator=(const WorldBuilder& other) = delete;
 		WorldBuilder& operator=(WorldBuilder&& other) = delete;
 
-		void setTileInfo(const TileInfo& info);
 		void addLayerInfo(const LayerInfo& info);
 		void setWorldPadding(float left, float top);
 		static void buildLevel(const std::string& lvlName);
@@ -85,7 +79,6 @@ namespace rift2d
 
 	private:
 
-		TileInfo m_TileInfo{};
 		std::vector<LayerInfo> m_layerInfo{};
 		std::vector<TileLayerData> m_tileLayerData{};
 
