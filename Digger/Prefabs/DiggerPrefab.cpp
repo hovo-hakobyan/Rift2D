@@ -1,5 +1,7 @@
 #include "DiggerPrefab.h"
 
+#include <iostream>
+
 #include "BoxCollider2D.h"
 #include "Commands/MoveCommand.h"
 #include "Commands/ScoreCommand.h"
@@ -31,14 +33,23 @@ void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSc
 	rbDef.type = rift2d::RiftBodyType::Dynamic;
 	rbDef.fixedRotation = false;
 	rbDef.linearDamping = 10.f;
+	rbDef.tag = "player";
 	auto rb = gameObject->addComponent<rift2d::RigidBody2D>(rbDef);
+	rb->onBeginOverlap([](rift2d::RigidBody2D* other)
+		{
+			if(other->getTag() == "dirt")
+			{
+				other->getOwner()->markForDestroy();
+			}
+		});
 	const auto pos = rootObj->getTransform()->getWorldPosition();
 	gameObject->addComponent<rift2d::BoxCollider2D>(rift2d::BoxColliderInfo{ glm::vec2{pos.x,pos.y},
-		glm::vec2{64.f,64.f},
+		glm::vec2{40.f,40.f},
 		1.f,
 		0.f,
 		0.f,
-		false });
+		false,
+		physics::CollisionGroup::Group1});
 
 	//add to scenegraph
 	auto player = pScene->addGameObject(std::move(gameObject));

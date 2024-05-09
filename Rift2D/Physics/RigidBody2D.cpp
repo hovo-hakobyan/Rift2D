@@ -22,9 +22,17 @@ namespace rift2d
 			const auto transform = m_pOwner->getTransform();
 			const auto pos = transform->getWorldPosition();
 			m_bodyDef.pos = glm::vec2{ pos.x,pos.y };
-
 			m_pBody = static_cast<b2Body*>(Physics::GetInstance().createRigidBody(m_bodyDef));
 			m_pBody->SetLinearDamping(m_bodyDef.linearDamping);
+			
+		}
+
+		void end()
+		{
+			if (m_pBody)
+			{
+				Physics::GetInstance().destroyRigidBody(m_pBody);
+			}
 		}
 
 		void update()
@@ -32,8 +40,6 @@ namespace rift2d
 			const auto newPos = m_pBody->GetPosition();
 			const auto transform = m_pOwner->getTransform();
 			transform->setWorldPosition(Utils::metersToPixels(glm::vec2{ newPos.x,newPos.y }));
-
-		
 		}
 
 		void setLinearVelocity(const glm::vec2 v) const
@@ -61,17 +67,48 @@ namespace rift2d
 		{
 			return m_pBody;
 		}
+
+		void onBeginOverlap(const physics::OverlapEventCallback& callback)
+		{
+			m_beginOverlapCallbacks.push_back(callback);
+		}
+
+		void evaluateBeginOverlap(RigidBody2D* pOtherBody) const
+		{
+			if (!pOtherBody || pOtherBody->getOwner()->isMarkedForDestruction()) return;
+			for (auto& callback : m_beginOverlapCallbacks) callback(pOtherBody);
+		}
+
+		void onEndOverlap(const physics::OverlapEventCallback& callback)
+		{
+			m_endOverlapCallbacks.push_back(callback);
+		}
+
+		void evaluateEndOverlap(RigidBody2D* pOtherBody)
+		{
+			if (!pOtherBody || pOtherBody->getOwner()->isMarkedForDestruction()) return;
+			for (auto& callback : m_endOverlapCallbacks) callback(pOtherBody);
+		}
+
+		std::string getTag() const
+		{
+			return m_bodyDef.tag;
+		}
 	private:
 		RigidBodyDef m_bodyDef{};
 		b2Body* m_pBody{};
 		GameObject* m_pOwner{};
+		std::vector<physics::OverlapEventCallback> m_beginOverlapCallbacks{};
+		std::vector<physics::OverlapEventCallback> m_endOverlapCallbacks{};
 	};
 
 
 	RigidBody2D::RigidBody2D(GameObject* owner, RigidBodyDef bodyDef) :
-		BaseComponent(owner),
-		m_pImpl(std::make_unique<Impl>(owner,bodyDef))
-	{}
+		BaseComponent(owner)
+	{
+		bodyDef.data = this;
+		m_pImpl = std::make_unique<Impl>(owner, bodyDef);
+	}
 
 	RigidBody2D::~RigidBody2D() = default;
 
@@ -80,6 +117,13 @@ namespace rift2d
 		BaseComponent::init();
 
 		m_pImpl->init();
+	}
+
+	void RigidBody2D::end()
+	{
+		BaseComponent::end();
+
+		m_pImpl->end();
 	}
 
 	void RigidBody2D::update()
@@ -107,9 +151,33 @@ namespace rift2d
 		m_pImpl->setRotation(dir);
 	}
 
+	void RigidBody2D::onBeginOverlap(const physics::OverlapEventCallback& callback)
+	{
+		m_pImpl->onBeginOverlap(callback);
+	}
+
+	void RigidBody2D::onEndOverlap(const physics::OverlapEventCallback& callback)
+	{
+		m_pImpl->onEndOverlap(callback);
+	}
+
+	void RigidBody2D::evaluateBeginOverlap(RigidBody2D* pOtherBody) const
+	{
+		m_pImpl->evaluateBeginOverlap(pOtherBody);
+	}
+
+	void RigidBody2D::evaluateEndOverlap(RigidBody2D* pOtherBody) const
+	{
+		m_pImpl->evaluateEndOverlap(pOtherBody);
+	}
+
 	void* RigidBody2D::getBody() const
 	{
 		return m_pImpl->getBody();
 	}
 
+	std::string RigidBody2D::getTag() const
+	{
+		return m_pImpl->getTag();
+	}
 }

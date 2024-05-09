@@ -40,7 +40,7 @@ set(IMGUI_SOURCES
 FetchContent_Declare(
   box2d
   GIT_REPOSITORY https://github.com/erincatto/box2d.git
-  GIT_TAG v2.4.1
+  GIT_TAG v2.4.0
 )
 
 
@@ -68,6 +68,10 @@ set_source_files_properties("${box2d_SOURCE_DIR}/src/dynamics/b2_distance_joint.
                           PROPERTIES COMPILE_FLAGS "/wd4189")
 set_source_files_properties("${box2d_SOURCE_DIR}/src/dynamics/b2_mouse_joint.cpp"
                           PROPERTIES COMPILE_FLAGS "/wd4189")
+set_source_files_properties("${box2d_SOURCE_DIR}/src/dynamics/b2_revolute_joint.cpp"
+                           PROPERTIES COMPILE_FLAGS "/wd4189")
+set_source_files_properties("${box2d_SOURCE_DIR}/src/dynamics/b2_rope_joint.cpp"
+                           PROPERTIES COMPILE_FLAGS "/wd4189")
 
 endif()
 

@@ -1,7 +1,7 @@
 #pragma once
 #include <glm/vec2.hpp>
 #include "BaseComponent.h"
-#include <cstdint>
+#include "PhysicsConfig.h"
 
 namespace rift2d
 {
@@ -19,6 +19,9 @@ namespace rift2d
 		float friction{};
 		float restitution{};
 		bool debugVisualize{};
+		physics::CollisionGroup ownGroup{physics::CollisionGroup::Default};
+		physics::CollisionGroup collidingGroups{ physics::CollisionGroup::All };
+
 	};
 
 	class BoxCollider2D final: public BaseComponent

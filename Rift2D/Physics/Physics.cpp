@@ -2,8 +2,11 @@
 #include <box2d/b2_world.h>
 #include <glm/vec2.hpp>
 #include <box2d/b2_body.h>
+
+#include "ContactListener.h"
 #include "TimeManager.h"
 #include "Utils.h"
+#include "PhysicsConfig.h"
 
 namespace rift2d
 {
@@ -12,14 +15,14 @@ namespace rift2d
 	public:
 
 		Impl()
-		:m_physicsWorld(std::make_unique<b2World>(b2Vec2{0.f,0.f})),
-		m_positionIterations{2},
-		m_velocityIterations{6}
-		{}
+		:m_physicsWorld(std::make_unique<b2World>(b2Vec2{0.f,physics::DEFAULT_GRAVITY}))
+		{
+			m_physicsWorld->SetContactListener(new ContactListener());
+		}
 
 		void update()
 		{
-			m_physicsWorld->Step(TimeManager::GetInstance().getFixedTime(), m_velocityIterations, m_positionIterations);
+			m_physicsWorld->Step(TimeManager::GetInstance().getFixedTime(),static_cast<uint32>( physics::VELOCITY_ITERATIONS),static_cast<uint32>(physics::POSITION_ITERATIONS));
 		}
 
 		void* createRigidBody(const RigidBodyDef& bodyDef) const
@@ -29,6 +32,7 @@ namespace rift2d
 			const glm::vec2 posMeters = Utils::pixelToMeters(glm::vec2{ bodyDef.pos.x,bodyDef.pos.y });
 			b2bDef.position.Set(posMeters.x, posMeters.y);
 			b2bDef.fixedRotation = bodyDef.fixedRotation;
+			b2bDef.userData = bodyDef.data;
 
 			return m_physicsWorld->CreateBody(&b2bDef);
 		}
@@ -42,10 +46,20 @@ namespace rift2d
 			}
 			return b2_staticBody;
 		}
+
+		void destroyRigidBody(void* body)
+		{
+			auto physicsBody = static_cast<b2Body*>(body);
+			if (physicsBody)
+			{
+				m_physicsWorld->DestroyBody(physicsBody);
+			}
+		}
+
+		
 	private:
 		std::unique_ptr<b2World> m_physicsWorld;
-		int32_t m_positionIterations;
-		int32_t m_velocityIterations;
+		std::unique_ptr<ContactListener> m_contactListener;
 	};
 
 	Physics::Physics() :
@@ -63,6 +77,9 @@ namespace rift2d
 		return m_pImpl->createRigidBody(bodyDef);
 	}
 
-	
+	void Physics::destroyRigidBody(void* body)
+	{
+		m_pImpl->destroyRigidBody(body);
+	}
 }
 

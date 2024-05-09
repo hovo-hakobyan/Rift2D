@@ -16,6 +16,7 @@ namespace rift2d
 
 		void update();
 		void* createRigidBody(const RigidBodyDef& bodyDef) const;
+		void  destroyRigidBody(void* body);
 
 	private:
 		friend class Singleton;

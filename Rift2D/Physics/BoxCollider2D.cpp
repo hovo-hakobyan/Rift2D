@@ -21,7 +21,7 @@ namespace rift2d
 	void BoxCollider2D::init()
 	{
 		BaseComponent::init();
-
+		
 		const auto rb = getOwner()->getComponent<RigidBody2D>();
 		if(!rb)
 		{
@@ -39,6 +39,8 @@ namespace rift2d
 		fixtureDef.shape = &shape;
 		fixtureDef.density = m_info.density;
 		fixtureDef.restitution = m_info.restitution;
+		fixtureDef.filter.categoryBits = static_cast<uint16>(m_info.ownGroup);
+		fixtureDef.filter.maskBits = static_cast<uint16>(m_info.collidingGroups);
 
 		const auto body = static_cast<b2Body*>(rb->getBody());
 		body->CreateFixture(&fixtureDef);

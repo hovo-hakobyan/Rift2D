@@ -37,4 +37,5 @@ namespace rift2d
         virtual void addSoundMapping(int id, const std::string& filename) = 0;
     };
 
+
 }

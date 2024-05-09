@@ -11,7 +11,7 @@ void digger::DirtPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pScen
 	const auto gameObject = pScene->createGameObject();
 	const auto spriteComp = gameObject->addComponent<rift2d::SpriteComponent>();
 	spriteComp->setTexture("dirt.png");
-	gameObject->addComponent<rift2d::RigidBody2D>(rift2d::RigidBodyDef{ rift2d::RiftBodyType::Static,{},true });
+	gameObject->addComponent<rift2d::RigidBody2D>(rift2d::RigidBodyDef{ rift2d::RiftBodyType::Static,{},true,0.1f,"dirt" });
 
 	const auto pos = rootObj->getTransform()->getWorldPosition();
 	gameObject->addComponent<rift2d::BoxCollider2D>(rift2d::BoxColliderInfo{ glm::vec2{pos.x,pos.y},
@@ -19,7 +19,8 @@ void digger::DirtPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pScen
 	   1.f,
 	   1.f,
 	   0.f,
-	   false});
+	   false,
+	physics::CollisionGroup::Group2});
 
 	gameObject->setParent(rootObj,false);
 }
