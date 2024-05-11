@@ -1,5 +1,6 @@
 #include "DirtPrefab.h"
 #include "BoxCollider2D.h"
+#include "LevelGridTile.h"
 #include "RigidBody2D.h"
 #include "Scene.h"
 #include "SpriteComponent.h"
@@ -21,6 +22,7 @@ void digger::DirtPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pScen
 	   0.f,
 	   false,
 	physics::CollisionGroup::Group2});
+	gameObject->addComponent<rift2d::LevelGridTile>();
 
 	gameObject->setParent(rootObj,false);
 }

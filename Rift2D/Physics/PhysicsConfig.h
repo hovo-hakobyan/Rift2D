@@ -2,6 +2,8 @@
 #include <cstdint>
 #include <functional>
 
+#include "GameObject.h"
+
 namespace rift2d
 {
 	class RigidBody2D;
@@ -36,6 +38,6 @@ namespace physics
 	constexpr uint32_t		VELOCITY_ITERATIONS = 6;
 	constexpr uint32_t		POSITION_ITERATIONS = 2;
 
-	using OverlapEventCallback = std::function<void(rift2d::RigidBody2D* otherBody)>;
+	using OverlapEventCallback = std::function<void(rift2d::RigidBody2D* body, rift2d::RigidBody2D* otherBody, rift2d::GameObject* gameObject, rift2d::GameObject* otherGameObject )>;
 
 }

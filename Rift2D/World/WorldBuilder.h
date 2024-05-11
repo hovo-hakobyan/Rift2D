@@ -85,8 +85,6 @@ namespace rift2d
 		LayerInfo m_currentLayerInfo{};
 		bool m_isBrushSelected{};
 
-		uint16_t m_nrRows{};
-		uint16_t m_nrCols{};
 		uint8_t m_nrLayers{};
 		int m_currentLayerNr{0};
 		std::vector<char> m_layerEditStates{}; //(special bool vector optimization, hence vector of char as an alternative) https://stackoverflow.com/questions/46115669/why-does-stdvectorbool-have-no-data

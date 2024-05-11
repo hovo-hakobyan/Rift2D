@@ -6,6 +6,7 @@
 #include "Prefabs/MoneyPrefab.h"
 #include "FPSComponent.h"
 #include "Locator.h"
+#include "Settings.h"
 #include "Prefabs/DiggerPrefab.h"
 
 digger::GameScene::GameScene():
@@ -62,4 +63,7 @@ void digger::GameScene::init()
 	ss.addSoundMapping(2, "gold_tick.mp3");
 
 	std::cout << "DPad to move\nX to shoot";
+
+	
+	
 }

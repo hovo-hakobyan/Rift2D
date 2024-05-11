@@ -42,8 +42,8 @@ namespace rift2d
 
 		void onBeginOverlap(const physics::OverlapEventCallback& callback);
 		void onEndOverlap(const physics::OverlapEventCallback& callback);
-		void evaluateBeginOverlap(RigidBody2D* pOtherBody) const;
-		void evaluateEndOverlap(RigidBody2D* pOtherBody) const;
+		void evaluateBeginOverlap(RigidBody2D* body, RigidBody2D* otherBody, GameObject* gameObject, GameObject* otherGameObject) const;
+		void evaluateEndOverlap(RigidBody2D* body, RigidBody2D* otherBody, GameObject* gameObject, GameObject* otherGameObject) const;
 
 		void* getBody() const;
 		std::string getTag() const;

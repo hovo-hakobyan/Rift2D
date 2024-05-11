@@ -73,10 +73,11 @@ namespace rift2d
 			m_beginOverlapCallbacks.push_back(callback);
 		}
 
-		void evaluateBeginOverlap(RigidBody2D* pOtherBody) const
+		void evaluateBeginOverlap(RigidBody2D* body, RigidBody2D* otherBody, GameObject* gameObject, GameObject* otherGameObject) const
 		{
-			if (!pOtherBody || pOtherBody->getOwner()->isMarkedForDestruction()) return;
-			for (auto& callback : m_beginOverlapCallbacks) callback(pOtherBody);
+			if (!gameObject || gameObject->isMarkedForDestruction()) return;
+			if (!otherGameObject || otherGameObject->isMarkedForDestruction()) return;
+			for (auto& callback : m_beginOverlapCallbacks) callback(body, otherBody, gameObject, otherGameObject);
 		}
 
 		void onEndOverlap(const physics::OverlapEventCallback& callback)
@@ -84,10 +85,11 @@ namespace rift2d
 			m_endOverlapCallbacks.push_back(callback);
 		}
 
-		void evaluateEndOverlap(RigidBody2D* pOtherBody)
+		void evaluateEndOverlap(RigidBody2D* body, RigidBody2D* otherBody, GameObject* gameObject, GameObject* otherGameObject)
 		{
-			if (!pOtherBody || pOtherBody->getOwner()->isMarkedForDestruction()) return;
-			for (auto& callback : m_endOverlapCallbacks) callback(pOtherBody);
+			if (!gameObject || gameObject->isMarkedForDestruction()) return;
+			if (!otherGameObject || otherGameObject->isMarkedForDestruction()) return;
+			for (auto& callback : m_endOverlapCallbacks) callback(body, otherBody, gameObject, otherGameObject);
 		}
 
 		std::string getTag() const
@@ -161,14 +163,14 @@ namespace rift2d
 		m_pImpl->onEndOverlap(callback);
 	}
 
-	void RigidBody2D::evaluateBeginOverlap(RigidBody2D* pOtherBody) const
+	void RigidBody2D::evaluateBeginOverlap(RigidBody2D* body, RigidBody2D* otherBody, GameObject* gameObject, GameObject* otherGameObject) const
 	{
-		m_pImpl->evaluateBeginOverlap(pOtherBody);
+		m_pImpl->evaluateBeginOverlap(body,otherBody,gameObject,otherGameObject);
 	}
 
-	void RigidBody2D::evaluateEndOverlap(RigidBody2D* pOtherBody) const
+	void RigidBody2D::evaluateEndOverlap(RigidBody2D* body, RigidBody2D* otherBody, GameObject* gameObject, GameObject* otherGameObject) const
 	{
-		m_pImpl->evaluateEndOverlap(pOtherBody);
+		m_pImpl->evaluateEndOverlap(body, otherBody, gameObject, otherGameObject);
 	}
 
 	void* RigidBody2D::getBody() const

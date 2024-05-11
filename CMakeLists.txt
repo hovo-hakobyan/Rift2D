@@ -310,6 +310,7 @@ file(GLOB GAME_DIGGER_SOURCES "Digger/Digger/*.cpp" "Digger/Digger/*.h")
 file(GLOB GAME_MISC_SOURCES "Digger/Misc/*.cpp" "Digger/Misc/*.h")
 file(GLOB GAME_PREFABS_SOURCES "Digger/Prefabs/*.cpp" "Digger/Prefabs/*.h")
 file(GLOB GAME_SCENES_SOURCES "Digger/Scenes/*.cpp" "Digger/Scenes/*.h")
+file(GLOB GAME_STATES_SOURCES "Digger/States/*.cpp" "Digger/States/*.h")
 
 # Create filtesr
 source_group("Commands" FILES ${GAME_COMMANDS_SOURCES})
@@ -318,6 +319,7 @@ source_group("Digger" FILES ${GAME_DIGGER_SOURCES})
 source_group("Misc" FILES ${GAME_MISC_SOURCES})
 source_group("Prefabs" FILES ${GAME_PREFABS_SOURCES})
 source_group("Scenes" FILES ${GAME_SCENES_SOURCES})
+source_group("States" FILES ${GAME_STATES_SOURCES})
 
 # Create executable
 add_executable(Digger
@@ -327,6 +329,7 @@ add_executable(Digger
  ${GAME_MISC_SOURCES}
  ${GAME_PREFABS_SOURCES}
  ${GAME_SCENES_SOURCES}
+ ${GAME_STATES_SOURCES}
  )
 
 # Link against Engine. Tells the linker where to find the libraries

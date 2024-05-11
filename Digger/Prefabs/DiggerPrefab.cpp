@@ -12,9 +12,13 @@
 #include "RigidBody2D.h"
 #include "SpriteComponent.h"
 #include "Scene.h"
+#include "Settings.h"
+#include "StateComponent.h"
 #include "Transform.h"
 #include "Components/HealthComponent.h"
 #include "Components/HealthDisplayComponent.h"
+#include "States/GoldCollectedState.h"
+#include "States/GoldExplodingState.h"
 
 
 void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pScene)
@@ -35,12 +39,22 @@ void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSc
 	rbDef.linearDamping = 10.f;
 	rbDef.tag = "player";
 	auto rb = gameObject->addComponent<rift2d::RigidBody2D>(rbDef);
-	rb->onBeginOverlap([](rift2d::RigidBody2D* other)
+	rb->onBeginOverlap([](rift2d::RigidBody2D*, rift2d::RigidBody2D* otherBody, rift2d::GameObject*, rift2d::GameObject* otherGameObject)
 		{
-			if(other->getTag() == "dirt")
+			if(otherBody->getTag() == "dirt")
 			{
-				other->getOwner()->markForDestroy();
+				if(otherGameObject) otherGameObject->markForDestroy();
 			}
+			else if (otherBody->getTag() == "money")
+			{
+				if(const auto state = otherGameObject->getComponent<rift2d::StateComponent>())
+				{
+					if(dynamic_cast<GoldExplodingState*>(state->getCurrentState())) state->changeState(std::make_unique<GoldCollectedState>());
+					
+				}
+			}
+		
+			
 		});
 	const auto pos = rootObj->getTransform()->getWorldPosition();
 	gameObject->addComponent<rift2d::BoxCollider2D>(rift2d::BoxColliderInfo{ glm::vec2{pos.x,pos.y},
@@ -61,8 +75,7 @@ void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSc
 
 	//add health component
 	gameObject = std::make_unique<rift2d::GameObject>(pScene);
-	auto windowSize = rift2d::Renderer::GetInstance().getWindowSize();
-	gameObject->getTransform()->setLocalPosition(windowSize.x - 100, 10);
+	gameObject->getTransform()->setLocalPosition(settings::WINDOW_WIDTH - 100, 10);
 	auto healthComp = gameObject->addComponent<HealthComponent>(3);
 	gameObject->addComponent<HealthDisplayComponent>(healthComp);
 

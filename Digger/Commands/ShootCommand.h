@@ -1,6 +1,7 @@
 #pragma once
 #include "Interfaces.h"
 
+
 namespace rift2d
 {
 	class GameObject;
@@ -8,7 +9,7 @@ namespace rift2d
 
 namespace digger
 {
-	class GameObject;
+
 	class ShootCommand final : public rift2d::ICommand
 	{
 	public:

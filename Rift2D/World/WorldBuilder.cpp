@@ -47,14 +47,10 @@ void rift2d::WorldBuilder::init()
 	BaseComponent::init();
 	if (m_nrLayers <= 0) THROW_RIFT_EXCEPTION("Number of layers in worldbuilder must be greater than 0", RiftExceptionType::Error);
 
-	const auto windowSize = Renderer::GetInstance().getWindowSize();
-	m_nrCols =static_cast<uint16_t>( static_cast<uint16_t>(windowSize.x) / settings::TILE_WIDTH);
-	m_nrRows = static_cast<uint16_t>(static_cast<uint16_t>(windowSize.y) / settings::TILE_HEIGHT);
-
 	m_tileLayerData.resize(m_nrLayers);
 	for (auto& element : m_tileLayerData)
 	{
-		element.layerInfoVec.resize(static_cast<size_t>(m_nrCols * m_nrRows));
+		element.layerInfoVec.resize(static_cast<size_t>(settings::NR_COLS * settings::NR_ROWS));
 	}
 
 	//first layer should be available for editing
@@ -66,8 +62,7 @@ void rift2d::WorldBuilder::onImGui()
 {
 	// Set the initial position of the window to the top-left corner
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
-	const auto windowSize = Renderer::GetInstance().getWindowSize();
-	ImGui::SetNextWindowSize(ImVec2(windowSize.x, windowSize.y));
+	ImGui::SetNextWindowSize(ImVec2(settings::WINDOW_WIDTH, settings::WINDOW_HEIGHT));
 
 	// Window flags
 	ImGuiWindowFlags window_flags = 0;
@@ -143,11 +138,11 @@ void rift2d::WorldBuilder::onImGui()
 
 	auto& layer = m_tileLayerData[m_currentLayerNr];
 	//Draw the grid
-	for(int row = 0; row < m_nrRows; ++row)
+	for(int row = 0; row < settings::NR_ROWS; ++row)
 	{
-		for(int col = 0; col < m_nrCols; ++col)
+		for(int col = 0; col < settings::NR_COLS; ++col)
 		{
-			int id = row * m_nrCols + col;
+			int id = row * settings::NR_COLS + col;
 			ImGui::PushID(id);
 
 			auto& tile = layer.layerInfoVec[id];
@@ -168,7 +163,7 @@ void rift2d::WorldBuilder::onImGui()
 			ImGui::PopStyleColor();
 			ImGui::PopID();
 
-			if (col < m_nrCols - 1) ImGui::SameLine();
+			if (col < settings::NR_COLS - 1) ImGui::SameLine();
 		}
 	}
 
@@ -197,19 +192,19 @@ void rift2d::WorldBuilder::saveLevelToFile()
 	}
 
 	//Write number of tiles to .riftmap
-	outFile.write(reinterpret_cast<const char*>(&m_nrRows), sizeof(m_nrRows));
-	outFile.write(reinterpret_cast<const char*>(&m_nrCols), sizeof(m_nrCols));
+	outFile.write(reinterpret_cast<const char*>(&settings::NR_ROWS), sizeof(settings::NR_ROWS));
+	outFile.write(reinterpret_cast<const char*>(&settings::NR_COLS), sizeof(settings::NR_COLS));
 
 	//write number of layers to .riftmap
 	outFile.write(reinterpret_cast<const char*>(&m_nrLayers), sizeof(m_nrLayers));
 
 	glm::vec2 tilePos{ m_worldPadding};
 
-	for (int row = 0; row <m_nrRows; ++row)
+	for (int row = 0; row <settings::NR_ROWS; ++row)
 	{
-		for (int col = 0; col < m_nrCols; ++col)
+		for (int col = 0; col < settings::NR_COLS; ++col)
 		{
-			const int tileIdx{ row * m_nrCols + col };
+			const int tileIdx{ row * settings::NR_COLS + col };
 			writeTileData(outFile, tileIdx, tilePos);
 
 			if (!outFile)
@@ -318,13 +313,11 @@ void rift2d::WorldBuilder::buildLevel(const std::string& lvlName)
 	const auto pScene = SceneManager::GetInstance().getActiveScene();
 	auto& prefabRegistry = WorldBuilderPrefabRegistry::GetInstance();
 
-	auto& levelGrid = LevelGrid::GetInstance();
 	for (const auto & info : tileSaveDatas)
 	{
 		for (const auto data : info.prefabRegistryIds)
 		{
-			auto go = prefabRegistry.createPrefab(glm::vec3{ info.spawnLocation.x,info.spawnLocation.y,1.f }, data, pScene);
-			levelGrid.setTile(static_cast<int>(info.spawnLocation.x),static_cast<int>(info.spawnLocation.y),false, go);
+			prefabRegistry.createPrefab(glm::vec3{ info.spawnLocation.x,info.spawnLocation.y,1.f }, data, pScene);
 		}
 		
 	}

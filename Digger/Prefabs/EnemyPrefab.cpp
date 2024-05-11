@@ -12,6 +12,7 @@
 #include "Components/ScoreDisplayComponent.h"
 #include "Renderer.h"
 #include "InputManager.h"
+#include "Settings.h"
 
 void digger::EnemyPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pScene)
 {
@@ -31,8 +32,7 @@ void digger::EnemyPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSce
 
 	//add health component
 	gameObject = pScene->createGameObject();
-	auto windowSize = rift2d::Renderer::GetInstance().getWindowSize();
-	gameObject->getTransform()->setLocalPosition(windowSize.x - 100, 40);
+	gameObject->getTransform()->setLocalPosition(settings::WINDOW_WIDTH - 100, 40);
 	auto healthComp = gameObject->addComponent<digger::HealthComponent>(3);
 	gameObject->addComponent<digger::HealthDisplayComponent>(healthComp);
 

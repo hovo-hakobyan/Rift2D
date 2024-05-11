@@ -6,6 +6,7 @@
 digger::ShootCommand::ShootCommand(rift2d::GameObject* shooter):
 m_pShooter(shooter)
 {
+	
 }
 
 

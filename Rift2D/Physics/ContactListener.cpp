@@ -11,22 +11,26 @@ namespace rift2d
 
 		auto* bodyA = static_cast<RigidBody2D*>(contact->GetFixtureA()->GetBody()->GetUserData());
 		if (!bodyA) return;
+		auto goA = bodyA->getOwner();
 
 		auto* bodyB = static_cast<RigidBody2D*>(contact->GetFixtureB()->GetBody()->GetUserData());
 		if (!bodyB) return;
-		bodyA->evaluateBeginOverlap(bodyB);
-		bodyB->evaluateBeginOverlap(bodyA);
+		auto goB = bodyB->getOwner();
+
+		bodyA->evaluateBeginOverlap(bodyA,bodyB,goA,goB);
+		bodyB->evaluateBeginOverlap(bodyB,bodyA,goB,goA);
 	}
 
 	void ContactListener::EndContact(b2Contact* contact)
 	{
 		auto* bodyA = static_cast<RigidBody2D*>(contact->GetFixtureA()->GetBody()->GetUserData());
 		if (!bodyA) return;
-
+		auto goA = bodyA->getOwner();
 		auto* bodyB = static_cast<RigidBody2D*>(contact->GetFixtureB()->GetBody()->GetUserData());
 		if (!bodyB) return;
+		auto goB = bodyB->getOwner();
 
-		bodyA->evaluateEndOverlap(bodyB);
-		bodyB->evaluateEndOverlap(bodyA);
+		bodyA->evaluateEndOverlap(bodyA, bodyB, goA, goB);
+		bodyB->evaluateEndOverlap(bodyB, bodyA, goB, goA);
 	}
 }

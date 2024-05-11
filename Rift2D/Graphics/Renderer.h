@@ -36,7 +36,6 @@ namespace rift2d
 
 		const RiftColor& getBackgroundColor() const { return m_clearColor; }
 		void setBackgroundColor(const RiftColor& color) { m_clearColor = color; }
-		glm::vec2 getWindowSize() const;
 
 		void registerComponent(IRenderable* component);
 		void unregisterComponent(IRenderable* component);

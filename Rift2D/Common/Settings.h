@@ -3,9 +3,11 @@
 namespace settings
 {
 	constexpr int WINDOW_WIDTH = 960;
-	constexpr int WINDOW_HEIGHT = 600;
+	constexpr int WINDOW_HEIGHT = 640;
 	constexpr uint16_t TILE_WIDTH = 64;
 	constexpr uint16_t TILE_HEIGHT = 64;
+	constexpr uint16_t NR_ROWS = 10;
+	constexpr uint16_t NR_COLS = 15;
 
 	//credits Alex Kougentakos, Odyssey engine
 	constexpr float PPM = 100.0f;  // pixels per meter

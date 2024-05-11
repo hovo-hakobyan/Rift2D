@@ -3,8 +3,6 @@
 
 namespace digger
 {
-	class GameObject;
-	class Scene;
 	class DiggerPrefab final : public rift2d::Prefab
 	{
 	public:

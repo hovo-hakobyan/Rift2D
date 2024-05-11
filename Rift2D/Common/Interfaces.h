@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <string>
 
+
 namespace rift2d
 {
     
@@ -35,6 +36,16 @@ namespace rift2d
         virtual void play(const soundId id, const float volume = 1.f) = 0;
         virtual void setPath(const std::string& dataPath) = 0;
         virtual void addSoundMapping(int id, const std::string& filename) = 0;
+    };
+
+    class GameObject;
+    class IState
+    {
+    public:
+        virtual ~IState() = default;
+        virtual void onEnter(GameObject* gameObject) = 0;
+        virtual void update(GameObject* gameObject) = 0;
+        virtual void onExit(GameObject* gameObject) = 0;
     };
 
 

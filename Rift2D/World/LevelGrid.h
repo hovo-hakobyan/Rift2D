@@ -18,6 +18,7 @@ namespace rift2d
 		
 		void setup(int rows, int cols);
 		void setTile(int x, int y, bool empty, GameObject* occupant = nullptr);
+		bool isTileEmpty(int idx);
 		bool isTileEmpty(int x, int y) const;
 		GameObject* getOccupant(int x, int y) const;
 	private:
@@ -26,7 +27,7 @@ namespace rift2d
 
 		struct Tile
 		{
-			bool isEmpty{};
+			bool isEmpty{true};
 			GameObject* pOccupant{};
 		};
 
@@ -35,6 +36,7 @@ namespace rift2d
 		std::vector<Tile> m_grid{};
 
 		bool isValidTile(int x, int y) const;
+		bool m_isInitialized{ false };
 	};
 
 

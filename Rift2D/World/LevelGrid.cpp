@@ -10,15 +10,24 @@ void rift2d::LevelGrid::setup(int rows, int cols)
 	m_cols = cols;
 	m_grid.clear();
 	m_grid.resize(static_cast<size_t>( m_rows) * m_cols);
+	m_isInitialized = true;
 }
 
 void rift2d::LevelGrid::setTile(int x, int y, bool empty, GameObject* occupant)
 {
+	if (!m_isInitialized) return;
 	if(!isValidTile(x, y)) THROW_RIFT_EXCEPTION("Invalid tile", RiftExceptionType::Error);
 
 	const int idx = Utils::indexFromPosition(x, y, m_cols);
 	m_grid[idx].isEmpty = empty;
 	m_grid[idx].pOccupant = occupant;
+}
+
+bool rift2d::LevelGrid::isTileEmpty(int idx)
+{
+	if (idx >= m_grid.size()) return false;
+	if (static_cast<size_t>(idx) >= m_grid.size()) THROW_RIFT_EXCEPTION("Invalid tile", RiftExceptionType::Error);
+	return m_grid[idx].isEmpty;
 }
 
 bool rift2d::LevelGrid::isTileEmpty(int x, int y) const
@@ -32,6 +41,7 @@ bool rift2d::LevelGrid::isTileEmpty(int x, int y) const
 
 rift2d::GameObject* rift2d::LevelGrid::getOccupant(int x, int y) const
 {
+	if (!m_isInitialized) return nullptr;
 	if (!isValidTile(x, y)) THROW_RIFT_EXCEPTION("Invalid tile", RiftExceptionType::Error);
 
 	const int idx = Utils::indexFromPosition(x, y, m_cols);
