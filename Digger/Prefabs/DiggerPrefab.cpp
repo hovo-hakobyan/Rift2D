@@ -70,8 +70,11 @@ void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSc
 	player->setParent(rootObj, false);
 
 	//Bind movement to input
-	rift2d::InputManager::GetInstance().bindAxis2D(SDL_SCANCODE_D, SDL_SCANCODE_S, SDL_SCANCODE_A, SDL_SCANCODE_W,
+	rift2d::InputManager::GetInstance().bindAxis2D(rift2d::GamepadAxis2D::DPad, 0,
 		std::make_unique<MoveCommand>(rb, 300.f));
+
+	rift2d::InputManager::GetInstance().bindAxis2D(SDL_SCANCODE_D,SDL_SCANCODE_S,SDL_SCANCODE_A,SDL_SCANCODE_W,
+			std::make_unique<MoveCommand>(rb, 300.f));
 
 	//add health component
 	gameObject = std::make_unique<rift2d::GameObject>(pScene);

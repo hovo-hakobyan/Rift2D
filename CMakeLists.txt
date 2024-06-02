@@ -293,8 +293,6 @@ if(WIN32)
     COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_SOURCE_DIR}/Data" "$<TARGET_FILE_DIR:Engine>/Data"
   )
 
-
-
   set_target_properties(Engine PROPERTIES
         LINK_FLAGS "/SUBSYSTEM:CONSOLE"
     )

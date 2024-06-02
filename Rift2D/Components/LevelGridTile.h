@@ -3,7 +3,7 @@
 
 namespace rift2d
 {
-	class LevelGridTile final : public BaseComponent
+	class LevelGridTile final : public BaseComponent, public IComponentWatcher
 	{
 	public:
 		LevelGridTile(GameObject* owner);
@@ -14,7 +14,8 @@ namespace rift2d
 		LevelGridTile& operator=(LevelGridTile&& other) = delete;
 
 		virtual void init() override;
-		virtual void end() override;
+
+		virtual void onComponentRemoved(BaseComponent* component) override;
 	};
 
 

@@ -14,15 +14,19 @@ void rift2d::LevelGridTile::init()
 {
 	BaseComponent::init();
 
-	auto pos = getOwner()->getTransform()->getWorldPosition();
+	const auto transform = getOwner()->getTransform();
+	transform->registerWatcher(this);
+
+	auto pos = transform->getWorldPosition();
 	pos.x += settings::TILE_WIDTH / 2;
 	pos.y += settings::TILE_HEIGHT / 2;
 	LevelGrid::GetInstance().setTile(static_cast<int>(pos.x), static_cast<int>(pos.y),false, getOwner());
 }
 
-void rift2d::LevelGridTile::end()
+
+
+void rift2d::LevelGridTile::onComponentRemoved(BaseComponent*)
 {
-	BaseComponent::end();
 	auto pos = getOwner()->getTransform()->getWorldPosition();
 	pos.x += settings::TILE_WIDTH / 2;
 	pos.y += settings::TILE_HEIGHT / 2;

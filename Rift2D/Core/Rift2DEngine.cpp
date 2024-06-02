@@ -25,6 +25,7 @@
 
 SDL_Window* g_window{};
 bool rift2d::Rift2DEngine::m_shouldQuit = false;
+std::filesystem::path rift2d::Rift2DEngine::m_dataPath = "";
 
 void LogSDLVersion(const std::string& message, const SDL_version& v)
 {
@@ -73,6 +74,7 @@ void PrintSDLVersion()
 
 rift2d::Rift2DEngine::Rift2DEngine(const std::filesystem::path &dataPath)
 {
+	m_dataPath = dataPath;
 	PrintSDLVersion();
 	
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) 

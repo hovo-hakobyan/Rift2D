@@ -9,7 +9,7 @@ namespace digger
 	{
 		if(const auto sprite = gameObject->getComponent<rift2d::SpriteComponent>())
 		{
-			sprite->setTexture("money.png");
+			sprite->setTexture("money.png",{0.f,-8.f});
 		}
 	}
 

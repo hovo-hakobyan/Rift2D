@@ -1,9 +1,7 @@
 #include "WorldBuilderScene.h"
-
 #include "Exception.h"
 #include "WorldBuilder.h"
-#include "Prefabs/DiggerPrefab.h"
-#include "Prefabs/EnemyPrefab.h"
+
 
 digger::WorldBuilderScene::WorldBuilderScene():
 Scene("WorldBuilderScene")

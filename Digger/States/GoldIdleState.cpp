@@ -1,7 +1,4 @@
 #include "GoldIdleState.h"
-
-#include <iostream>
-
 #include "GameObject.h"
 #include "GoldFallingState.h"
 #include "LevelGrid.h"
@@ -26,7 +23,6 @@ namespace digger
 	{
 		if(shouldFall(gameObject))
 		{
-			std::cout << "should fall\n";
 			if(const auto stateComponent = gameObject->getComponent<rift2d::StateComponent>())
 			{
 				stateComponent->changeState(std::make_unique<GoldFallingState>());

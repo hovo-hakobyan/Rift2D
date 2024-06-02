@@ -15,7 +15,7 @@ namespace digger
 	{
 		if (const auto rigidBody = gameObject->getComponent<rift2d::RigidBody2D>())
 		{
-			rigidBody->setLinearVelocity({ 0.f,1.f });
+			rigidBody->setLinearVelocity({ 0.f,1.5f });
 		}
 		m_startPosition = gameObject->getTransform()->getWorldPosition();
 		auto pos = m_startPosition;

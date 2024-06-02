@@ -18,8 +18,10 @@ namespace rift2d
 		Rift2DEngine& operator=(Rift2DEngine&& other) = delete;
 
 		static void quitGame() { m_shouldQuit = true; }
+		static std::filesystem::path getDataPath() { return m_dataPath; }
 
 	private:
 		static bool m_shouldQuit;
+		static std::filesystem::path m_dataPath;
 	};
 }

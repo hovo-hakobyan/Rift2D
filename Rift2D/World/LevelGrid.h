@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-
 #include "Singleton.h"
 
 
@@ -21,6 +20,8 @@ namespace rift2d
 		bool isTileEmpty(int idx);
 		bool isTileEmpty(int x, int y) const;
 		GameObject* getOccupant(int x, int y) const;
+
+
 	private:
 		friend class Singleton;
 		LevelGrid() = default;

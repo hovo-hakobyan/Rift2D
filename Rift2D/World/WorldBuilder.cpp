@@ -8,6 +8,7 @@
 #include "Scene.h"
 #include "Exception.h"
 #include "LevelGrid.h"
+#include "Rift2DEngine.h"
 #include "SceneManager.h"
 #include "Settings.h"
 
@@ -175,8 +176,8 @@ void rift2d::WorldBuilder::onImGui()
 
 void rift2d::WorldBuilder::saveLevelToFile()
 {
-	const std::filesystem::path directoryPath = "../Levels";
-	const std::string name = getNextLevelName();
+	const std::filesystem::path directoryPath = Rift2DEngine::getDataPath();
+	const std::string name ="Levels/"+ getNextLevelName();
 	const bool dirCreated = std::filesystem::create_directories(directoryPath);
 	if (!dirCreated && !std::filesystem::exists(directoryPath))
 	{
@@ -225,8 +226,8 @@ void rift2d::WorldBuilder::saveLevelToFile()
 
 std::vector<rift2d::TileSaveData> rift2d::WorldBuilder::readSaveData(const std::string& lvlName)
 {
-
-	std::ifstream inFile("../Levels/" + lvlName + ".riftmap", std::ios::binary);
+	const auto dataPath = Rift2DEngine::getDataPath().string();
+	std::ifstream inFile( dataPath + "Levels/" + lvlName + ".riftmap", std::ios::binary);
 	if (!inFile)
 	{
 		THROW_RIFT_EXCEPTION("Cannot open " + lvlName + ".riftmap. It doesn't exist", RiftExceptionType::Error);

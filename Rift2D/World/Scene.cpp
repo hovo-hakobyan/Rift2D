@@ -150,6 +150,9 @@ void rift2d::Scene::rootEnd()
 	{
 		object->end();
 	}
+
+	m_rootObjectCache.clear();
+	m_rootGameObjects.clear();
 }
 
 void Scene::rootOnImGui()
