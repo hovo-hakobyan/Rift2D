@@ -78,7 +78,7 @@ void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSc
 
 	//add health component
 	gameObject = std::make_unique<rift2d::GameObject>(pScene);
-	gameObject->getTransform()->setLocalPosition(settings::WINDOW_WIDTH - 100, 10);
+	gameObject->getTransform()->setLocalPosition(riftSettings::WINDOW_WIDTH - 100, 10);
 	auto healthComp = gameObject->addComponent<HealthComponent>(3);
 	gameObject->addComponent<HealthDisplayComponent>(healthComp);
 

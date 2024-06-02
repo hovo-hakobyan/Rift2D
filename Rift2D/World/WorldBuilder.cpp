@@ -51,7 +51,7 @@ void rift2d::WorldBuilder::init()
 	m_tileLayerData.resize(m_nrLayers);
 	for (auto& element : m_tileLayerData)
 	{
-		element.layerInfoVec.resize(static_cast<size_t>(settings::NR_COLS * settings::NR_ROWS));
+		element.layerInfoVec.resize(static_cast<size_t>(riftSettings::NR_COLS * riftSettings::NR_ROWS));
 	}
 
 	//first layer should be available for editing
@@ -63,7 +63,7 @@ void rift2d::WorldBuilder::onImGui()
 {
 	// Set the initial position of the window to the top-left corner
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
-	ImGui::SetNextWindowSize(ImVec2(settings::WINDOW_WIDTH, settings::WINDOW_HEIGHT));
+	ImGui::SetNextWindowSize(ImVec2(riftSettings::WINDOW_WIDTH, riftSettings::WINDOW_HEIGHT));
 
 	// Window flags
 	ImGuiWindowFlags window_flags = 0;
@@ -139,11 +139,11 @@ void rift2d::WorldBuilder::onImGui()
 
 	auto& layer = m_tileLayerData[m_currentLayerNr];
 	//Draw the grid
-	for(int row = 0; row < settings::NR_ROWS; ++row)
+	for(int row = 0; row < riftSettings::NR_ROWS; ++row)
 	{
-		for(int col = 0; col < settings::NR_COLS; ++col)
+		for(int col = 0; col < riftSettings::NR_COLS; ++col)
 		{
-			int id = row * settings::NR_COLS + col;
+			int id = row * riftSettings::NR_COLS + col;
 			ImGui::PushID(id);
 
 			auto& tile = layer.layerInfoVec[id];
@@ -152,7 +152,7 @@ void rift2d::WorldBuilder::onImGui()
 			//temporary color change
 			ImGui::PushStyleColor(ImGuiCol_Button, tileColor);
 
-			if (ImGui::Button("###tile", ImVec2(settings::TILE_WIDTH, settings::TILE_HEIGHT)))
+			if (ImGui::Button("###tile", ImVec2(riftSettings::TILE_WIDTH, riftSettings::TILE_HEIGHT)))
 			{
 				if(m_isBrushSelected)
 				{
@@ -164,7 +164,7 @@ void rift2d::WorldBuilder::onImGui()
 			ImGui::PopStyleColor();
 			ImGui::PopID();
 
-			if (col < settings::NR_COLS - 1) ImGui::SameLine();
+			if (col < riftSettings::NR_COLS - 1) ImGui::SameLine();
 		}
 	}
 
@@ -193,19 +193,19 @@ void rift2d::WorldBuilder::saveLevelToFile()
 	}
 
 	//Write number of tiles to .riftmap
-	outFile.write(reinterpret_cast<const char*>(&settings::NR_ROWS), sizeof(settings::NR_ROWS));
-	outFile.write(reinterpret_cast<const char*>(&settings::NR_COLS), sizeof(settings::NR_COLS));
+	outFile.write(reinterpret_cast<const char*>(&riftSettings::NR_ROWS), sizeof(riftSettings::NR_ROWS));
+	outFile.write(reinterpret_cast<const char*>(&riftSettings::NR_COLS), sizeof(riftSettings::NR_COLS));
 
 	//write number of layers to .riftmap
 	outFile.write(reinterpret_cast<const char*>(&m_nrLayers), sizeof(m_nrLayers));
 
 	glm::vec2 tilePos{ m_worldPadding};
 
-	for (int row = 0; row <settings::NR_ROWS; ++row)
+	for (int row = 0; row <riftSettings::NR_ROWS; ++row)
 	{
-		for (int col = 0; col < settings::NR_COLS; ++col)
+		for (int col = 0; col < riftSettings::NR_COLS; ++col)
 		{
-			const int tileIdx{ row * settings::NR_COLS + col };
+			const int tileIdx{ row * riftSettings::NR_COLS + col };
 			writeTileData(outFile, tileIdx, tilePos);
 
 			if (!outFile)
@@ -213,10 +213,10 @@ void rift2d::WorldBuilder::saveLevelToFile()
 				THROW_RIFT_EXCEPTION("Cannot save " + name + ".riftmap, writing failed", RiftExceptionType::Error);
 			}
 
-			tilePos.x += static_cast<float>(settings::TILE_WIDTH);
+			tilePos.x += static_cast<float>(riftSettings::TILE_WIDTH);
 
 		}
-		tilePos.y += static_cast<float>(settings::TILE_HEIGHT);
+		tilePos.y += static_cast<float>(riftSettings::TILE_HEIGHT);
 		tilePos.x = 0.f;
 	}
 
@@ -285,10 +285,11 @@ std::string rift2d::WorldBuilder::getNextLevelName() const
 {
 	if (m_saveMapHighestIdx != -1) return "level" + std::to_string(++m_saveMapHighestIdx);
 
+	const auto dataPath = Rift2DEngine::getDataPath().string();
 	int maxLevelNum = -1;
 	const std::regex levelRegex("level(\\d+)\\.riftmap");
 
-	for (const auto& entry : std::filesystem::directory_iterator("../Levels"))
+	for (const auto& entry : std::filesystem::directory_iterator(dataPath + "Levels"))
 	{
 		std::smatch matches;
 		std::string filename = entry.path().filename().string();

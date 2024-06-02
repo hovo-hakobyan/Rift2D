@@ -23,6 +23,7 @@ namespace rift2d
 
 		Scene* getActiveScene() const;
 		void setActiveScene(const std::string& sceneName, bool destroyCurrentScene = false);
+		bool isValidScene(const std::string& sceneName) const;
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager();

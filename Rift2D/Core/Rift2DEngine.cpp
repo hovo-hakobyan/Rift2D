@@ -86,8 +86,8 @@ rift2d::Rift2DEngine::Rift2DEngine(const std::filesystem::path &dataPath)
 		"Programming 4 assignment - Howhannes Hakobyan 2DAE09",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
-		settings::WINDOW_WIDTH,
-		settings::WINDOW_HEIGHT,
+		riftSettings::WINDOW_WIDTH,
+		riftSettings::WINDOW_HEIGHT,
 		SDL_WINDOW_OPENGL
 	);
 	if (g_window == nullptr) 
@@ -107,7 +107,7 @@ rift2d::Rift2DEngine::Rift2DEngine(const std::filesystem::path &dataPath)
 	}
 	ServiceLocator::registerSoundSystem(std::make_unique<SDLSoundSystem>());
 
-	ServiceLocator::getSoundSystem().setPath(settings::SOUND_PATH.data());
+	ServiceLocator::getSoundSystem().setPath(riftSettings::SOUND_PATH.data());
 
 }
 

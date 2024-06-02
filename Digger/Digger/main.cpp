@@ -2,8 +2,8 @@
 #include "InputManager.h"
 #include "Scenes/MenuScene.h"
 #include "SceneManager.h"
+#include "Commands/SkipLevelCommand.h"
 #include "Commands/ToMainMenuCommand.h"
-#include "Scenes/PhysicsTestScene.h"
 namespace fs = std::filesystem;
 
 void initEngine()
@@ -12,6 +12,7 @@ void initEngine()
 	//sceneManager.addScene(std::make_unique<digger::PhysicsTestScene>());
 	sceneManager.addScene(std::make_unique<digger::MenuScene>());
 	rift2d::InputManager::GetInstance().bindAction(SDL_SCANCODE_ESCAPE, rift2d::InputEvent::Down, std::make_unique<digger::ToMainMenuCommand>());
+	rift2d::InputManager::GetInstance().bindAction(SDL_SCANCODE_F1, rift2d::InputEvent::Down, std::make_unique<digger::SkipLevelCommand>());
 }
 
 

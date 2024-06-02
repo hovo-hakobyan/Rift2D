@@ -52,6 +52,6 @@ rift2d::GameObject* rift2d::LevelGrid::getOccupant(int x, int y) const
 bool rift2d::LevelGrid::isValidTile(int x, int y) const
 {
 	if (m_grid.empty()) return false;
-	if (x >= 0 && x < settings::WINDOW_WIDTH && y >= 0 && y < settings::WINDOW_HEIGHT) return true;
+	if (x >= 0 && x < riftSettings::WINDOW_WIDTH && y >= 0 && y < riftSettings::WINDOW_HEIGHT) return true;
 	return false;
 }

@@ -5,7 +5,7 @@ namespace digger
 	class GameScene :public rift2d::Scene
 	{
 	public:
-		GameScene();
+		GameScene(int level);
 		~GameScene() override = default;
 		GameScene(const GameScene& other) = delete;
 		GameScene(GameScene&& other) noexcept = delete;
@@ -14,6 +14,9 @@ namespace digger
 
 	protected:
 		virtual void init() override;
+
+	private:
+		int m_levelIdx{};
 	};
 
 }

@@ -19,10 +19,10 @@ namespace digger
 		}
 		m_startPosition = gameObject->getTransform()->getWorldPosition();
 		auto pos = m_startPosition;
-		pos.x += settings::TILE_WIDTH / 2;
-		pos.y += settings::TILE_HEIGHT / 2;
+		pos.x += riftSettings::TILE_WIDTH / 2;
+		pos.y += riftSettings::TILE_HEIGHT / 2;
 
-		m_startingTileIdx = rift2d::Utils::indexFromPosition(static_cast<int>(pos.x), static_cast<int>(pos.y), settings::NR_COLS);
+		m_startingTileIdx = rift2d::Utils::indexFromPosition(static_cast<int>(pos.x), static_cast<int>(pos.y), riftSettings::NR_COLS);
 	}
 
 	void GoldFallingState::update(rift2d::GameObject* gameObject)
@@ -36,7 +36,7 @@ namespace digger
 
 		if(hitsGround(gameObject))
 		{
-			if (m_fallDistance >= settings::TILE_HEIGHT * static_cast<float>(m_nrStoriesToExplode))
+			if (m_fallDistance >= riftSettings::TILE_HEIGHT * static_cast<float>(m_nrStoriesToExplode))
 			{
 				stateComponent->changeState(std::make_unique<GoldExplodingState>());
 			}
@@ -59,7 +59,7 @@ namespace digger
 	{
 		auto pos = go->getTransform()->getWorldPosition();
 		pos.y += 5.f;
-		const auto idx = rift2d::Utils::indexFromPosition(static_cast<int>(pos.x), static_cast<int>(pos.y), settings::NR_COLS);
+		const auto idx = rift2d::Utils::indexFromPosition(static_cast<int>(pos.x), static_cast<int>(pos.y), riftSettings::NR_COLS);
 		if (idx == m_startingTileIdx) return false;
 		if (rift2d::LevelGrid::GetInstance().isTileEmpty(idx)) return false;
 		return true;

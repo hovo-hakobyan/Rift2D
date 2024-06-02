@@ -1,6 +1,6 @@
 #pragma once
 #include <string_view>
-namespace settings
+namespace riftSettings
 {
 	constexpr int WINDOW_WIDTH = 960;
 	constexpr int WINDOW_HEIGHT = 640;

@@ -38,8 +38,8 @@ namespace digger
 	{
 		auto pos = gameObj->getTransform()->getWorldPosition();
 
-		const auto idx = rift2d::Utils::indexFromPosition(static_cast<int>(pos.x), static_cast<int>(pos.y), settings::NR_COLS);
-		const auto idxUnderneath = idx + settings::NR_COLS;
+		const auto idx = rift2d::Utils::indexFromPosition(static_cast<int>(pos.x), static_cast<int>(pos.y), riftSettings::NR_COLS);
+		const auto idxUnderneath = idx + riftSettings::NR_COLS;
 		if (rift2d::LevelGrid::GetInstance().isTileEmpty(idxUnderneath)) return true;
 		return false;
 	}

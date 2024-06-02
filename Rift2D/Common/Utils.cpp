@@ -8,18 +8,18 @@ namespace  rift2d
 
 	glm::vec2 Utils::pixelToMeters(const glm::vec2& pixelPos)
 	{
-		return { pixelPos.x * settings::MPP, pixelPos.y * settings::MPP };
+		return { pixelPos.x * riftSettings::MPP, pixelPos.y * riftSettings::MPP };
 	}
 
 	glm::vec2 Utils::metersToPixels(const glm::vec2& meterPos)
 	{
-		return { meterPos.x * settings::PPM, meterPos.y * settings::PPM };
+		return { meterPos.x * riftSettings::PPM, meterPos.y * riftSettings::PPM };
 	}
 
 	int Utils::indexFromPosition(int x, int y, int nrCols)
 	{
-		const int gridX = x / settings::TILE_WIDTH;
-		const int gridY = y / settings::TILE_HEIGHT;
+		const int gridX = x / riftSettings::TILE_WIDTH;
+		const int gridY = y / riftSettings::TILE_HEIGHT;
 
 		return gridY * nrCols + gridX;
 	}

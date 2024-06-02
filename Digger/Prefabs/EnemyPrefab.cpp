@@ -32,7 +32,7 @@ void digger::EnemyPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSce
 
 	//add health component
 	gameObject = pScene->createGameObject();
-	gameObject->getTransform()->setLocalPosition(settings::WINDOW_WIDTH - 100, 40);
+	gameObject->getTransform()->setLocalPosition(riftSettings::WINDOW_WIDTH - 100, 40);
 	auto healthComp = gameObject->addComponent<digger::HealthComponent>(3);
 	gameObject->addComponent<digger::HealthDisplayComponent>(healthComp);
 

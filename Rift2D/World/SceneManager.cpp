@@ -39,6 +39,11 @@ void rift2d::SceneManager::setActiveScene(const std::string& sceneName, bool des
 	m_destroyCurrentScene = destroyCurrentScene;
 }
 
+bool rift2d::SceneManager::isValidScene(const std::string& sceneName) const
+{
+	return m_scenes.contains(sceneName);
+}
+
 
 void rift2d::SceneManager::init()
 {

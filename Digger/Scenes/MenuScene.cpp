@@ -1,6 +1,5 @@
 #include "MenuScene.h"
 #include <imgui.h>
-
 #include "GameScene.h"
 #include "Rift2DEngine.h"
 #include "SceneManager.h"
@@ -44,8 +43,8 @@ void digger::MenuScene::onImGui()
 
     if (ImGui::Button("Play"))
     {
-        rift2d::SceneManager::GetInstance().addScene(std::make_unique<GameScene>());
-        rift2d::SceneManager::GetInstance().setActiveScene("GameScene");
+        rift2d::SceneManager::GetInstance().addScene(std::make_unique<GameScene>(0));
+        rift2d::SceneManager::GetInstance().setActiveScene("level0");
     }
 
     ImGui::Spacing(); ImGui::Spacing();

@@ -6,11 +6,11 @@
 #include "Prefabs/MoneyPrefab.h"
 #include "FPSComponent.h"
 #include "Locator.h"
-#include "Settings.h"
+
 #include "Prefabs/DiggerPrefab.h"
 
-digger::GameScene::GameScene():
-Scene("GameScene")
+digger::GameScene::GameScene(int level):
+Scene("level" + std::to_string(level)), m_levelIdx(level)
 {
 }
 
@@ -42,7 +42,7 @@ void digger::GameScene::init()
 
 	try
 	{
-		rift2d::WorldBuilder::buildLevel("level0");
+		rift2d::WorldBuilder::buildLevel("level" + std::to_string(m_levelIdx));
 	}
 	catch (const rift2d::RiftException& e)
 	{
