@@ -14,7 +14,6 @@ namespace rift2d
 		LevelGridTile& operator=(LevelGridTile&& other) = delete;
 
 		virtual void init() override;
-
 		virtual void onComponentRemoved(BaseComponent* component) override;
 	};
 

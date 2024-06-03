@@ -32,6 +32,10 @@ namespace rift2d
 			return nullptr;
 		}
 
+		void unregisterPrefabCreators()
+		{
+			m_prefabCreators.clear();
+		}
 
 	private:
 		friend Singleton;

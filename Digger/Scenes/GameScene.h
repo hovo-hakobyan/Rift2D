@@ -14,9 +14,11 @@ namespace digger
 
 	protected:
 		virtual void init() override;
+		virtual void end() override;
 
 	private:
 		int m_levelIdx{};
+		rift2d::ICommand* m_shootCommand{};
 	};
 
 }

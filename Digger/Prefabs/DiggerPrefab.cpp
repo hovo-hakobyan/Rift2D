@@ -86,9 +86,7 @@ void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSc
 	player = pScene->addGameObject(std::move(gameObject));
 	player->setParent(rootObj,true);
 
-	//bind shooting to input
-	rift2d::InputManager::GetInstance().bindAction(rift2d::GamepadKey::X, 0, rift2d::InputEvent::Down,
-		std::make_unique<ShootCommand>(rootObj));
+	
 
 	
 }

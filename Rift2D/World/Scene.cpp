@@ -3,6 +3,7 @@
 #include <ranges>
 
 #include "Exception.h"
+#include "InputManager.h"
 
 using namespace rift2d;
 
@@ -144,6 +145,8 @@ void Scene::rootLateUpdate()
 
 void rift2d::Scene::rootEnd()
 {
+	InputManager::GetInstance().unbindNonPersistentCommands();
+
 	end();
 
 	for (auto& object : m_rootGameObjects)

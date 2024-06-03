@@ -21,6 +21,4 @@ void digger::SkipLevelCommand::execute()
 		sceneManager.setActiveScene("level" + std::to_string(m_currentLevelIdx),true);
 	}
 
-	
-	
 }

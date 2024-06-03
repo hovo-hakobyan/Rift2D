@@ -38,32 +38,32 @@ bool rift2d::InputManager::processInput()
 }
 
 rift2d::ICommand* rift2d::InputManager::bindAction(GamepadKey key, unsigned int gamepadId, InputEvent event,
-                                                   std::unique_ptr<ICommand> command)
+                                                   std::unique_ptr<ICommand> command, bool isPersistent)
 {
 	auto rawPtr = command.get();
-	m_gamepadActionBindings.push_back({ key,gamepadId,event,std::move(command) });
+	m_gamepadActionBindings.push_back({ key,gamepadId,event,std::move(command),isPersistent });
 	return rawPtr;
 }
 
-rift2d::ICommand* rift2d::InputManager::bindAction(SDL_Scancode keyboardKey, InputEvent event, std::unique_ptr<ICommand> command)
+rift2d::ICommand* rift2d::InputManager::bindAction(SDL_Scancode keyboardKey, InputEvent event, std::unique_ptr<ICommand> command, bool isPersistent)
 {
 	auto rawPtr = command.get();
-	m_keyboardActionBindings.push_back({ keyboardKey,event,std::move(command) });
+	m_keyboardActionBindings.push_back({ keyboardKey,event,std::move(command),false, isPersistent });
 	return rawPtr;
 }
 
-rift2d::ICommand* rift2d::InputManager::bindAxis2D(GamepadAxis2D axis, unsigned gamepadId, std::unique_ptr<Axis2DCommand> command)
+rift2d::ICommand* rift2d::InputManager::bindAxis2D(GamepadAxis2D axis, unsigned gamepadId, std::unique_ptr<Axis2DCommand> command, bool isPersistent)
 {
 	auto rawPtr = command.get();
-	m_gamepadAxis2DBindings.push_back({ axis,gamepadId,std::move(command) });
+	m_gamepadAxis2DBindings.push_back({ axis,gamepadId,std::move(command),isPersistent });
 	return rawPtr;
 }
 
 rift2d::ICommand* rift2d::InputManager::bindAxis2D(SDL_Scancode x, SDL_Scancode y, SDL_Scancode xNegative, SDL_Scancode yNegative,
-                                                   std::unique_ptr<Axis2DCommand> command)
+                                                   std::unique_ptr<Axis2DCommand> command, bool isPersistent)
 {
 	auto rawPtr = command.get();
-	m_keyboardAxis2DBindings.push_back({ x,y,xNegative,yNegative,std::move(command) });
+	m_keyboardAxis2DBindings.push_back({ x,y,xNegative,yNegative,std::move(command),isPersistent });
 	return rawPtr;
 }
 
@@ -87,6 +87,23 @@ void rift2d::InputManager::unbindCommand(ICommand* command)
 	removeCommand(m_keyboardActionBindings);
 }
 
+void rift2d::InputManager::unbindNonPersistentCommands()
+{
+	auto removeCommand = [](auto& bindings)
+		{
+			auto it = std::remove_if(bindings.begin(), bindings.end(),
+				[](const auto& binding)
+				{
+					return !binding.isPersistent;
+				});
+			bindings.erase(it, bindings.end());
+		};
+
+	removeCommand(m_gamepadActionBindings);
+	removeCommand(m_gamepadAxis2DBindings);
+	removeCommand(m_keyboardAxis2DBindings);
+	removeCommand(m_keyboardActionBindings);
+}
 
 
 void rift2d::InputManager::processGamepadActions() const

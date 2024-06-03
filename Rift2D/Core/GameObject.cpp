@@ -93,7 +93,7 @@ void rift2d::GameObject::end()
 		{
 			renderer.unregisterComponent(renderableComp);
 		}
-
+		comp->notifyRemoval();
 		comp->end();
 	}
 

@@ -31,8 +31,6 @@ namespace rift2d
 		void setWorldRotation(float angle, bool isDegree = false);
 		void rotate(float angle, bool isDegree = false);
 
-		
-
 		void broadcastDirtyTransform();
 	private:
 		glm::vec2 m_localPosition{};

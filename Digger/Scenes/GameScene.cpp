@@ -5,7 +5,9 @@
 #include "Prefabs/EmeraldPrefab.h"
 #include "Prefabs/MoneyPrefab.h"
 #include "FPSComponent.h"
+#include "InputManager.h"
 #include "Locator.h"
+#include "Commands/ShootCommand.h"
 
 #include "Prefabs/DiggerPrefab.h"
 
@@ -64,6 +66,10 @@ void digger::GameScene::init()
 
 	std::cout << "DPad to move\nX to shoot";
 
-	
-	
+}
+
+void digger::GameScene::end()
+{
+	rift2d::WorldBuilderPrefabRegistry::GetInstance().unregisterPrefabCreators();
+
 }
