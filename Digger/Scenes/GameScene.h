@@ -20,7 +20,6 @@ namespace digger
 
 	protected:
 		virtual void init() override;
-		virtual void update() override;
 		virtual void end() override;
 
 	private:

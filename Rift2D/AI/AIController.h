@@ -40,7 +40,10 @@ namespace rift2d
 		bool m_shouldDebugDraw{ false };
 		std::deque<glm::vec2> m_path;
 		RigidBody2D* m_pRB{};
-		float m_speed{300.f};
+		float m_speed{400.f};
+
+		float m_pathRecalcTime{.3f};
+		float m_currentRecalcTime{0.f};
 	};
 
 

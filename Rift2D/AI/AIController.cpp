@@ -48,6 +48,19 @@ namespace rift2d
 
 	void AIController::update()
 	{
+		auto& world = World::GetInstance();
+		m_currentRecalcTime += world.getDeltaTime();
+
+		if (m_currentRecalcTime >= m_pathRecalcTime)
+		{
+			if(auto player = world.getPlayer())
+			{
+				moveTo(player);
+				m_currentRecalcTime = 0.f;
+			}
+			
+		}
+
 		if (!m_shouldMove) return;
 		if (m_path.empty()) return;
 		if (!m_pRB) return;
@@ -67,7 +80,7 @@ namespace rift2d
 		}
 
 		const auto targetdir = m_path.front() - getOwner()->getTransform()->getWorldPosition();
-		const auto v = glm::normalize(targetdir) * m_speed * World::GetInstance().getDeltaTime();
+		const auto v = glm::normalize(targetdir) * m_speed * world.getDeltaTime();
 		m_pRB->setLinearVelocity(v);
 	}
 

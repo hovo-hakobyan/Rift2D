@@ -10,6 +10,7 @@
 #include "InputManager.h"
 #include "Locator.h"
 #include "World.h"
+#include "Components/EnemyManager.h"
 #include "Prefabs/DiggerPrefab.h"
 #include "Prefabs/Enemy.h"
 
@@ -68,24 +69,11 @@ void digger::GameScene::init()
 
 	std::cout << "DPad to move\nX to shoot";
 
-	m_pEnemy= addGameObjectFromPrefab<Enemy>();
-	
-
+	gameObject = std::make_unique<rift2d::GameObject>(this);
+	gameObject->addComponent<EnemyManager>(3, 4.f);
+	addGameObject(std::move(gameObject));
 }
 
-void digger::GameScene::update()
-{
-
-	m_currentTime += rift2d::World::GetInstance().getDeltaTime();
-
-	if(m_currentTime >= m_maxTime)
-	{
-		if(!m_pAIController) m_pAIController = m_pEnemy->getComponent<rift2d::AIController>();
-
-		m_pAIController->moveTo(m_pPlayer);
-		m_currentTime = 0.f;
-	}
-}
 
 void digger::GameScene::end()
 {
