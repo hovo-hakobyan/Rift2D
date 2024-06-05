@@ -1,6 +1,6 @@
 #include "FPSComponent.h"
 #include "GameObject.h"
-#include "TimeManager.h"
+#include "World.h"
 #include "TextComponent.h"
 #include <format>
 #include "ResourceManager.h"
@@ -33,7 +33,7 @@ void rift2d::FPSComponent::update()
 		return;
 	}
 
-	m_accumulatedSeconds += TimeManager::GetInstance().getDeltaTime();
+	m_accumulatedSeconds += World::GetInstance().getDeltaTime();
 	++m_frameCount;
 
 	if (m_accumulatedSeconds < m_updateInterval)

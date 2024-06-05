@@ -1,5 +1,11 @@
 #pragma once
 #include <Scene.h>
+
+namespace rift2d
+{
+	class AIController;
+}
+
 namespace digger
 {
 	class GameScene :public rift2d::Scene
@@ -14,11 +20,19 @@ namespace digger
 
 	protected:
 		virtual void init() override;
+		virtual void update() override;
 		virtual void end() override;
 
 	private:
 		int m_levelIdx{};
 		rift2d::ICommand* m_shootCommand{};
+		rift2d::GameObject* m_pPlayer{};
+		rift2d::GameObject* m_pEnemy{};
+
+		rift2d::AIController* m_pAIController{};
+
+		float m_maxTime{ 2.f };
+		float m_currentTime{ 0.f };
 	};
 
 }

@@ -4,6 +4,7 @@
 
 #include "Exception.h"
 #include "InputManager.h"
+#include "World.h"
 
 using namespace rift2d;
 
@@ -146,6 +147,7 @@ void Scene::rootLateUpdate()
 void rift2d::Scene::rootEnd()
 {
 	InputManager::GetInstance().unbindNonPersistentCommands();
+	World::GetInstance().clearPlayers();
 
 	end();
 

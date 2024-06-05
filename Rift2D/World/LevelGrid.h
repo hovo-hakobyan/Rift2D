@@ -19,8 +19,12 @@ namespace rift2d
 		void setTile(int x, int y, bool empty, GameObject* occupant = nullptr);
 		bool isTileEmpty(int idx);
 		bool isTileEmpty(int x, int y) const;
+		bool isValidTileIdx(int idx) const;
+		bool isValidRow(int row) const;
+		bool isValidCol(int col) const;
+		int rows() const { return m_rows; }
+		int cols() const { return m_cols; }
 		GameObject* getOccupant(int x, int y) const;
-
 
 	private:
 		friend class Singleton;

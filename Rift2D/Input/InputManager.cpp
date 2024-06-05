@@ -3,6 +3,7 @@
 #include <iostream>
 #include <SDL_events.h>
 #include "GameObject.h"
+#include "World.h"
 #include "backends/imgui_impl_sdl2.h"
 
 rift2d::InputManager::~InputManager() = default;
@@ -38,30 +39,34 @@ bool rift2d::InputManager::processInput()
 }
 
 rift2d::ICommand* rift2d::InputManager::bindAction(GamepadKey key, unsigned int gamepadId, InputEvent event,
-                                                   std::unique_ptr<ICommand> command, bool isPersistent)
+                                                   std::unique_ptr<ICommand> command, bool isPersistent, GameObject* pOwner)
 {
+	registerInputOwner(pOwner);
 	auto rawPtr = command.get();
 	m_gamepadActionBindings.push_back({ key,gamepadId,event,std::move(command),isPersistent });
 	return rawPtr;
 }
 
-rift2d::ICommand* rift2d::InputManager::bindAction(SDL_Scancode keyboardKey, InputEvent event, std::unique_ptr<ICommand> command, bool isPersistent)
+rift2d::ICommand* rift2d::InputManager::bindAction(SDL_Scancode keyboardKey, InputEvent event, std::unique_ptr<ICommand> command, bool isPersistent, GameObject* pOwner)
 {
+	registerInputOwner(pOwner);
 	auto rawPtr = command.get();
 	m_keyboardActionBindings.push_back({ keyboardKey,event,std::move(command),false, isPersistent });
 	return rawPtr;
 }
 
-rift2d::ICommand* rift2d::InputManager::bindAxis2D(GamepadAxis2D axis, unsigned gamepadId, std::unique_ptr<Axis2DCommand> command, bool isPersistent)
+rift2d::ICommand* rift2d::InputManager::bindAxis2D(GamepadAxis2D axis, unsigned gamepadId, std::unique_ptr<Axis2DCommand> command, bool isPersistent, GameObject* pOwner)
 {
+	registerInputOwner(pOwner);
 	auto rawPtr = command.get();
 	m_gamepadAxis2DBindings.push_back({ axis,gamepadId,std::move(command),isPersistent });
 	return rawPtr;
 }
 
 rift2d::ICommand* rift2d::InputManager::bindAxis2D(SDL_Scancode x, SDL_Scancode y, SDL_Scancode xNegative, SDL_Scancode yNegative,
-                                                   std::unique_ptr<Axis2DCommand> command, bool isPersistent)
+                                                   std::unique_ptr<Axis2DCommand> command, bool isPersistent, GameObject* pOwner)
 {
+	registerInputOwner(pOwner);
 	auto rawPtr = command.get();
 	m_keyboardAxis2DBindings.push_back({ x,y,xNegative,yNegative,std::move(command),isPersistent });
 	return rawPtr;
@@ -94,7 +99,12 @@ void rift2d::InputManager::unbindNonPersistentCommands()
 			auto it = std::remove_if(bindings.begin(), bindings.end(),
 				[](const auto& binding)
 				{
-					return !binding.isPersistent;
+					if(!binding.isPersistent)
+					{
+
+						return false;
+					}
+					return true;
 				});
 			bindings.erase(it, bindings.end());
 		};
@@ -253,5 +263,14 @@ bool rift2d::InputManager::processSDL()
 	}
 
 	return true;
+}
+
+void rift2d::InputManager::registerInputOwner(GameObject* pOwner)
+{
+	if (!pOwner) return;
+	auto& world = World::GetInstance();
+
+	if (world.isPlayer(pOwner)) return;
+	world.registerPlayer(pOwner);
 }
 

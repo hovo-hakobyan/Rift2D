@@ -76,6 +76,7 @@ set_source_files_properties("${box2d_SOURCE_DIR}/src/dynamics/b2_rope_joint.cpp"
 endif()
 
 # Define engine files
+file(GLOB ENGINE_AI_SOURCES "Rift2D/AI/*.cpp" "Rift2D/AI/*.h")
 file(GLOB ENGINE_AUDIO_SOURCES "Rift2D/Audio/*.cpp" "Rift2D/Audio/*.h")
 file(GLOB ENGINE_CORE_SOURCES "Rift2D/Core/*.cpp" "Rift2D/Core/*.h")
 file(GLOB ENGINE_COMMON_SOURCES "Rift2D/Common/*.cpp" "Rift2D/Common/*.h")
@@ -87,6 +88,7 @@ file(GLOB ENGINE_WORLD_SOURCES "Rift2D/World/*.cpp" "Rift2D/World/*.h" )
 
 
 # Create filters
+source_group("AI" FILES ${ENGINE_AI_SOURCES})
 source_group("Audio" FILES ${ENGINE_AUDIO_SOURCES})
 source_group("Core" FILES ${ENGINE_CORE_SOURCES})
 source_group("Components" FILES ${ENGINE_COMPPONENT_SOURCES})
@@ -100,6 +102,7 @@ source_group("Third-Party\\Box2D" FILES ${BOX2D_SOURCES} )
 
 # Add all sources to Engine library
 add_library(Engine STATIC 
+${ENGINE_AI_SOURCES}
 ${ENGINE_AUDIO_SOURCES}
 ${ENGINE_CORE_SOURCES}
 ${ENGINE_COMPPONENT_SOURCES}
@@ -145,6 +148,7 @@ ${imgui_SOURCE_DIR}/backends
 ${implot_SOURCE_DIR}
 ${box2d_SOURCE_DIR}/include
 ${glm_SOURCE_DIR}
+${CMAKE_SOURCE_DIR}/Rift2D/AI
 ${CMAKE_SOURCE_DIR}/Rift2D/Audio
 ${CMAKE_SOURCE_DIR}/Rift2D/Core
 ${CMAKE_SOURCE_DIR}/Rift2D/Components

@@ -19,10 +19,10 @@ namespace rift2d
 		~InputManager() override;
 		void init();
 		bool processInput();
-		ICommand* bindAction(GamepadKey key, unsigned int gamepadId,InputEvent event, std::unique_ptr<ICommand> command, bool isPersistent = false);
-		ICommand* bindAction(SDL_Scancode keyboardKey, InputEvent event, std::unique_ptr<ICommand> command, bool isPersistent = false);
-		ICommand* bindAxis2D(GamepadAxis2D axis2D, unsigned int gamepadId, std::unique_ptr<Axis2DCommand> command, bool isPersistent = false);
-		ICommand* bindAxis2D(SDL_Scancode x, SDL_Scancode y, SDL_Scancode xNegative, SDL_Scancode yNegative, std::unique_ptr<Axis2DCommand> command, bool isPersistent = false);
+		ICommand* bindAction(GamepadKey key, unsigned int gamepadId,InputEvent event, std::unique_ptr<ICommand> command, bool isPersistent = false, GameObject* pOwner = nullptr);
+		ICommand* bindAction(SDL_Scancode keyboardKey, InputEvent event, std::unique_ptr<ICommand> command, bool isPersistent = false, GameObject* pOwner = nullptr);
+		ICommand* bindAxis2D(GamepadAxis2D axis2D, unsigned int gamepadId, std::unique_ptr<Axis2DCommand> command, bool isPersistent = false, GameObject* pOwner = nullptr);
+		ICommand* bindAxis2D(SDL_Scancode x, SDL_Scancode y, SDL_Scancode xNegative, SDL_Scancode yNegative, std::unique_ptr<Axis2DCommand> command, bool isPersistent = false, GameObject* pOwner = nullptr);
 
 		void unbindCommand(ICommand* command);
 		void unbindNonPersistentCommands();
@@ -35,6 +35,7 @@ namespace rift2d
 			InputEvent event;
 			std::unique_ptr<ICommand> command;
 			bool isPersistent;
+
 		};
 
 		struct GamepadAxisBinding2D
@@ -77,6 +78,7 @@ namespace rift2d
 		void processKeyboardAxis() const;
 		void processKeyboardActions();
 		bool processSDL();
+		void registerInputOwner(GameObject* pOwner);
 	};
 
 }

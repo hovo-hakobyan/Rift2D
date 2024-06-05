@@ -4,7 +4,7 @@
 #include <box2d/b2_body.h>
 
 #include "ContactListener.h"
-#include "TimeManager.h"
+#include "World.h"
 #include "Utils.h"
 #include "PhysicsConfig.h"
 
@@ -22,7 +22,7 @@ namespace rift2d
 
 		void update()
 		{
-			m_physicsWorld->Step(TimeManager::GetInstance().getFixedTime(),static_cast<uint32>( physics::VELOCITY_ITERATIONS),static_cast<uint32>(physics::POSITION_ITERATIONS));
+			m_physicsWorld->Step(World::GetInstance().getFixedTime(),static_cast<uint32>( physics::VELOCITY_ITERATIONS),static_cast<uint32>(physics::POSITION_ITERATIONS));
 		}
 
 		void* createRigidBody(const RigidBodyDef& bodyDef) const

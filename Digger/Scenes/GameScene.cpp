@@ -1,4 +1,6 @@
 #include "GameScene.h"
+
+#include "AIController.h"
 #include "Exception.h"
 #include "WorldBuilder.h"
 #include "Prefabs/DirtPrefab.h"
@@ -7,9 +9,9 @@
 #include "FPSComponent.h"
 #include "InputManager.h"
 #include "Locator.h"
-#include "Commands/ShootCommand.h"
-
+#include "World.h"
 #include "Prefabs/DiggerPrefab.h"
+#include "Prefabs/Enemy.h"
 
 digger::GameScene::GameScene(int level):
 Scene("level" + std::to_string(level)), m_levelIdx(level)
@@ -56,7 +58,7 @@ void digger::GameScene::init()
 	gameObject->addComponent<rift2d::FPSComponent>();
 	addGameObject(std::move(gameObject));
 
-	addGameObjectFromPrefab<DiggerPrefab>();
+	m_pPlayer = addGameObjectFromPrefab<DiggerPrefab>();
 
 	//add sound mappings
 	auto& ss = rift2d::ServiceLocator::getSoundSystem();
@@ -66,6 +68,23 @@ void digger::GameScene::init()
 
 	std::cout << "DPad to move\nX to shoot";
 
+	m_pEnemy= addGameObjectFromPrefab<Enemy>();
+	
+
+}
+
+void digger::GameScene::update()
+{
+
+	m_currentTime += rift2d::World::GetInstance().getDeltaTime();
+
+	if(m_currentTime >= m_maxTime)
+	{
+		if(!m_pAIController) m_pAIController = m_pEnemy->getComponent<rift2d::AIController>();
+
+		m_pAIController->moveTo(m_pPlayer);
+		m_currentTime = 0.f;
+	}
 }
 
 void digger::GameScene::end()

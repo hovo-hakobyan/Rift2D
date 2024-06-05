@@ -2,7 +2,7 @@
 #include <glm/trigonometric.hpp>
 #include "Transform.h"
 #include "GameObject.h"
-#include "TimeManager.h"
+#include "World.h"
 
 rift2d::Rotator::Rotator(GameObject* owner, float radius, float rotSpeedDegrees):
 BaseComponent(owner),m_radius(radius),m_rotationSpeed(rotSpeedDegrees)
@@ -11,7 +11,7 @@ BaseComponent(owner),m_radius(radius),m_rotationSpeed(rotSpeedDegrees)
 
 void rift2d::Rotator::update()
 {
-	const float deltaTime = TimeManager::GetInstance().getDeltaTime();
+	const float deltaTime = World::GetInstance().getDeltaTime();
 	m_currentAngleDegrees += m_rotationSpeed * deltaTime;
 
 	if (m_currentAngleDegrees >= 360.f) m_currentAngleDegrees -= 360.f;

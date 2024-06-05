@@ -18,7 +18,7 @@
 #include "Locator.h"
 #include "Physics.h"
 #include "SceneManager.h"
-#include "TimeManager.h"
+#include "World.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include "SDLSoundSystem.h"
@@ -128,12 +128,12 @@ void rift2d::Rift2DEngine::run(const std::function<void()>& load)
 
 	sceneManager.init();
 	InputManager::GetInstance().init();
-	auto& timeManager = TimeManager::GetInstance();
+	auto& world = World::GetInstance();
 	using namespace std::chrono;
 
 	auto lastTime = high_resolution_clock::now();
-	timeManager.m_deltaTime = 1.0f / 144.f;
-	timeManager.m_fixedTime = 1.f / 60.f;
+	world.m_deltaTime = 1.0f / 144.f;
+	world.m_fixedTime = 1.f / 60.f;
 	const float minDeltaTime = 0.001f;
 
 	float lag = 0.f;
@@ -142,17 +142,17 @@ void rift2d::Rift2DEngine::run(const std::function<void()>& load)
 	{
 		const auto currentTime = high_resolution_clock::now();
 		const float deltaTime = duration<float>(currentTime - lastTime).count();
-		timeManager.m_deltaTime = glm::max(deltaTime, minDeltaTime);
+		world.m_deltaTime = glm::max(deltaTime, minDeltaTime);
 		lastTime = currentTime;
-		lag += timeManager.m_deltaTime;
+		lag += world.m_deltaTime;
 
 		m_shouldQuit = !InputManager::GetInstance().processInput();
 
-		while (lag >= timeManager.m_fixedTime)
+		while (lag >= world.m_fixedTime)
 		{
 			sceneManager.fixedUpdate();
 			Physics::GetInstance().update();
-			lag -= timeManager.m_fixedTime;
+			lag -= world.m_fixedTime;
 		}
 
 		sceneManager.update();
