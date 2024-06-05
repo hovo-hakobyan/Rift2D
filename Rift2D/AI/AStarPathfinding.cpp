@@ -11,7 +11,7 @@ namespace rift2d
 	{
 	}
 
-	std::vector<glm::vec2> AStarPathfinding::findPath(const glm::vec2& startPos, const glm::vec2& targetPos)
+	std::deque<glm::vec2> AStarPathfinding::findPath(const glm::vec2& startPos, const glm::vec2& targetPos)
 	{
 		std::vector<Node> openList;
 		std::set<Node> closedList;
@@ -31,16 +31,17 @@ namespace rift2d
 
 			if(currentNode == endNode)
 			{
-				std::vector<glm::vec2> path;
+				std::deque<glm::vec2> path;
 				Node* pathNode = &currentNode;
 
 				while (pathNode != nullptr)
 				{
-					path.emplace_back(Utils::positionFromRowCol(pathNode->row, pathNode->col));
+					path.push_front(Utils::positionFromRowCol(pathNode->row, pathNode->col));
 					pathNode = pathNode->pParent;
+					
 				}
-
-				std::reverse(path.begin(), path.end());
+				path.pop_front();
+				cleanupNodes();
 				return path;
 			}
 
@@ -57,12 +58,14 @@ namespace rift2d
 				neighbor.hCost = distance(neighbor.row, neighbor.col, endNode.row, endNode.col);
 				neighbor.fCost = neighbor.gCost + neighbor.hCost;
 				neighbor.pParent = new Node(currentNode);
+				m_cleanupNodes.push_back(neighbor.pParent);
 
 				openList.push_back(neighbor);
 			}
 
 		}
 
+		cleanupNodes();
 		return {};
 
 	}
@@ -94,4 +97,12 @@ namespace rift2d
 		return static_cast<float>(std::abs(row - targetRow) + std::abs(col - targetCol));
 	}
 
+	void AStarPathfinding::cleanupNodes()
+	{
+		for (auto nodePtr : m_cleanupNodes)
+		{
+			delete nodePtr;
+		}
+		m_cleanupNodes.clear();
+	}
 }

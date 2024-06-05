@@ -15,5 +15,4 @@ void digger::WorldBuilderScene::init()
 	comp->addLayerInfo(rift2d::LayerInfo{ 1,rift2d::RiftColor::Brown, "Dirt" });
 	comp->addLayerInfo(rift2d::LayerInfo{ 2,rift2d::RiftColor::Green,"Gold" });
 	comp->addLayerInfo(rift2d::LayerInfo{ 3,rift2d::RiftColor::Yellow,"Emerald" });
-	comp->setWorldPadding(0.f, 0.f);
 }

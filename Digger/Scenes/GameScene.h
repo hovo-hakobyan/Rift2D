@@ -31,7 +31,7 @@ namespace digger
 
 		rift2d::AIController* m_pAIController{};
 
-		float m_maxTime{ 2.f };
+		float m_maxTime{ 1.f };
 		float m_currentTime{ 0.f };
 	};
 

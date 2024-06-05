@@ -1,4 +1,5 @@
 #pragma once
+#include <deque>
 #include <vector>
 #include <glm/vec2.hpp>
 
@@ -41,13 +42,17 @@ namespace rift2d
 		AStarPathfinding& operator=(const AStarPathfinding& other) = delete;
 		AStarPathfinding& operator=(AStarPathfinding&& other) = delete;
 
-		std::vector<glm::vec2> findPath(const glm::vec2& startPos, const glm::vec2& targetPos);
+		std::deque<glm::vec2> findPath(const glm::vec2& startPos, const glm::vec2& targetPos);
 	private:
 		int m_rows{};
 		int m_cols{};
 
 		[[nodiscard]] std::vector<Node> getNeighbors(const Node& node) const;
 		float distance(int row, int col, int targetRow, int targetCol);
+
+		std::vector<Node*> m_cleanupNodes;
+		void cleanupNodes();
+
 	};
 }
 		

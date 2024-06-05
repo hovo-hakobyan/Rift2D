@@ -61,6 +61,7 @@ namespace digger
 		pos.y += 5.f;
 		const auto idx = rift2d::Utils::indexFromPosition(static_cast<int>(pos.x), static_cast<int>(pos.y), riftSettings::NR_COLS);
 		if (idx == m_startingTileIdx) return false;
+		if (not rift2d::LevelGrid::GetInstance().isValidTileIdx(idx)) return true;
 		if (rift2d::LevelGrid::GetInstance().isTileEmpty(idx)) return false;
 		return true;
 	}

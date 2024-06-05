@@ -1,16 +1,20 @@
 #include "AIController.h"
 
 #include <imgui.h>
+#include <iostream>
+#include <ostream>
 
+#include "RigidBody2D.h"
 #include "AStarPathfinding.h"
 #include "GameObject.h"
 #include "LevelGrid.h"
 #include "Transform.h"
+#include "World.h"
 
 namespace rift2d
 {
-	AIController::AIController(GameObject* owner):
-	BaseComponent(owner)
+	AIController::AIController(GameObject* owner,  RigidBody2D* rb):
+	BaseComponent(owner),m_pRB(rb)
 	{
 	}
 
@@ -22,6 +26,7 @@ namespace rift2d
 
 		const auto& levelGrid = LevelGrid::GetInstance();
 		m_aStarPathfinding = std::make_unique<AStarPathfinding>(levelGrid.rows(), levelGrid.cols());
+
 	}
 
 	void AIController::moveTo(GameObject* pTarget)
@@ -38,13 +43,32 @@ namespace rift2d
 
 		if (m_path.empty()) return;
 		m_shouldMove = true;
+
 	}
 
 	void AIController::update()
 	{
 		if (!m_shouldMove) return;
+		if (m_path.empty()) return;
+		if (!m_pRB) return;
 
+		const auto currentPos = getOwner()->getTransform()->getWorldPosition();
+		const auto targetPos = m_path.front();
+		const float distance = glm::length(targetPos - currentPos);
+		constexpr float reachThreshold = 10.f;
+		if(distance < reachThreshold)
+		{
+			m_path.pop_front();
+			if(m_path.empty())
+			{
+				m_shouldMove = false;
+				return;
+			}
+		}
 
+		const auto targetdir = m_path.front() - getOwner()->getTransform()->getWorldPosition();
+		const auto v = glm::normalize(targetdir) * m_speed * World::GetInstance().getDeltaTime();
+		m_pRB->setLinearVelocity(v);
 	}
 
 
@@ -70,4 +94,6 @@ namespace rift2d
 		}
 
 	}
+
+
 }
