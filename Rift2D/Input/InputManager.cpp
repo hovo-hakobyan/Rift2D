@@ -99,12 +99,7 @@ void rift2d::InputManager::unbindNonPersistentCommands()
 			auto it = std::remove_if(bindings.begin(), bindings.end(),
 				[](const auto& binding)
 				{
-					if(!binding.isPersistent)
-					{
-
-						return false;
-					}
-					return true;
+					return !binding.isPersistent;
 				});
 			bindings.erase(it, bindings.end());
 		};

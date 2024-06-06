@@ -62,9 +62,6 @@ void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSc
 		false,
 		physics::CollisionGroup::Group1});
 
-	//add to scenegraph
-	//auto player = pScene->addGameObject(std::move(gameObject));
-	//player->setParent(rootObj, false);
 
 	//Bind movement to input
 	rift2d::InputManager::GetInstance().bindAxis2D(rift2d::GamepadAxis2D::DPad, 0,

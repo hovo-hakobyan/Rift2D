@@ -25,9 +25,9 @@ void rift2d::LevelGridTile::init()
 
 
 
-void rift2d::LevelGridTile::onComponentRemoved(BaseComponent*)
+void rift2d::LevelGridTile::onComponentRemoved(BaseComponent* comp)
 {
-	auto pos = getOwner()->getTransform()->getWorldPosition();
+	auto pos = comp->getOwner()->getTransform()->getWorldPosition();
 	pos.x += riftSettings::TILE_WIDTH / 2;
 	pos.y += riftSettings::TILE_HEIGHT / 2;
 	LevelGrid::GetInstance().setTile(static_cast<int>(pos.x), static_cast<int>(pos.y), true, getOwner());
