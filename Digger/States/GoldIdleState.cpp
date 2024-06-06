@@ -10,14 +10,6 @@
 
 namespace digger
 {
-	void GoldIdleState::onEnter(rift2d::GameObject* gameObject)
-	{
-		if(const auto body = gameObject->getComponent<rift2d::RigidBody2D>())
-		{
-			body->setLinearVelocity({ 0.f,0.f });
-		}
-
-	}
 
 	void GoldIdleState::update(rift2d::GameObject* gameObject)
 	{

@@ -17,7 +17,8 @@ namespace rift2d
     class IComponentWatcher
     {
     public:
-        virtual void onComponentRemoved(BaseComponent* component) = 0;
+        virtual void onComponentRemoved(BaseComponent*){}
+        virtual void onComponentInitialized(BaseComponent*) {}
         virtual ~IComponentWatcher() = default;
     };
 

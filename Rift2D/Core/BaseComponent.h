@@ -57,10 +57,7 @@ namespace rift2d
 
 		void notifyRemoval()
 		{
-			if (m_watchers.empty())
-			{
-				return;
-			}
+			if (m_watchers.empty()) return;
 
 			for (auto* watcher : m_watchers)
 			{
@@ -68,8 +65,16 @@ namespace rift2d
 			}
 		}
 
-	protected:
-		
+		void notifyInitialized()
+		{
+			if (m_watchers.empty()) return;
+
+			for (auto* watcher : m_watchers)
+			{
+				watcher->onComponentInitialized(this);
+			}
+		}
+
 	private:
 		bool m_isMarkedForRemoval{};
 		bool m_isDisabled{};

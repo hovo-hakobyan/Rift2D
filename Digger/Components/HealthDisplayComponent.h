@@ -25,12 +25,15 @@ namespace digger
 		void end() override;
 
 		virtual void onComponentRemoved(rift2d::BaseComponent* component) override;
+		void setHealthComponent(HealthComponent* healthComponent);
+
 	private:
 		std::vector<rift2d::SpriteComponent*> m_pSpriteComponents{};
 		HealthComponent* m_pHealth;
 		unsigned int m_observerId{};
 
 		void updateLivesDisplay(int currentLives);
+		void initInternal();
 	};
 
 

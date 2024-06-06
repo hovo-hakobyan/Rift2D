@@ -27,6 +27,9 @@ namespace rift2d
 		void unbindCommand(ICommand* command);
 		void unbindNonPersistentCommands();
 
+		void disableInput() { m_isDisabled = true; }
+		void enableInput() { m_isDisabled = false; }
+
 	private:
 		struct GamepadActionBinding
 		{
@@ -79,6 +82,8 @@ namespace rift2d
 		void processKeyboardActions();
 		bool processSDL();
 		void registerInputOwner(GameObject* pOwner);
+
+		bool m_isDisabled{false};
 	};
 
 }

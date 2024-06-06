@@ -9,6 +9,7 @@
 #include "Scene.h"
 #include "SpriteComponent.h"
 #include "Transform.h"
+#include "Components/HealthComponent.h"
 
 namespace digger
 {
@@ -29,11 +30,14 @@ namespace digger
 		rbDef.linearDamping = 10.f;
 		rbDef.tag = "enemy";
 		auto rb = rootObj->addComponent<rift2d::RigidBody2D>(rbDef);
-		rb->onBeginOverlap([](rift2d::RigidBody2D*, rift2d::RigidBody2D* otherBody, rift2d::GameObject*, rift2d::GameObject*)
+		rb->onBeginOverlap([](rift2d::RigidBody2D*, rift2d::RigidBody2D* otherBody, rift2d::GameObject*, rift2d::GameObject* otherGameObject)
 			{
 				if (otherBody->getTag() == "player")
 				{
-					std::cout << "player dead";
+					if(auto health = otherGameObject->getComponent<HealthComponent>())
+					{
+						health->modify(-1);
+					}
 				}
 
 			});

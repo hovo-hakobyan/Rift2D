@@ -4,7 +4,7 @@
 #include "Subject.h"
 
 digger::HealthComponent::HealthComponent(rift2d::GameObject* owner, int maxHealth):
-BaseComponent(owner),m_maxHealth(maxHealth),m_currentHealth(maxHealth),m_pOnHealthChanged(std::make_unique<rift2d::Subject<int>>())
+BaseComponent(owner),m_maxHealth(maxHealth),m_currentHealth(maxHealth),m_pOnHealthChanged(std::make_unique<rift2d::Subject<int>>()), m_pOnDamageTaken(std::make_unique<rift2d::Subject<int>>())
 {
 }
 
@@ -34,4 +34,5 @@ void digger::HealthComponent::modify(int amount)
 	m_currentHealth = std::min(m_currentHealth, m_maxHealth);
 
 	m_pOnHealthChanged->notify(m_currentHealth);
+	if (amount < 0) m_pOnDamageTaken->notify(m_currentHealth);
 }

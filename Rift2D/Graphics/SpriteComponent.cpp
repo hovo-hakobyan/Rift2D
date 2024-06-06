@@ -5,8 +5,8 @@
 #include "Transform.h"
 
 
-rift2d::SpriteComponent::SpriteComponent(GameObject* owner) :
-	BaseComponent(owner), m_texture(nullptr)
+rift2d::SpriteComponent::SpriteComponent(GameObject* owner, bool isUI) :
+	BaseComponent(owner), m_texture(nullptr),m_isUI(isUI)
 {
 }
 
@@ -19,8 +19,8 @@ void rift2d::SpriteComponent::render() const
 		auto owner = getOwner();
 		if (owner)
 		{
-			glm::vec2 pos = owner->getTransform()->getWorldPosition();
-			auto rot = owner->getTransform()->getWorldRotation(true);
+			const glm::vec2 pos = m_isUI ? owner->getTransform()->getWorldPosition() : owner->getTransform()->getWorldPosition();
+			const auto rot = owner->getTransform()->getWorldRotation(true);
 
 			Renderer::GetInstance().renderTexture(*m_texture, pos.x + m_offest.x, pos.y + m_offest.y, rot);
 		

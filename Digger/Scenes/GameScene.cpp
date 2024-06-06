@@ -1,5 +1,4 @@
 #include "GameScene.h"
-
 #include "AIController.h"
 #include "Exception.h"
 #include "WorldBuilder.h"
@@ -9,10 +8,13 @@
 #include "FPSComponent.h"
 #include "InputManager.h"
 #include "Locator.h"
-#include "World.h"
+#include "RiftUI.h"
 #include "Components/EnemyManager.h"
+#include "Components/HealthDisplayComponent.h"
+#include "Components/HealthComponent.h"
 #include "Prefabs/DiggerPrefab.h"
-#include "Prefabs/Enemy.h"
+#include "Prefabs/DiggerUI.h"
+
 
 digger::GameScene::GameScene(int level):
 Scene("level" + std::to_string(level)), m_levelIdx(level)
@@ -70,9 +72,30 @@ void digger::GameScene::init()
 	std::cout << "DPad to move\nX to shoot";
 
 	gameObject = std::make_unique<rift2d::GameObject>(this);
-	gameObject->addComponent<EnemyManager>(3, 4.f);
+	auto enemyManager = gameObject->addComponent<EnemyManager>(3, 4.f);
 	addGameObject(std::move(gameObject));
+
+	//UI
+	m_pUI = addGameObjectFromPrefab<DiggerUI>();
+
+	if (auto health = m_pPlayer->getComponent<HealthComponent>())
+	{
+		if (auto healthDisplay = m_pUI->getComponent<HealthDisplayComponent>())
+		{
+			healthDisplay->setHealthComponent(health);
+		}
+
+		health->damageTakenEvent()->subscribe([enemyManager](int)
+			{
+				enemyManager->reset();
+			});
+		
+	}
+
+	
 }
+
+
 
 
 void digger::GameScene::end()

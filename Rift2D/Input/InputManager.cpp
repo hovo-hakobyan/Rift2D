@@ -21,7 +21,7 @@ void rift2d::InputManager::init()
 
 bool rift2d::InputManager::processInput()
 {
-
+	if (m_isDisabled) return true;
 	for(const auto& gamepad : m_gamepads)
 	{
 		gamepad->update();
@@ -109,6 +109,7 @@ void rift2d::InputManager::unbindNonPersistentCommands()
 	removeCommand(m_keyboardAxis2DBindings);
 	removeCommand(m_keyboardActionBindings);
 }
+
 
 
 void rift2d::InputManager::processGamepadActions() const

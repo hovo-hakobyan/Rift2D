@@ -25,7 +25,7 @@ void rift2d::LevelGrid::setTile(int x, int y, bool empty, GameObject* occupant)
 
 bool rift2d::LevelGrid::isTileEmpty(int idx)
 {
-	if (static_cast<size_t>(idx) >= m_grid.size() || idx < 0) THROW_RIFT_EXCEPTION("Invalid tile", RiftExceptionType::Error);
+	if (static_cast<size_t>(idx) >= m_grid.size() || idx < 0) return false;
 	return m_grid[idx].isEmpty;
 }
 

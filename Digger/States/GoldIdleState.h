@@ -14,7 +14,7 @@ namespace digger
 		GoldIdleState& operator=(const GoldIdleState& other) = delete;
 		GoldIdleState& operator=(GoldIdleState&& other) = delete;
 
-		void onEnter(rift2d::GameObject* gameObject) override;
+		void onEnter(rift2d::GameObject*) override{};
 		void update(rift2d::GameObject* gameObject) override;
 		void onExit(rift2d::GameObject* gameObject) override;
 

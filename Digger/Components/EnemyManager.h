@@ -1,9 +1,13 @@
 #pragma once
 
+#include <vector>
+
 #include "BaseComponent.h"
+
 
 namespace rift2d
 {
+	class GameObject;
 	class Scene;
 }
 
@@ -22,6 +26,8 @@ namespace digger
 
 		virtual void init() override;
 		virtual void update() override;
+
+		void reset();
 	private:
 		int m_maxAliveEnemies{};
 		int m_aliveEnemies{};
@@ -29,6 +35,8 @@ namespace digger
 		float m_currentSpawnTime{};
 
 		rift2d::Scene* m_pScene{};
+
+		std::vector<rift2d::GameObject*> m_pEnemies{};
 	};
 
 

@@ -15,7 +15,7 @@ namespace rift2d
 		void setTexture(Texture2D* texture, const glm::vec2& offset = { 0.f,0.f });
 		void shouldRender(bool shouldRender) { m_shouldRender = shouldRender; }
 
-		SpriteComponent(GameObject* owner);
+		SpriteComponent(GameObject* owner, bool isUI = false);
 		virtual ~SpriteComponent() override = default;
 		SpriteComponent(const SpriteComponent& other) = delete;
 		SpriteComponent(SpriteComponent&& other) = delete;
@@ -25,6 +25,8 @@ namespace rift2d
 		Texture2D* m_texture{};
 		glm::vec2 m_offest{};
 		bool m_shouldRender{true};
+		bool m_isUI{ false };
 	};
+
 		
 }

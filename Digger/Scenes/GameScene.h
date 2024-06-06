@@ -27,6 +27,7 @@ namespace digger
 		rift2d::ICommand* m_shootCommand{};
 		rift2d::GameObject* m_pPlayer{};
 		rift2d::GameObject* m_pEnemy{};
+		rift2d::GameObject* m_pUI{};
 
 		rift2d::AIController* m_pAIController{};
 

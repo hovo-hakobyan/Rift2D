@@ -20,6 +20,7 @@ namespace  digger
 		int getCurrentHealth() const { return m_currentHealth; }
 
 		rift2d::Subject<int>* healthChangedEvent() const { return m_pOnHealthChanged.get(); }
+		rift2d::Subject<int>* damageTakenEvent() const { return m_pOnDamageTaken.get(); }
 
 		void init() override;
 		void end() override;
@@ -30,6 +31,7 @@ namespace  digger
 		bool m_isDead{};
 
 		std::unique_ptr<rift2d::Subject<int>> m_pOnHealthChanged;
+		std::unique_ptr<rift2d::Subject<int>> m_pOnDamageTaken;
 	};
 
 

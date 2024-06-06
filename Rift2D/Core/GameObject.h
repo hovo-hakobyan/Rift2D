@@ -113,6 +113,14 @@ namespace rift2d
 				}
 			}
 
+			for (const auto& comp : m_componentsCache)
+			{
+				if (auto castedComp = dynamic_cast<ComponentType*>(comp.get()))
+				{
+					return castedComp;
+				}
+			}
+
 			// If not found, recursively search in the children GameObjects
 			for (const auto& child : m_children)
 			{

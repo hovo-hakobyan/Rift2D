@@ -24,6 +24,7 @@ void rift2d::GameObject::init()
 	for (auto& comp : m_components)
 	{
 		comp->init();
+		comp->notifyInitialized();
 	}
 
 	for(auto& child : m_children)
@@ -322,7 +323,11 @@ void rift2d::GameObject::processComponentCache()
 		{
 			if(m_gameStarted)
 			{
-				if (!comp->isInitialized()) comp->init();
+				if (!comp->isInitialized())
+				{
+					comp->init();
+					comp->notifyInitialized();
+				}
 			}
 		}
 		

@@ -12,30 +12,7 @@ BaseComponent(owner),m_pHealth(healthComponent)
 void digger::HealthDisplayComponent::init()
 {
 	BaseComponent::init();
-	if(m_pHealth)
-	{
-		m_pHealth->registerWatcher(this);
-		m_pSpriteComponents.reserve(m_pHealth->getMaxHealth());
-		float offset = 0;
-		for (int i = 0; i < m_pHealth->getMaxHealth(); ++i)
-		{
-			if (auto spComp = getOwner()->addComponent<rift2d::SpriteComponent>())
-			{
-				if (const auto texture = rift2d::ResourceManager::GetInstance().loadTexture("health.png"))
-				{
-					constexpr float step = 25.f;
-					spComp->setTexture(texture, { offset,0 });
-					offset += step;
-					m_pSpriteComponents.push_back(spComp);
-				}
-			}
-		}
-
-		m_observerId = m_pHealth->healthChangedEvent()->subscribe([this](int newHealth)
-			{
-				this->updateLivesDisplay(newHealth);
-			});
-	}
+	initInternal();
 	
 }
 
@@ -52,6 +29,12 @@ void digger::HealthDisplayComponent::onComponentRemoved(BaseComponent* component
 	{
 		m_pHealth = nullptr;
 	}
+}
+
+void digger::HealthDisplayComponent::setHealthComponent(HealthComponent* healthComponent)
+{
+	m_pHealth = healthComponent;
+	initInternal();
 }
 
 void digger::HealthDisplayComponent::updateLivesDisplay(int currentLives)
@@ -74,6 +57,34 @@ void digger::HealthDisplayComponent::updateLivesDisplay(int currentLives)
 		std::for_each(m_pSpriteComponents.begin() + count, m_pSpriteComponents.end(), [&setRender](rift2d::SpriteComponent* component)
 			{
 				setRender(component, false);
+			});
+	}
+}
+
+void digger::HealthDisplayComponent::initInternal()
+{
+	if (m_pHealth)
+	{
+		m_pHealth->registerWatcher(this);
+		m_pSpriteComponents.reserve(m_pHealth->getMaxHealth());
+		float offset = 0;
+		for (int i = 0; i < m_pHealth->getMaxHealth(); ++i)
+		{
+			if (auto spComp = getOwner()->addComponent<rift2d::SpriteComponent>(true))
+			{
+				if (const auto texture = rift2d::ResourceManager::GetInstance().loadTexture("health.png"))
+				{
+					constexpr float step = 25.f;
+					spComp->setTexture(texture, { offset,0 });
+					offset += step;
+					m_pSpriteComponents.push_back(spComp);
+				}
+			}
+		}
+
+		m_observerId = m_pHealth->healthChangedEvent()->subscribe([this](int newHealth)
+			{
+				this->updateLivesDisplay(newHealth);
 			});
 	}
 }

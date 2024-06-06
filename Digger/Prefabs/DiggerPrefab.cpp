@@ -15,6 +15,7 @@
 #include "Components/HealthDisplayComponent.h"
 #include "States/GoldCollectedState.h"
 #include "States/GoldExplodingState.h"
+#include "States/PlayerNormalState.h"
 
 
 void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pScene)
@@ -71,16 +72,7 @@ void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSc
 		std::make_unique<MoveCommand>(rb, 300.f));
 
 	//add health component
-	auto gameObject = std::make_unique<rift2d::GameObject>(pScene);
-	gameObject->getTransform()->setLocalPosition(riftSettings::WINDOW_WIDTH - 100, 10);
-	auto healthComp = gameObject->addComponent<HealthComponent>(3);
-	gameObject->addComponent<HealthDisplayComponent>(healthComp);
+	auto health = rootObj->addComponent<HealthComponent>(3);
 
-	//add to scenegraph
-	auto health = pScene->addGameObject(std::move(gameObject));
-	health->setParent(rootObj,true);
-
-	
-
-	
+	rootObj->addComponent<rift2d::StateComponent>()->changeState(std::make_unique<PlayerNormalState>(health));
 }
