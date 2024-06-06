@@ -1,6 +1,7 @@
 #include "PlayerDeadState.h"
 #include "GameObject.h"
 #include "InputManager.h"
+#include "Physics.h"
 #include "PlayerNormalState.h"
 #include "SpriteComponent.h"
 #include "StateComponent.h"
@@ -15,6 +16,7 @@ void digger::PlayerDeadState::onEnter(rift2d::GameObject* gameObject)
 	}
 
 	rift2d::InputManager::GetInstance().disableInput();
+	rift2d::Physics::GetInstance().disable();
 }
 
 void digger::PlayerDeadState::update(rift2d::GameObject* gameObject)
@@ -31,4 +33,10 @@ void digger::PlayerDeadState::update(rift2d::GameObject* gameObject)
 			
 		}
 	}
+}
+
+void digger::PlayerDeadState::onExit(rift2d::GameObject*)
+{
+	rift2d::InputManager::GetInstance().enableInput();
+	rift2d::Physics::GetInstance().enable();
 }

@@ -1,6 +1,7 @@
 #include "PlayerNormalState.h"
 #include "GameObject.h"
 #include "InputManager.h"
+#include "Physics.h"
 #include "PlayerDeadState.h"
 #include "Transform.h"
 #include "SpriteComponent.h"
@@ -18,14 +19,13 @@ void digger::PlayerNormalState::onEnter(rift2d::GameObject* gameObject)
 		sprite->setTexture("digger.png");
 	}
 
-	gameObject->getTransform()->setLocalPosition(150.f, 390.f);
+	gameObject->getTransform()->setWorldPosition(150.f, 390.f);
 
 	m_observerId = m_pHealth->damageTakenEvent()->subscribe([this](int newHealth)
 		{
 			this->onPlayerHealthChanged(newHealth);
 		});
 
-	rift2d::InputManager::GetInstance().enableInput();
 }
 
 void digger::PlayerNormalState::update(rift2d::GameObject* gameObject)

@@ -22,6 +22,7 @@ namespace rift2d
 
 		void update()
 		{
+			if (m_isDisabled) return;
 			m_physicsWorld->Step(World::GetInstance().getFixedTime(),static_cast<uint32>( physics::VELOCITY_ITERATIONS),static_cast<uint32>(physics::POSITION_ITERATIONS));
 		}
 
@@ -56,10 +57,19 @@ namespace rift2d
 			}
 		}
 
-		
+		void enable()
+		{
+			m_isDisabled = false;
+		}
+
+		void disable()
+		{
+			m_isDisabled = true;
+		}
 	private:
 		std::unique_ptr<b2World> m_physicsWorld;
 		std::unique_ptr<ContactListener> m_contactListener;
+		bool m_isDisabled{ false };
 	};
 
 	Physics::Physics() :
@@ -80,6 +90,16 @@ namespace rift2d
 	void Physics::destroyRigidBody(void* body)
 	{
 		m_pImpl->destroyRigidBody(body);
+	}
+
+	void Physics::disable()
+	{
+		m_pImpl->disable();
+	}
+
+	void Physics::enable()
+	{
+		m_pImpl->enable();
 	}
 }
 

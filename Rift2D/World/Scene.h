@@ -46,6 +46,7 @@ namespace rift2d
 		explicit Scene(std::string name);
 
 		virtual void init() = 0;
+		virtual void onActivate(){}
 		virtual void fixedUpdate(){}
 		virtual void update() {}
 		virtual void lateUpdate() {}

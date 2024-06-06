@@ -4,7 +4,10 @@
 #include "Subject.h"
 
 digger::HealthComponent::HealthComponent(rift2d::GameObject* owner, int maxHealth):
-BaseComponent(owner),m_maxHealth(maxHealth),m_currentHealth(maxHealth),m_pOnHealthChanged(std::make_unique<rift2d::Subject<int>>()), m_pOnDamageTaken(std::make_unique<rift2d::Subject<int>>())
+BaseComponent(owner),m_maxHealth(maxHealth),m_currentHealth(maxHealth),
+m_pOnHealthChanged(std::make_unique<rift2d::Subject<int>>()),
+m_pOnDamageTaken(std::make_unique<rift2d::Subject<int>>()),
+m_pOnDeath(std::make_unique<rift2d::Subject<>>())
 {
 }
 
@@ -30,6 +33,7 @@ void digger::HealthComponent::modify(int amount)
 	{
 		m_isDead = true;
 		m_currentHealth = 0;
+		m_pOnDeath->notify();
 	}
 	m_currentHealth = std::min(m_currentHealth, m_maxHealth);
 

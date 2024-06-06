@@ -16,7 +16,7 @@ namespace digger
 
 		void onEnter(rift2d::GameObject* gameObject) override;
 		void update(rift2d::GameObject* gameObject) override;
-		void onExit(rift2d::GameObject*) override {};
+		void onExit(rift2d::GameObject*) override;
 
 	private:
 		float m_maxDeadTime{ 3.f };

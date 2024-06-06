@@ -112,6 +112,7 @@ void rift2d::SceneManager::frameCleanup()
 			m_pActiveScene->rootInit();
 		}
 		m_pActiveScene->enableScene();
+		m_pActiveScene->onActivate();
 	}
 
 }

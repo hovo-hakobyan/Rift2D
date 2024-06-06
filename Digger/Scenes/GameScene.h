@@ -20,6 +20,7 @@ namespace digger
 
 	protected:
 		virtual void init() override;
+		virtual void onActivate() override;
 		virtual void end() override;
 
 	private:
@@ -33,6 +34,8 @@ namespace digger
 
 		float m_maxTime{ 1.f };
 		float m_currentTime{ 0.f };
+
+		void handleGameOver();
 	};
 
 }

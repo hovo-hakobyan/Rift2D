@@ -1,6 +1,8 @@
 #include "MenuScene.h"
 #include <imgui.h>
 #include "GameScene.h"
+#include "InputManager.h"
+#include "Physics.h"
 #include "Rift2DEngine.h"
 #include "SceneManager.h"
 #include "SpriteComponent.h"
@@ -17,6 +19,12 @@ void digger::MenuScene::init()
     auto go = createGameObject();
     auto sprite = go->addComponent<rift2d::SpriteComponent>();
     sprite->setTexture("background.tga");
+}
+
+void digger::MenuScene::onActivate()
+{
+    rift2d::InputManager::GetInstance().enableInput();
+    rift2d::Physics::GetInstance().disable();
 }
 
 void digger::MenuScene::onImGui()

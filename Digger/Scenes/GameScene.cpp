@@ -8,7 +8,9 @@
 #include "FPSComponent.h"
 #include "InputManager.h"
 #include "Locator.h"
+#include "Physics.h"
 #include "RiftUI.h"
+#include "SceneManager.h"
 #include "Components/EnemyManager.h"
 #include "Components/HealthDisplayComponent.h"
 #include "Components/HealthComponent.h"
@@ -89,17 +91,32 @@ void digger::GameScene::init()
 			{
 				enemyManager->reset();
 			});
+
+		health->onDeathEvent()->subscribe([this]()
+			{
+				this->handleGameOver();
+			});
 		
 	}
 
 	
 }
 
-
+void digger::GameScene::onActivate()
+{
+	rift2d::InputManager::GetInstance().enableInput();
+	rift2d::Physics::GetInstance().enable();
+}
 
 
 void digger::GameScene::end()
 {
 	rift2d::WorldBuilderPrefabRegistry::GetInstance().unregisterPrefabCreators();
 
+}
+
+void digger::GameScene::handleGameOver()
+{
+
+	rift2d::SceneManager::GetInstance().setActiveScene("MenuScene", true);
 }

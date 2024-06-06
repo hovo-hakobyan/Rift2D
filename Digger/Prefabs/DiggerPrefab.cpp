@@ -72,7 +72,7 @@ void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSc
 		std::make_unique<MoveCommand>(rb, 300.f));
 
 	//add health component
-	auto health = rootObj->addComponent<HealthComponent>(3);
+	auto health = rootObj->addComponent<HealthComponent>(2);
 
 	rootObj->addComponent<rift2d::StateComponent>()->changeState(std::make_unique<PlayerNormalState>(health));
 }
