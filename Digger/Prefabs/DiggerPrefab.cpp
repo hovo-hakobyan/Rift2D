@@ -61,6 +61,7 @@ void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSc
 		0.f,
 		0.f,
 		false,
+		false,
 		physics::CollisionGroup::Group1});
 
 

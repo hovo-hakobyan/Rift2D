@@ -1,4 +1,7 @@
 #include "MoneyPrefab.h"
+
+#include <iostream>
+
 #include "BoxCollider2D.h"
 #include "Renderer.h"
 #include "RigidBody2D.h"
@@ -6,6 +9,8 @@
 #include "Settings.h"
 #include "SpriteComponent.h"
 #include "StateComponent.h"
+#include "Components/HealthComponent.h"
+#include "States/GoldFallingState.h"
 #include "States/GoldIdleState.h"
 
 void digger::MoneyPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pScene)
@@ -14,24 +19,60 @@ void digger::MoneyPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSce
 
 
 	rift2d::GameObject* gameObject = pScene->createGameObject();
-	const auto spriteComp = gameObject->addComponent<rift2d::SpriteComponent>();
+	auto spriteComp = gameObject->addComponent<rift2d::SpriteComponent>();
 	spriteComp->setTexture("money-bag.png");
 
-	gameObject->addComponent<rift2d::RigidBody2D>(rift2d::RigidBodyDef{ rift2d::RiftBodyType::Kinematic,{},true,0.1f,"money" });
-	const auto pos = rootObj->getTransform()->getWorldPosition();
+	auto rb =gameObject->addComponent<rift2d::RigidBody2D>(rift2d::RigidBodyDef{ rift2d::RiftBodyType::Kinematic,{},true,0.1f,"money" });
+	auto pos = rootObj->getTransform()->getWorldPosition();
+	pos.y += 32.f;
 	gameObject->addComponent<rift2d::BoxCollider2D>(rift2d::BoxColliderInfo
 		{
 			pos,
-			glm::vec2{32.f,32.f},
+			glm::vec2{32.f,10.f},
 			50.f,
 			0.f,
 			0.f,
 			false,
+			false,
 			physics::CollisionGroup::Group3,
+			physics::CollisionGroup::Group1 | physics::CollisionGroup::Group4
+		});
+
+
+	rb->onBeginOverlap([](rift2d::RigidBody2D*, rift2d::RigidBody2D* otherBody, rift2d::GameObject* gameObject, rift2d::GameObject* otherGameObject)
+		{
+			if (auto state = gameObject->getComponent<rift2d::StateComponent>())
+			{
+				if (auto goldFallingState = dynamic_cast<GoldFallingState*>(state->getCurrentState()))
+				{
+					if (otherBody->getTag() == "player")
+					{
+						if (auto health = otherGameObject->getComponent<HealthComponent>())
+						{
+							health->modify(-1);
+							gameObject->markForDestroy();
+						}
+					}
+					else if (otherBody->getTag() == "enemy")
+					{
+						otherGameObject->markForDestroy();
+						gameObject->markForDestroy();
+					}
+				}
+				else if(auto goldExploadedState = dynamic_cast<GoldFallingState*>(state->getCurrentState()))
+				{
+					if (otherBody->getTag() == "player")
+					{
+						//score ting
+					}
+				}
+			}
 		});
 
 	gameObject->addComponent<rift2d::StateComponent>()->changeState(std::make_unique<GoldIdleState>());
 
 	gameObject->setParent(rootObj, false);
 
+
+	
 }

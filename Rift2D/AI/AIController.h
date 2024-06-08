@@ -4,6 +4,7 @@
 #include <glm/vec2.hpp>
 
 #include "BaseComponent.h"
+#include "Subject.h"
 
 namespace rift2d
 {
@@ -30,10 +31,12 @@ namespace rift2d
 		void moveTo(GameObject* pTarget);
 		void update() override;
 		void setDebugDraw(bool shouldDebugDraw) { m_shouldDebugDraw = shouldDebugDraw; }
+		rift2d::Subject<>* onDeathEvent() const { return m_pOnDeath.get(); }
 
 		void setSpeed(float speed) { m_speed = speed; }
 		virtual void init() override;
 		virtual void onImGui() override;
+		virtual void end() override;
 	private:
 		std::unique_ptr<AStarPathfinding> m_aStarPathfinding;
 		bool m_shouldMove{ false };
@@ -44,6 +47,8 @@ namespace rift2d
 
 		float m_pathRecalcTime{.3f};
 		float m_currentRecalcTime{0.f};
+
+		std::unique_ptr<Subject<>> m_pOnDeath;
 	};
 
 

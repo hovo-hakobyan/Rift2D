@@ -14,7 +14,7 @@
 namespace rift2d
 {
 	AIController::AIController(GameObject* owner,  RigidBody2D* rb):
-	BaseComponent(owner),m_pRB(rb)
+	BaseComponent(owner),m_pRB(rb),m_pOnDeath(std::make_unique<rift2d::Subject<>>())
 	{
 	}
 
@@ -108,5 +108,9 @@ namespace rift2d
 
 	}
 
-
+	void AIController::end()
+	{
+		BaseComponent::end();
+		m_pOnDeath->notify();
+	}
 }

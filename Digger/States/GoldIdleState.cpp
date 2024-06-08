@@ -1,6 +1,6 @@
 #include "GoldIdleState.h"
 #include "GameObject.h"
-#include "GoldFallingState.h"
+#include "GoldActivateState.h"
 #include "LevelGrid.h"
 #include "RigidBody2D.h"
 #include "Settings.h"
@@ -17,7 +17,7 @@ namespace digger
 		{
 			if(const auto stateComponent = gameObject->getComponent<rift2d::StateComponent>())
 			{
-				stateComponent->changeState(std::make_unique<GoldFallingState>());
+				stateComponent->changeState(std::make_unique<GoldActivateState>());
 			}
 		}
 	}

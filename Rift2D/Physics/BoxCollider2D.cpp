@@ -39,6 +39,7 @@ namespace rift2d
 		fixtureDef.shape = &shape;
 		fixtureDef.density = m_info.density;
 		fixtureDef.restitution = m_info.restitution;
+		fixtureDef.isSensor = m_info.isTrigger;
 		fixtureDef.filter.categoryBits = static_cast<uint16>(m_info.ownGroup);
 		fixtureDef.filter.maskBits = static_cast<uint16>(m_info.collidingGroups);
 

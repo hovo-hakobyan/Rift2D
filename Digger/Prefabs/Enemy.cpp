@@ -49,6 +49,7 @@ namespace digger
 			0.f,
 			0.f,
 			false,
+			false,
 			physics::CollisionGroup::Group4 });
 
 		const auto aiController = gameObject->addComponent<rift2d::AIController>(rb);

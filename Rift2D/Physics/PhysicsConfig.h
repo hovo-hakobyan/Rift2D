@@ -34,6 +34,11 @@ namespace physics
 
 	};
 
+	constexpr CollisionGroup operator|(CollisionGroup lhs, CollisionGroup rhs)
+	{
+		return static_cast<CollisionGroup>(static_cast<uint16_t>(lhs) | static_cast<uint16_t>(rhs));
+	}
+
 	constexpr float			DEFAULT_GRAVITY = 0.f;
 	constexpr uint32_t		VELOCITY_ITERATIONS = 6;
 	constexpr uint32_t		POSITION_ITERATIONS = 2;

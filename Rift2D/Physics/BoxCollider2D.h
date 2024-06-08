@@ -19,6 +19,7 @@ namespace rift2d
 		float friction{};
 		float restitution{};
 		bool debugVisualize{};
+		bool isTrigger{};
 		physics::CollisionGroup ownGroup{physics::CollisionGroup::Default};
 		physics::CollisionGroup collidingGroups{ physics::CollisionGroup::All };
 
