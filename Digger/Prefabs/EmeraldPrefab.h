@@ -15,6 +15,7 @@ namespace digger
 		EmeraldPrefab& operator=(EmeraldPrefab&& other) = delete;
 
 		void setup(rift2d::GameObject* rootObj, rift2d::Scene* pScene) override;
+
 	};
 
 

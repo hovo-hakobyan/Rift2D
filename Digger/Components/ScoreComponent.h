@@ -18,10 +18,11 @@ namespace digger
 		virtual void end() override;
 
 		void modify(int amount);
-		rift2d::Subject<int>* onScoreChangeEvent() const { return m_pOnScoreChange.get(); }
+		rift2d::Subject<int>* scoreChangeEvent() const { return m_pOnScoreChange.get(); }
 
 	private:
 		int m_currentScore{};
+
 		std::unique_ptr<rift2d::Subject<int>> m_pOnScoreChange;
 	};
 }

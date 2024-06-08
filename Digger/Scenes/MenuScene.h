@@ -3,6 +3,7 @@
 
 namespace digger
 {
+	class DiggerGameMode;
 	class MenuScene : public rift2d::Scene
 	{
 	public:
@@ -18,6 +19,9 @@ namespace digger
 		virtual void init() override;
 		virtual void onActivate() override;
 		virtual void onImGui() override;
+
+	private:
+		DiggerGameMode* m_pGameMode{};
 	};
 
 

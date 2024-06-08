@@ -13,6 +13,7 @@ void digger::ScoreDisplayComponent::onComponentRemoved(BaseComponent* component)
 {
 	if (component == m_pScoreComponent)
 	{
+		m_pScoreComponent->scoreChangeEvent()->unsubscribe(m_observerID);
 		m_pScoreComponent = nullptr;
 	}
 
@@ -30,7 +31,7 @@ void digger::ScoreDisplayComponent::init()
 	{
 		m_pScoreComponent->registerWatcher(this);
 
-		m_observerID = m_pScoreComponent->onScoreChangeEvent()->subscribe([this](int newScore)
+		m_observerID = m_pScoreComponent->scoreChangeEvent()->subscribe([this](int newScore)
 			{
 				this->updateScore(newScore);
 			});
@@ -44,7 +45,7 @@ void digger::ScoreDisplayComponent::init()
 void digger::ScoreDisplayComponent::end()
 {
 	BaseComponent::end();
-	m_pScoreComponent->onScoreChangeEvent()->unsubscribe(m_observerID);
+	if (m_pScoreComponent) m_pScoreComponent->scoreChangeEvent()->unsubscribe(m_observerID);
 }
 
 void digger::ScoreDisplayComponent::updateScore(int currentScore) const

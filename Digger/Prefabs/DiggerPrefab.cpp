@@ -12,8 +12,8 @@
 #include "StateComponent.h"
 #include "Transform.h"
 #include "Components/HealthComponent.h"
-#include "Components/HealthDisplayComponent.h"
-#include "States/GoldCollectedState.h"
+#include "Components/ScoreComponent.h"
+#include "Digger/GameSettings.h"
 #include "States/GoldExplodingState.h"
 #include "States/PlayerNormalState.h"
 
@@ -37,23 +37,7 @@ void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSc
 	rbDef.linearDamping = 10.f;
 	rbDef.tag = "player";
 	auto rb = rootObj->addComponent<rift2d::RigidBody2D>(rbDef);
-	rb->onBeginOverlap([](rift2d::RigidBody2D*, rift2d::RigidBody2D* otherBody, rift2d::GameObject*, rift2d::GameObject* otherGameObject)
-		{
-			if(otherBody->getTag() == "dirt")
-			{
-				if(otherGameObject) otherGameObject->markForDestroy();
-			}
-			else if (otherBody->getTag() == "money")
-			{
-				if(const auto state = otherGameObject->getComponent<rift2d::StateComponent>())
-				{
-					if(dynamic_cast<GoldExplodingState*>(state->getCurrentState())) state->changeState(std::make_unique<GoldCollectedState>());
-					
-				}
-			}
-		
-			
-		});
+	
 	const auto pos = rootObj->getTransform()->getWorldPosition();
 	rootObj->addComponent<rift2d::BoxCollider2D>(rift2d::BoxColliderInfo{ glm::vec2{pos.x,pos.y},
 		glm::vec2{40.f,40.f},
@@ -76,4 +60,29 @@ void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSc
 	auto health = rootObj->addComponent<HealthComponent>(2);
 
 	rootObj->addComponent<rift2d::StateComponent>()->changeState(std::make_unique<PlayerNormalState>(health));
+
+	rootObj->addComponent<ScoreComponent>();
+
+
+	rb->onBeginOverlap([&](rift2d::RigidBody2D*, rift2d::RigidBody2D* otherBody, rift2d::GameObject* gameObject, rift2d::GameObject* otherGameObject)
+		{
+			if (otherBody->getTag() == "dirt")
+			{
+				if (otherGameObject) otherGameObject->markForDestroy();
+			}
+			else if (otherBody->getTag() == "money")
+			{
+				if (const auto state = otherGameObject->getComponent<rift2d::StateComponent>())
+				{
+					if (dynamic_cast<GoldExplodingState*>(state->getCurrentState()))
+					{
+						if (auto score = gameObject->getComponent<ScoreComponent>())
+						{
+							score->modify(gameSettings::GOLD_SCORE);
+							otherGameObject->markForDestroy();
+						}
+					}
+				}
+			}
+		});
 }

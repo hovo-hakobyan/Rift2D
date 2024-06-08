@@ -5,15 +5,20 @@
 #include "Prefabs/DirtPrefab.h"
 #include "Prefabs/EmeraldPrefab.h"
 #include "Prefabs/MoneyPrefab.h"
-#include "FPSComponent.h"
+#include "GameModeManager.h"
 #include "InputManager.h"
 #include "Locator.h"
 #include "Physics.h"
-#include "RiftUI.h"
 #include "SceneManager.h"
+#include "World.h"
+#include "Commands/SkipLevelCommand.h"
 #include "Components/EnemyManager.h"
 #include "Components/HealthDisplayComponent.h"
 #include "Components/HealthComponent.h"
+#include "Components/ScoreComponent.h"
+#include "Components/ScoreDisplayComponent.h"
+#include "Digger/EmeraldManager.h"
+#include "Digger/GameSettings.h"
 #include "Prefabs/DiggerPrefab.h"
 #include "Prefabs/DiggerUI.h"
 
@@ -59,9 +64,6 @@ void digger::GameScene::init()
 		throw;
 	}
 
-	auto gameObject = std::make_unique<rift2d::GameObject>(this);
-	gameObject->addComponent<rift2d::FPSComponent>();
-	addGameObject(std::move(gameObject));
 
 	m_pPlayer = addGameObjectFromPrefab<DiggerPrefab>();
 
@@ -73,9 +75,34 @@ void digger::GameScene::init()
 
 	std::cout << "DPad to move\nX to shoot";
 
-	gameObject = std::make_unique<rift2d::GameObject>(this);
+	auto gameObject = std::make_unique<rift2d::GameObject>(this);
 	auto enemyManager = gameObject->addComponent<EnemyManager>(3, 4.f);
 	addGameObject(std::move(gameObject));
+
+	if(const auto scoreComp = m_pPlayer->getComponent<ScoreComponent>())
+	{
+		enemyManager->onEnemySpawn()->subscribe([&](rift2d::GameObject* go)
+			{
+				if(const auto aiComp = go->getComponent<rift2d::AIController>())
+				{
+					aiComp->onDeathEvent()->subscribe([&]()
+						{
+							scoreComp->modify(gameSettings::NOBBIN_SCORE);
+						});
+				}
+			});
+
+		gameObject = std::make_unique<rift2d::GameObject>(this);
+		gameObject->addComponent<ScoreDisplayComponent>(scoreComp);
+		addGameObject(std::move(gameObject));
+		
+	}
+
+	m_victoryObserverId= EmeraldManager::GetInstance().onFullyCollected()->subscribe([this]()
+		{
+			this->handleVictory();
+		});
+	
 
 	//UI
 	m_pUI = addGameObjectFromPrefab<DiggerUI>();
@@ -99,7 +126,6 @@ void digger::GameScene::init()
 		
 	}
 
-	
 }
 
 void digger::GameScene::onActivate()
@@ -112,11 +138,31 @@ void digger::GameScene::onActivate()
 void digger::GameScene::end()
 {
 	rift2d::WorldBuilderPrefabRegistry::GetInstance().unregisterPrefabCreators();
+	EmeraldManager::GetInstance().onFullyCollected()->clearSubscribers();
 
+}
+
+void digger::GameScene::update()
+{
+	if(m_isLevelWon)
+	{
+		m_currentTime += rift2d::World::GetInstance().getDeltaTime();
+		if (m_currentTime >= m_maxTime)
+		{
+			const auto nextLevel = std::make_unique<SkipLevelCommand>();
+			nextLevel->execute();
+		}
+	}
 }
 
 void digger::GameScene::handleGameOver()
 {
-
 	rift2d::SceneManager::GetInstance().setActiveScene("MenuScene", true);
+}
+
+void digger::GameScene::handleVictory()
+{
+	m_isLevelWon = true;
+	rift2d::InputManager::GetInstance().disableInput();
+	rift2d::Physics::GetInstance().disable();
 }

@@ -108,9 +108,10 @@ namespace rift2d
 
 	}
 
-	void AIController::end()
+
+	void AIController::die()
 	{
-		BaseComponent::end();
 		m_pOnDeath->notify();
+		getOwner()->markForDestroy();
 	}
 }

@@ -50,10 +50,11 @@ namespace digger
 			0.f,
 			false,
 			false,
-			physics::CollisionGroup::Group4 });
+			physics::CollisionGroup::Group4,
+		physics::CollisionGroup::Group1 | physics::CollisionGroup::Group2});
 
 		const auto aiController = gameObject->addComponent<rift2d::AIController>(rb);
-		aiController->setDebugDraw(true);
+		aiController->setDebugDraw(false);
 
 		const auto enemy = pScene->addGameObject(std::move(gameObject));
 		enemy->setParent(rootObj, false);

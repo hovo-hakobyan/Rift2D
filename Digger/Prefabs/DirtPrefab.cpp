@@ -20,7 +20,7 @@ void digger::DirtPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pScen
 	   1.f,
 	   0.f,
 	   false,
-		false,
+		true,
 	physics::CollisionGroup::Group2,
 	physics::CollisionGroup::Group1 | physics::CollisionGroup::Group4 });
 	rootObj->addComponent<rift2d::LevelGridTile>();

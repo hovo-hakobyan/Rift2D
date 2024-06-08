@@ -49,5 +49,10 @@ namespace rift2d
         virtual void onExit(GameObject* gameObject) = 0;
     };
 
+    class IGameMode
+    {
+    public:
+        virtual ~IGameMode() = default;
+    };
 
 }

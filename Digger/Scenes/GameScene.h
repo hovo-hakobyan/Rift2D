@@ -22,6 +22,7 @@ namespace digger
 		virtual void init() override;
 		virtual void onActivate() override;
 		virtual void end() override;
+		void update() override;
 
 	private:
 		int m_levelIdx{};
@@ -32,10 +33,14 @@ namespace digger
 
 		rift2d::AIController* m_pAIController{};
 
+		
+		bool m_isLevelWon{ false };
 		float m_maxTime{ 1.f };
 		float m_currentTime{ 0.f };
 
 		void handleGameOver();
+		void handleVictory();
+		unsigned int m_victoryObserverId{};
 	};
 
 }
