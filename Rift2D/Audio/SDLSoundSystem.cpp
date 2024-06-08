@@ -25,6 +25,7 @@ public:
 
 	void play(const soundId id, float volume = 1.f)
 	{
+		if (m_isMuted) return;
 		{
 			std::lock_guard lock(m_queueMutex);
 			if (!m_queuedSounds.contains(id))
@@ -47,6 +48,13 @@ public:
 	{
 		m_soundMap[id] = filename;
 	}
+
+	void mute()
+	{
+		m_isMuted = !m_isMuted;
+		
+	}
+
 private:
 	struct MixChunkDeleter
 	{
@@ -62,6 +70,7 @@ private:
 	int m_audioChannels{ 1 };
 	int m_audioBuffers{ 4096 };
 	std::filesystem::path m_dataPath;
+	bool m_isMuted{ false };
 
 	static float max_volume;
 	static float min_volume;
@@ -142,4 +151,9 @@ void rift2d::SDLSoundSystem::setPath(const std::string& dataPath)
 void rift2d::SDLSoundSystem::addSoundMapping(int id, const std::string& filename)
 {
 	m_pImpl->addSoundMapping(id, filename);
+}
+
+void rift2d::SDLSoundSystem::mute()
+{
+	m_pImpl->mute();
 }

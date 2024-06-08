@@ -1,9 +1,11 @@
 #include "DirtPrefab.h"
 #include "BoxCollider2D.h"
+#include "GameModeManager.h"
 #include "LevelGridTile.h"
 #include "RigidBody2D.h"
 #include "Scene.h"
 #include "SpriteComponent.h"
+#include "Digger/DiggerGameMode.h"
 
 void digger::DirtPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pScene)
 {
@@ -20,7 +22,7 @@ void digger::DirtPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pScen
 	   1.f,
 	   0.f,
 	   false,
-		true,
+		false,
 	physics::CollisionGroup::Group2,
 	physics::CollisionGroup::Group1 | physics::CollisionGroup::Group4 });
 	rootObj->addComponent<rift2d::LevelGridTile>();

@@ -39,4 +39,5 @@ void digger::PlayerDeadState::onExit(rift2d::GameObject*)
 {
 	rift2d::InputManager::GetInstance().enableInput();
 	rift2d::Physics::GetInstance().enable();
+
 }

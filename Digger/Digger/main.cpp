@@ -5,6 +5,7 @@
 #include "InputManager.h"
 #include "Scenes/MenuScene.h"
 #include "SceneManager.h"
+#include "Commands/MuteSoundCommand.h"
 #include "Commands/SkipLevelCommand.h"
 #include "Commands/ToMainMenuCommand.h"
 namespace fs = std::filesystem;
@@ -15,6 +16,7 @@ void init()
 	sceneManager.addScene(std::make_unique<digger::MenuScene>());
 	rift2d::InputManager::GetInstance().bindAction(SDL_SCANCODE_ESCAPE, rift2d::InputEvent::Down, std::make_unique<digger::ToMainMenuCommand>(),true);
 	rift2d::InputManager::GetInstance().bindAction(SDL_SCANCODE_F1, rift2d::InputEvent::Down, std::make_unique<digger::SkipLevelCommand>(),true);
+	rift2d::InputManager::GetInstance().bindAction(SDL_SCANCODE_F3, rift2d::InputEvent::Down, std::make_unique<digger::MuteSoundCommand>(), true);
 	rift2d::GameModeManager::GetInstance().createGameMode<digger::DiggerGameMode>();
 }
 

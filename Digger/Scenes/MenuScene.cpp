@@ -25,6 +25,7 @@ void digger::MenuScene::init()
     sprite->setTexture("background.tga");
 
     m_pGameMode = dynamic_cast<DiggerGameMode*>(rift2d::GameModeManager::GetInstance().getGameMode());
+    
 }
 
 void digger::MenuScene::onActivate()
@@ -72,13 +73,27 @@ void digger::MenuScene::onImGui()
 
     ImGui::Spacing(); ImGui::Spacing();
 
-    if (ImGui::Button("Play"))
+    if (ImGui::Button("Single Player"))
     {
         rift2d::SceneManager::GetInstance().addScene(std::make_unique<GameScene>(0));
         rift2d::SceneManager::GetInstance().setActiveScene("level0");
         if(m_pGameMode)
         {
             m_pGameMode->setCurrentPlayerName(playerName);
+            m_pGameMode->setPlayMode(PlayMode::Singleplayer);
+        }
+    }
+
+    ImGui::Spacing(); ImGui::Spacing();
+
+    if (ImGui::Button("Versus"))
+    {
+        rift2d::SceneManager::GetInstance().addScene(std::make_unique<GameScene>(0));
+        rift2d::SceneManager::GetInstance().setActiveScene("level0");
+        if (m_pGameMode)
+        {
+            m_pGameMode->setCurrentPlayerName(playerName);
+            m_pGameMode->setPlayMode(PlayMode::Versus);
         }
     }
 

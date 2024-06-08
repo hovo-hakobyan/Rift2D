@@ -39,6 +39,7 @@ namespace rift2d
 		void setLinearDamping(float damping) const;
 		void applyLinearImpulse(const glm::vec2 impulse, const glm::vec2 point) const;
 		void setRotation(const glm::vec2 dir) const;
+		void setPosition(const glm::vec2 pos) ;
 
 		void onBeginOverlap(const physics::OverlapEventCallback& callback);
 		void onEndOverlap(const physics::OverlapEventCallback& callback);

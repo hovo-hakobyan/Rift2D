@@ -4,12 +4,16 @@
 #include <memory>
 #include "AIController.h"
 #include "BoxCollider2D.h"
+#include "GameModeManager.h"
 #include "GameObject.h"
+#include "InputManager.h"
 #include "RigidBody2D.h"
 #include "Scene.h"
 #include "SpriteComponent.h"
 #include "Transform.h"
+#include "Commands/MoveCommand.h"
 #include "Components/HealthComponent.h"
+#include "Digger/DiggerGameMode.h"
 
 namespace digger
 {
@@ -17,16 +21,15 @@ namespace digger
 	{
 		if (!rootObj or !pScene) return;
 
-		auto gameObject = std::make_unique<rift2d::GameObject>(pScene);
 		rootObj->getTransform()->setLocalPosition(850.f, 100.f);
 
-		const auto spriteComponent = gameObject->addComponent<rift2d::SpriteComponent>();
+		const auto spriteComponent = rootObj->addComponent<rift2d::SpriteComponent>();
 		spriteComponent->setTexture("nobbin.png");
 
 		//Physics
 		rift2d::RigidBodyDef rbDef;
 		rbDef.type = rift2d::RiftBodyType::Dynamic;
-		rbDef.fixedRotation = false;
+		rbDef.fixedRotation = true;
 		rbDef.linearDamping = 10.f;
 		rbDef.tag = "enemy";
 		auto rb = rootObj->addComponent<rift2d::RigidBody2D>(rbDef);
@@ -42,23 +45,32 @@ namespace digger
 
 			});
 
+		auto gameMode = dynamic_cast<DiggerGameMode*>(rift2d::GameModeManager::GetInstance().getGameMode());
+		switch (gameMode->getPlayMode())
+		{
+		case PlayMode::Singleplayer:
+			rootObj->addComponent<rift2d::AIController>(rb);
+			break;
+		case PlayMode::CoOp:
+			break;
+		case PlayMode::Versus:
+			rift2d::InputManager::GetInstance().bindAxis2D(rift2d::GamepadAxis2D::DPad, 0,
+				std::make_unique<MoveCommand>(rb, 350.f));
+			break;
+		}
+
 		const auto pos = rootObj->getTransform()->getWorldPosition();
 		rootObj->addComponent<rift2d::BoxCollider2D>(rift2d::BoxColliderInfo{ glm::vec2{pos.x,pos.y},
-			glm::vec2{40.f,40.f},
+			glm::vec2{32.f,32.f},
 			1.f,
 			0.f,
 			0.f,
 			false,
 			false,
 			physics::CollisionGroup::Group4,
-		physics::CollisionGroup::Group1 | physics::CollisionGroup::Group2});
+		physics::CollisionGroup::Group1 | physics::CollisionGroup::Group2 | physics::CollisionGroup::Group3 });
 
-		const auto aiController = gameObject->addComponent<rift2d::AIController>(rb);
-		aiController->setDebugDraw(false);
+	
 
-		const auto enemy = pScene->addGameObject(std::move(gameObject));
-		enemy->setParent(rootObj, false);
-
-		
 	}
 }

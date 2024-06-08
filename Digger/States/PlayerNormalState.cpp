@@ -19,7 +19,10 @@ void digger::PlayerNormalState::onEnter(rift2d::GameObject* gameObject)
 		sprite->setTexture("digger.png");
 	}
 
-	gameObject->getTransform()->setWorldPosition(150.f, 390.f);
+	if(const auto rb = gameObject->getComponent<rift2d::RigidBody2D>())
+	{
+		rb->setPosition(glm::vec2{ 150.f,390.f });
+	}
 
 	m_observerId = m_pHealth->damageTakenEvent()->subscribe([this](int newHealth)
 		{

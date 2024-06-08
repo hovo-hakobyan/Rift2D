@@ -14,6 +14,7 @@ namespace rift2d
 
 	GameObject* World::getPlayer() const
 	{
+		if (m_players.empty()) return nullptr;
 		return m_players.front();
 	}
 

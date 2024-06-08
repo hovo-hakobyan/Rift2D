@@ -10,7 +10,11 @@
 #include "Settings.h"
 #include "SpriteComponent.h"
 #include "StateComponent.h"
+#include "World.h"
+#include "Commands/ToMainMenuCommand.h"
 #include "Components/HealthComponent.h"
+#include "Components/ScoreComponent.h"
+#include "Digger/GameSettings.h"
 #include "States/GoldFallingState.h"
 #include "States/GoldIdleState.h"
 
@@ -29,7 +33,7 @@ void digger::MoneyPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSce
 	gameObject->addComponent<rift2d::BoxCollider2D>(rift2d::BoxColliderInfo
 		{
 			pos,
-			glm::vec2{32.f,20.f},
+			glm::vec2{15.f,20.f},
 			50.f,
 			0.f,
 			0.f,
@@ -60,6 +64,16 @@ void digger::MoneyPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSce
 						if(auto ai = otherGameObject->getComponent<rift2d::AIController>())
 						{
 							ai->die();
+						}
+						else
+						{
+							if (auto comp =rift2d::World::GetInstance().getPlayer()->getComponent<ScoreComponent>())
+							{
+								comp->modify(gameSettings::NOBBIN_SCORE);
+								otherGameObject->markForDestroy();
+								auto command = std::make_unique<ToMainMenuCommand>();
+								command->execute();
+							}
 						}
 						go->markForDestroy();
 					}

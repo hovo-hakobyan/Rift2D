@@ -17,10 +17,12 @@
 #include "Components/HealthComponent.h"
 #include "Components/ScoreComponent.h"
 #include "Components/ScoreDisplayComponent.h"
+#include "Digger/DiggerGameMode.h"
 #include "Digger/EmeraldManager.h"
 #include "Digger/GameSettings.h"
 #include "Prefabs/DiggerPrefab.h"
 #include "Prefabs/DiggerUI.h"
+#include "Prefabs/Enemy.h"
 
 
 digger::GameScene::GameScene(int level):
@@ -73,30 +75,64 @@ void digger::GameScene::init()
 	ss.addSoundMapping(1, "laser_explode.mp3");
 	ss.addSoundMapping(2, "gold_tick.mp3");
 
-	std::cout << "DPad to move\nX to shoot";
-
-	auto gameObject = std::make_unique<rift2d::GameObject>(this);
-	auto enemyManager = gameObject->addComponent<EnemyManager>(3, 4.f);
-	addGameObject(std::move(gameObject));
-
-	if(const auto scoreComp = m_pPlayer->getComponent<ScoreComponent>())
+	auto gameMode = dynamic_cast<DiggerGameMode*>(rift2d::GameModeManager::GetInstance().getGameMode());
+	switch (gameMode->getPlayMode())
 	{
-		enemyManager->onEnemySpawn()->subscribe([&](rift2d::GameObject* go)
-			{
-				if(const auto aiComp = go->getComponent<rift2d::AIController>())
-				{
-					aiComp->onDeathEvent()->subscribe([&]()
-						{
-							scoreComp->modify(gameSettings::NOBBIN_SCORE);
-						});
-				}
-			});
-
-		gameObject = std::make_unique<rift2d::GameObject>(this);
-		gameObject->addComponent<ScoreDisplayComponent>(scoreComp);
+	case PlayMode::Singleplayer:
+		{
+		auto gameObject = std::make_unique<rift2d::GameObject>(this);
+		auto enemyManager = gameObject->addComponent<EnemyManager>(3, 4.f);
 		addGameObject(std::move(gameObject));
+
+		if (const auto scoreComp = m_pPlayer->getComponent<ScoreComponent>())
+		{
+			enemyManager->onEnemySpawn()->subscribe([&](rift2d::GameObject* go)
+				{
+					if (const auto aiComp = go->getComponent<rift2d::AIController>())
+					{
+						aiComp->onDeathEvent()->subscribe([&]()
+							{
+								scoreComp->modify(gameSettings::NOBBIN_SCORE);
+							});
+					}
+				});
+
+			gameObject = std::make_unique<rift2d::GameObject>(this);
+			gameObject->addComponent<ScoreDisplayComponent>(scoreComp);
+			addGameObject(std::move(gameObject));
+
+		}
+
+		if (auto health = m_pPlayer->getComponent<HealthComponent>())
+		{
+			health->damageTakenEvent()->subscribe([enemyManager](int)
+				{
+					enemyManager->reset();
+				});
+		}
+		}
 		
+		break;
+	case PlayMode::CoOp:
+		break;
+	case PlayMode::Versus:
+		m_pEnemy = addGameObjectFromPrefab<Enemy>();
+		if (auto health = m_pPlayer->getComponent<HealthComponent>())
+		{
+			health->damageTakenEvent()->subscribe([&](int)
+				{
+					if(auto rb = m_pEnemy->getComponent<rift2d::RigidBody2D>())
+					{
+						rb->setPosition(glm::vec2{ 850.f, 100.f });
+					}
+				});
+		}
+		break;
 	}
+
+	
+
+	
 
 	m_victoryObserverId= EmeraldManager::GetInstance().onFullyCollected()->subscribe([this]()
 		{
@@ -113,11 +149,6 @@ void digger::GameScene::init()
 		{
 			healthDisplay->setHealthComponent(health);
 		}
-
-		health->damageTakenEvent()->subscribe([enemyManager](int)
-			{
-				enemyManager->reset();
-			});
 
 		health->onDeathEvent()->subscribe([this]()
 			{

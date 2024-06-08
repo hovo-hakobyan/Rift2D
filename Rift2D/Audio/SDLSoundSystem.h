@@ -17,6 +17,9 @@ namespace rift2d
 		void play(const soundId id, float volume = 1.f) override;
 		void setPath(const std::string& dataPath) override;
 		void addSoundMapping(int id, const std::string& filename) override;
+
+		void mute() override;
+
 		
 	private:
 		class Impl;
