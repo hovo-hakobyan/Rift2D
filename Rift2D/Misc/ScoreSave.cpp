@@ -35,13 +35,13 @@ void rift2d::ScoreSave::update(const std::string& name, int score)
 std::vector<rift2d::ScoreData> rift2d::ScoreSave::getTopScores(size_t count)
 {
 	loadScores();
+	std::sort(m_scores.begin(), m_scores.end());
 	if(m_scores.size() > count)
 	{
-		std::sort(m_scores.begin(), m_scores.end());
 		return std::vector<ScoreData>(m_scores.begin(), m_scores.begin() + count);
 	}
 
-	return {};
+	return m_scores;
 }
 
 void rift2d::ScoreSave::loadScores()

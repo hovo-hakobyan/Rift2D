@@ -1,10 +1,9 @@
 #include "MenuScene.h"
 #include <imgui.h>
-#include <iostream>
-
 #include "Digger/DiggerGameMode.h"
 #include "GameModeManager.h"
 #include "GameScene.h"
+#include "HighScoreScene.h"
 #include "InputManager.h"
 #include "Physics.h"
 #include "Rift2DEngine.h"
@@ -80,6 +79,17 @@ void digger::MenuScene::onImGui()
         if(m_pGameMode)
         {
             m_pGameMode->setCurrentPlayerName(playerName);
+        }
+    }
+
+    ImGui::Spacing(); ImGui::Spacing();
+    if (ImGui::Button("Leaderboard"))
+    {
+        rift2d::SceneManager::GetInstance().addScene(std::make_unique<HighScoreScene>());
+        rift2d::SceneManager::GetInstance().setActiveScene("HighScoreScene");
+        if (m_pGameMode)
+        {
+            m_pGameMode->setCurrentPlayerName("");
         }
     }
 

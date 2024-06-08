@@ -1,7 +1,6 @@
 #include "DiggerPrefab.h"
 #include "BoxCollider2D.h"
 #include "Commands/MoveCommand.h"
-#include "Commands/ScoreCommand.h"
 #include "GameObject.h"
 #include "InputManager.h"
 #include "Renderer.h"
@@ -57,7 +56,7 @@ void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSc
 		std::make_unique<MoveCommand>(rb, 300.f));
 
 	//add health component
-	auto health = rootObj->addComponent<HealthComponent>(2);
+	auto health = rootObj->addComponent<HealthComponent>(4);
 
 	rootObj->addComponent<rift2d::StateComponent>()->changeState(std::make_unique<PlayerNormalState>(health));
 
