@@ -3,6 +3,7 @@
 #include "Commands/MoveCommand.h"
 #include "GameObject.h"
 #include "InputManager.h"
+#include "Locator.h"
 #include "Renderer.h"
 #include "RigidBody2D.h"
 #include "SpriteComponent.h"
@@ -79,6 +80,7 @@ void digger::DiggerPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSc
 						{
 							score->modify(gameSettings::GOLD_SCORE);
 							otherGameObject->markForDestroy();
+							rift2d::ServiceLocator::getSoundSystem().play(3);
 						}
 					}
 				}

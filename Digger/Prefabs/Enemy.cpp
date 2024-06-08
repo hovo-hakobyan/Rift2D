@@ -46,6 +46,7 @@ namespace digger
 			});
 
 		auto gameMode = dynamic_cast<DiggerGameMode*>(rift2d::GameModeManager::GetInstance().getGameMode());
+		auto collisionGroups = physics::CollisionGroup::Group1 | physics::CollisionGroup::Group3;
 		switch (gameMode->getPlayMode())
 		{
 		case PlayMode::Singleplayer:
@@ -56,6 +57,7 @@ namespace digger
 		case PlayMode::Versus:
 			rift2d::InputManager::GetInstance().bindAxis2D(rift2d::GamepadAxis2D::DPad, 0,
 				std::make_unique<MoveCommand>(rb, 350.f));
+			collisionGroups = physics::CollisionGroup::Group1 | physics::CollisionGroup::Group2 |physics::CollisionGroup::Group3;
 			break;
 		}
 
@@ -68,7 +70,7 @@ namespace digger
 			false,
 			false,
 			physics::CollisionGroup::Group4,
-		physics::CollisionGroup::Group1 | physics::CollisionGroup::Group2 | physics::CollisionGroup::Group3 });
+		collisionGroups});
 
 	
 

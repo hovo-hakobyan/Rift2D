@@ -37,7 +37,7 @@ namespace rift2d
 	private:
 		std::unique_ptr<AStarPathfinding> m_aStarPathfinding;
 		bool m_shouldMove{ false };
-		bool m_shouldDebugDraw{ false };
+		bool m_shouldDebugDraw{ true };
 		std::deque<glm::vec2> m_path;
 		RigidBody2D* m_pRB{};
 		float m_speed{350.f};

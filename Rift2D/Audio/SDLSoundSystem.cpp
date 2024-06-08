@@ -8,7 +8,7 @@
 #include <SDL_syswm.h>
 #include <unordered_set>
 #include <filesystem>
-
+#include <ranges>
 
 
 class rift2d::SDLSoundSystem::Impl
@@ -25,7 +25,6 @@ public:
 
 	void play(const soundId id, float volume = 1.f)
 	{
-		if (m_isMuted) return;
 		{
 			std::lock_guard lock(m_queueMutex);
 			if (!m_queuedSounds.contains(id))
@@ -52,7 +51,23 @@ public:
 	void mute()
 	{
 		m_isMuted = !m_isMuted;
-		
+		auto vol = m_isMuted ? 0: 1;
+
+		for (auto& chunk : m_soundCache | std::views::values)
+		{
+			if (chunk) {
+				Mix_VolumeChunk(chunk.get(), vol); 
+			}
+		}
+	}
+
+	void clearSounds()
+	{
+		for (const auto& [key, chunk] : m_soundCache)
+		{
+			Mix_HaltChannel(-1); // Stop all channels
+		}
+		m_soundCache.clear(); // Clear the sound cache
 	}
 
 private:
@@ -156,4 +171,9 @@ void rift2d::SDLSoundSystem::addSoundMapping(int id, const std::string& filename
 void rift2d::SDLSoundSystem::mute()
 {
 	m_pImpl->mute();
+}
+
+void rift2d::SDLSoundSystem::clearSounds()
+{
+	m_pImpl->clearSounds();
 }

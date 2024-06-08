@@ -3,6 +3,7 @@
 #include "GoldExplodingState.h"
 #include "GoldIdleState.h"
 #include "LevelGrid.h"
+#include "Locator.h"
 #include "RigidBody2D.h"
 #include "Settings.h"
 #include "StateComponent.h"
@@ -23,6 +24,7 @@ namespace digger
 		pos.y += riftSettings::TILE_HEIGHT / 2;
 
 		m_startingTileIdx = rift2d::Utils::indexFromPosition(static_cast<int>(pos.x), static_cast<int>(pos.y), riftSettings::NR_COLS);
+		rift2d::ServiceLocator::getSoundSystem().play(5);
 	}
 
 	void GoldFallingState::update(rift2d::GameObject* gameObject)

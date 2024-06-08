@@ -1,6 +1,7 @@
 #include "GoldExplodingState.h"
 
 #include "GameObject.h"
+#include "Locator.h"
 #include "SpriteComponent.h"
 
 namespace digger
@@ -11,6 +12,8 @@ namespace digger
 		{
 			sprite->setTexture("money.png",{0.f,-8.f});
 		}
+
+		rift2d::ServiceLocator::getSoundSystem().play(1);
 	}
 
 	void GoldExplodingState::update(rift2d::GameObject* /*gameObject*/)

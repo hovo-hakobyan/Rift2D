@@ -38,6 +38,7 @@ namespace rift2d
         virtual void setPath(const std::string& dataPath) = 0;
         virtual void addSoundMapping(int id, const std::string& filename) = 0;
         virtual void mute() = 0;
+        virtual void clearSounds() = 0;
     };
 
     class GameObject;

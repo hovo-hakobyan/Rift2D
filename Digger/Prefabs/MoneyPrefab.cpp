@@ -33,12 +33,12 @@ void digger::MoneyPrefab::setup(rift2d::GameObject* rootObj, rift2d::Scene* pSce
 	gameObject->addComponent<rift2d::BoxCollider2D>(rift2d::BoxColliderInfo
 		{
 			pos,
-			glm::vec2{15.f,20.f},
+			glm::vec2{10.f,20.f},
 			50.f,
 			0.f,
 			0.f,
 			false,
-			false,
+			true,
 			physics::CollisionGroup::Group3,
 			physics::CollisionGroup::Group1 | physics::CollisionGroup::Group4
 		});

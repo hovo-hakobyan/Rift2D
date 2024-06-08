@@ -19,6 +19,7 @@ namespace rift2d
 		void addSoundMapping(int id, const std::string& filename) override;
 
 		void mute() override;
+		void clearSounds() override;
 
 		
 	private:

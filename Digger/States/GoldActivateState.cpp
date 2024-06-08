@@ -1,6 +1,7 @@
 #include "GoldActivateState.h"
 #include "GameObject.h"
 #include "GoldFallingState.h"
+#include "Locator.h"
 #include "StateComponent.h"
 #include "World.h"
 
@@ -12,4 +13,6 @@ void digger::GoldActivateState::update(rift2d::GameObject* gameObject)
 		const auto stateComponent = gameObject->getComponent<rift2d::StateComponent>();
 		stateComponent->changeState(std::make_unique<GoldFallingState>());
 	}
+
+	rift2d::ServiceLocator::getSoundSystem().play(2);
 }

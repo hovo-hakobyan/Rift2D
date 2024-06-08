@@ -10,6 +10,7 @@
 #include "Locator.h"
 #include "Physics.h"
 #include "SceneManager.h"
+#include "Utils.h"
 #include "World.h"
 #include "Commands/SkipLevelCommand.h"
 #include "Components/EnemyManager.h"
@@ -71,9 +72,13 @@ void digger::GameScene::init()
 
 	//add sound mappings
 	auto& ss = rift2d::ServiceLocator::getSoundSystem();
-	ss.addSoundMapping(0, "laser.mp3");
-	ss.addSoundMapping(1, "laser_explode.mp3");
+	ss.addSoundMapping(0, "gold_fall.mp3");
+	ss.addSoundMapping(1, "gold_break.mp3");
 	ss.addSoundMapping(2, "gold_tick.mp3");
+	ss.addSoundMapping(3, "gold_eat.mp3");
+	ss.addSoundMapping(4, "popcorn.mp3");
+
+	ss.play(4);
 
 	auto gameMode = dynamic_cast<DiggerGameMode*>(rift2d::GameModeManager::GetInstance().getGameMode());
 	switch (gameMode->getPlayMode())
@@ -170,6 +175,7 @@ void digger::GameScene::end()
 {
 	rift2d::WorldBuilderPrefabRegistry::GetInstance().unregisterPrefabCreators();
 	EmeraldManager::GetInstance().onFullyCollected()->clearSubscribers();
+	rift2d::ServiceLocator::getSoundSystem().clearSounds();
 
 }
 
@@ -184,6 +190,7 @@ void digger::GameScene::update()
 			nextLevel->execute();
 		}
 	}
+
 }
 
 void digger::GameScene::handleGameOver()
